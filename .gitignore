@@ -1,0 +1,18 @@
+# Npm, Yarn related
+node_modules
+yarn-error.log
+*.log
+
+# Database, Mysql
+db
+links
+events
+to_the_archives.sql
+sql/redis-2017-10-02.rdb
+
+# Personal
+public
+schema-es5
+graph
+__generated__/
+trash

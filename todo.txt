@@ -1,0 +1,11 @@
+- Fix memories and tags id. When using them in memory_tags, you don't know
+  which memory and tag you are referencing because you allow non-unique id's.
+  Memory and tags are bound to user_id. Thus, maybe make them non-bound to user?
+
+- Complete the database.
+
+- Set up hello world example so that everything works, e.g. Relay.
+
+- Design the website. Look at notebook.
+
+- Design the dashboard. This is a bit harder?
