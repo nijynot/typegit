@@ -8,8 +8,8 @@ import {
 
 import { modernEnvironment } from '../helpers.js';
 
-// import App from '../App.js';
-import LoginPage from '../pages/Login/LoginPage.js';
+import App from '../App.js';
+import HomePage from '../pages/Home/HomePage.js';
 
 const mountNode = document.getElementById('root');
 
@@ -17,22 +17,22 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query LoginPageQuery {
+      query HomePageQuery {
         viewer {
-          ...LoginPage_viewer
+          ...App_viewer,
+          ...HomePage_viewer
         }
       }
     `}
     variables={{}}
     render={({ err, props }) => {
-      console.log(props);
       if (props) {
-        console.log('render');
+        console.log(props);
         return (
-          <LoginPage viewer={props.viewer} />
+          <App viewer={props.viewer}>
+            <HomePage viewer={props.viewer} />
+          </App>
         );
-      } else if (err) {
-        console.log(err);
       }
       return null;
     }}

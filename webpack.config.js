@@ -6,6 +6,7 @@ const config = {
   entry: {
     // App: './views/',
     // FrontPage: './views/client-pages/FrontPage.js',
+    HomePage: './views/client-pages/HomePage.js',
     LoginPage: './views/client-pages/LoginPage.js',
   },
   output: {

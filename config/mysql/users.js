@@ -24,12 +24,7 @@ exports.getUserById = ({ id }) => {
     let sql = `select
     u.user_id as id,
     u.username,
-    u.name,
-    u.biography,
-    u.location,
     u.email,
-    u.gender,
-    u.birthdate,
     u.created
     from users u
     where u.user_id = ?`;
@@ -47,12 +42,7 @@ exports.getUserByUsername = ({ username }) => {
     let sql = `select
     u.user_id as id,
     u.username,
-    u.name,
-    u.biography,
-    u.location,
     u.email,
-    u.gender,
-    u.birthdate,
     u.created
     from users u
     where u.username = ?`;

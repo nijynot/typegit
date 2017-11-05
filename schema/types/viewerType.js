@@ -13,8 +13,9 @@ import {
 
 import mysql from '../../config/mysql.js';
 
+import { isLoggedIn, isOwner } from '../helpers.js';
+import { userType } from './userType.js';
 import { memoryType } from './memoryType.js';
-import { isOwner } from '../helpers.js';
 
 export const viewerType = new GraphQLObjectType({
   name: 'Viewer',
@@ -22,12 +23,26 @@ export const viewerType = new GraphQLObjectType({
     id: {
       type: GraphQLID,
     },
+    me: {
+      type: userType,
+      resolve: (rootValue, _, session) => {
+        if (isLoggedIn(session)) {
+          return mysql.getUserById({
+            id: session.user.user_id,
+          })
+          .then((value) => {
+            return value[0];
+          });
+        }
+        return null;
+      },
+    },
     memories: {
       type: new GraphQLList(memoryType),
       resolve: (rootValue, _, session) => {
-        if (isOwner(rootValue.id, session)) {
+        if (isLoggedIn(session)) {
           return mysql.getMemories({
-            user_id: 1,
+            user_id: session.user.user_id,
           })
           .then((value) => {
             return value;

@@ -10,9 +10,20 @@ class LoginPage extends React.PureComponent {
   render() {
     return (
       <div className="loginpage">
+        {this.props.viewer.id}
         <form method="post" action="/login">
-          <input placeholder="login" type="text" />
-          <input placeholder="password" type="password" />
+          <input
+            className="login-control"
+            name="username"
+            type="text"
+            placeholder="Username"
+          />
+          <input
+            className="login-control"
+            name="password"
+            type="password"
+            placeholder="Password"
+          />
           <input
             className="login-button"
             type="submit"
@@ -25,6 +36,7 @@ class LoginPage extends React.PureComponent {
 }
 
 LoginPage.propTypes = {
+  viewer: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(LoginPage, {

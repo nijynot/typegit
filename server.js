@@ -1,5 +1,6 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
+const _ = require('lodash');
 // const path = require('path');
 // const fs = require('fs');
 // const bcrypt = require('bcryptjs');
@@ -26,6 +27,10 @@ const staticOptions = {
     }
     return null;
   },
+};
+
+const exists = (object, path) => {
+  return !_.isEmpty(_.get(object, path));
 };
 
 const sessionOptions = {
@@ -71,10 +76,15 @@ app.use('/graphql', graphqlHTTP((request) => {
 }));
 
 app.get('/', (req, res) => {
-  res.send(template({ title: 'Diary', script: 'FrontPage.js' }));
+  if (_.get(req.user, 'user_id')) {
+    res.send(template({ title: 'Diary', script: 'HomePage.js' }));
+  } else {
+    res.send('Not logged in.');
+  }
 });
 
 app.get('/login', (req, res) => {
+  // res.send('test');
   res.send(template({ title: 'Login', script: 'LoginPage.js' }));
 });
 app.post('/login', passport.authenticate(

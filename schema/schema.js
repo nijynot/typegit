@@ -18,7 +18,7 @@ const queryType = new GraphQLObjectType({
     viewer: {
       type: viewerType,
       resolve: () => {
-        return { id: 1 };
+        return { id: 'root' };
       },
     },
   }),

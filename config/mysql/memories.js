@@ -29,7 +29,8 @@ exports.getMemories = ({ user_id }) => {
     m.created,
     m.user_id
     from memories m
-    where user_id = ?;`;
+    where user_id = ?
+    order by created desc;`;
     sql = mysql.format(sql, [user_id]);
 
     connection.query(sql, (err, results) => {

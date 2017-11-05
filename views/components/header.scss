@@ -1,0 +1,17 @@
+@import "scss/spacing";
+
+.header {
+}
+.header-top {
+  margin: 0 auto;
+  text-align: center;
+  width: 980px;
+  margin-top: $tiny;
+}
+.header-heading {
+  font-family: 'NeueHaasGroteskDisp';
+  font-weight: 700;
+  font-size: $large;
+}
+.header-profile {
+}

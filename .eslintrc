@@ -23,7 +23,8 @@
         "functions": "ignore",
     }],
     "import/prefer-default-export": 0,
-    "indent": ["error", 2, { "MemberExpression": 0 }]
+    "indent": ["error", 2, { "MemberExpression": 0 }],
+    "react/prop-types": [1, { ignore: [children] }]
   },
   "extends": "airbnb",
   "env": {

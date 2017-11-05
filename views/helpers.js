@@ -11,6 +11,7 @@ export function fetchQuery(
 ) {
   return fetch('/graphql', {
     method: 'POST',
+    credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
     },
