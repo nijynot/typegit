@@ -3,7 +3,7 @@ const mysql = require('../config/mysql.js');
 const _ = require('lodash');
 
 exports.isLoggedIn = (session) => {
-  if (get(session.user, 'user_id')) {
+  if (get(session, 'user.user_id')) {
     return true;
   }
   return false;

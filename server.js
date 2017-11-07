@@ -95,6 +95,14 @@ app.post('/login', passport.authenticate(
   }
 ));
 
+app.get('/new', (req, res) => {
+  res.send(template({ title: 'New memory', script: 'DraftingPage.js' }));
+});
+
+app.get('/:memory_id', (req, res) => {
+  res.send(template({ title: 'Memory', script: 'MemoryPage.js' }));
+});
+
 app.listen(PORT, () => {
   console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
   console.log(`Listening on port: ${PORT}`);

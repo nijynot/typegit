@@ -16,6 +16,9 @@
   font-weight: 900;
 }
 
+* {
+  box-sizing: border-box;
+}
 a {
   color: #000;
   text-decoration: none;
@@ -40,6 +43,9 @@ a:visited {
 }
 .hidden {
   visibility: hidden;
+}
+.none {
+  display: none;
 }
 .pre-wrap {
   white-space: pre-wrap;

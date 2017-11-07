@@ -10,6 +10,7 @@ import {
   GraphQLString,
 } from 'graphql';
 
+import get from 'lodash/get';
 
 import mysql from '../../config/mysql.js';
 
@@ -49,6 +50,23 @@ export const viewerType = new GraphQLObjectType({
           });
         }
         return [];
+      },
+    },
+    memory: {
+      type: memoryType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: (rootValue, args, session) => {
+        return mysql.getMemoryByIdAndUserId({
+          id: args.id,
+          user_id: get(session, 'user.user_id'),
+        })
+        .then((value) => {
+          return value[0];
+        });
       },
     },
   }),

@@ -1,0 +1,16 @@
+@import "scss/spacing";
+
+.memorypage {
+  margin: 0 auto;
+  width: 700px;
+}
+.memory-title {
+  font-size: 42px;
+  font-weight: 700;
+  text-align: center;
+}
+.memory-body {
+  padding-top: $base;
+  padding-bottom: $large;
+  font-size: 21px;
+}

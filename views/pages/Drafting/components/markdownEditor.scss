@@ -1,0 +1,107 @@
+@import "scss/border-radius";
+@import "scss/colors";
+@import "scss/spacing";
+
+.markdowneditor {
+  @include border-radius(3px);
+  border: 1px solid #c1c1c1;
+  display: inline-block;
+  margin-top: $tiny;
+}
+.markdowneditor.active {
+  border-color: #333;
+}
+.markdowneditor.active
+.markdowneditor-actions {
+  opacity: 1;
+  margin-top: 0;
+  visibility: visible;
+}
+.markdowneditor-textarea {
+  border: none;
+  display: inline-block;
+  outline: none;
+  padding: $tiny;
+  width: 400px;
+  vertical-align: top;
+}
+.markdowneditor-actions {
+  padding: $tiny;
+  border-top: 1px dashed #eee;
+  display: block;
+  margin-top: -34px;
+  opacity: 0;
+  visibility: collapse;
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.markdowneditor-action {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 700;
+  outline: none;
+  padding: 0 3px;
+  &:hover {
+    color: $stripe-blue;
+  }
+}
+.markdowneditor-action.active {
+  color: $stripe-blue;
+}
+.markdowneditor-preview {
+  min-width: 400px;
+  padding: $tiny;
+}
+.markdowneditor-preview-flash {
+  background-color: #f5f5f5;
+  padding: $tiny 10px;
+}
+.markdown-svg {
+  // transform: scale(0.019);
+  fill: #333;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.markdown-path {
+  width: auto;
+  height: auto;
+  transform: scale(0.019);
+}
+.markdowneditor-help {
+  width: 400px;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  padding: $tiny;
+  z-index: 999;
+}
+.markdowneditor-close-help-button {
+  background-color: transparent;
+  border: none;
+  color: $stripe-red;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    color: #ad1f21;
+  }
+}
+.markdowneditor-help-inline {
+  display: inline-block;
+}
+.markdowneditor-help-row {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+}
+.markdowneditor-inline-blockquote blockquote {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-left: $tiny;
+}

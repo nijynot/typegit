@@ -1,0 +1,28 @@
+@import "scss/spacing";
+
+.compactmemoryitem {
+  margin: 4px 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.compactmemoryitem-created {
+  padding-right: $small;
+}
+.compactmemoryitem-title {
+  font-weight: 700;
+}
+.compactmemoryitem-title.no-title {
+  color: #aaa;
+  font-style: italic;
+  opacity: 0.5;
+}
+.compactmemoryitem-body {
+  color: #333;
+  opacity: 1;
+}
+.compactmemoryitem-body.no-body {
+  color: #000;
+  font-style: italic;
+  opacity: 0.5;
+}

@@ -39,3 +39,34 @@ exports.getMemories = ({ user_id }) => {
     });
   });
 };
+
+exports.insertMemory = ({ memory_id, title, body, created, user_id }) => {
+  return new Promise((resolve, reject) => {
+    const UTC_TIMESTAMP = mysql.raw('UTC_TIMESTAMP()');
+    const datetime = created || UTC_TIMESTAMP;
+    let sql = `insert into memories (
+      memory_id, title, body, created, user_id
+    ) values (
+      ?, ?, ?, ?, ?
+    );`;
+    sql = mysql.format(sql, [memory_id, title, body, datetime, user_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.deleteMemory = ({ id }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `delete from memories
+    where memory_id = ?;`;
+    sql = mysql.format(sql, [id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};

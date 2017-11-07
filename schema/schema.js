@@ -12,6 +12,10 @@ import {
 
 import { viewerType } from './types/viewerType.js';
 
+// Mutations
+import { newMemoryMutation } from './mutations/newMemoryMutation.js';
+import { deleteMemoryMutation } from './mutations/deleteMemoryMutation.js';
+
 const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
@@ -24,9 +28,17 @@ const queryType = new GraphQLObjectType({
   }),
 });
 
+const mutationType = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: () => ({
+    newMemory: newMemoryMutation,
+    deleteMemory: deleteMemoryMutation,
+  }),
+});
+
 const schema = new GraphQLSchema({
   query: queryType,
-  // mutation: mutationType,
+  mutation: mutationType,
 });
 
 module.exports = schema;

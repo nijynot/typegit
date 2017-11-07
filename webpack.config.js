@@ -7,6 +7,8 @@ const config = {
     // App: './views/',
     // FrontPage: './views/client-pages/FrontPage.js',
     HomePage: './views/client-pages/HomePage.js',
+    MemoryPage: './views/client-pages/MemoryPage.js',
+    DraftingPage: './views/client-pages/DraftingPage.js',
     LoginPage: './views/client-pages/LoginPage.js',
   },
   output: {
@@ -49,9 +51,9 @@ const config = {
     ],
   },
   resolve: {
-    // modulesDirectories: ['scss', 'views/global', 'config', 'node_modules'],
+    // modulesDirectories: ['scss', 'views/global-components', 'config', 'node_modules'],
     alias: {
-      // 'global-components': path.resolve('./views/global-components'),
+      'global-components': path.resolve(__dirname, 'views/global-components'),
       // config: path.resolve('./config'),
       // pages: path.resolve('./views/pages'),
       // 'twitter-text': path.resolve('./config/twitter-text.js'),

@@ -6,6 +6,8 @@ import {
   graphql,
 } from 'react-relay';
 
+import CompactMemoryItem from './components/CompactMemoryItem.js';
+
 class HomePage extends React.Component {
   render() {
     console.log(this.props.viewer);
@@ -13,9 +15,12 @@ class HomePage extends React.Component {
       <div className="homepage">
         {this.props.viewer.memories.map((memory) => {
           return (
-            <div>
-              {memory.title || '~ No title. ~'}
-            </div>
+            <CompactMemoryItem
+              memory={memory}
+            />
+            // <div>
+            //   {memory.title || '~ No title. ~'}
+            // </div>
           );
         })}
       </div>
