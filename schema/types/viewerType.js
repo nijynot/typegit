@@ -18,6 +18,8 @@ import { isLoggedIn, isOwner } from '../helpers.js';
 import { userType } from './userType.js';
 import { memoryType } from './memoryType.js';
 
+import { Memory } from '../loaders/MemoryLoader.js';
+
 export const viewerType = new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
@@ -59,14 +61,15 @@ export const viewerType = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLString),
         },
       },
-      resolve: (rootValue, args, session) => {
-        return mysql.getMemoryByIdAndUserId({
-          id: args.id,
-          user_id: get(session, 'user.user_id'),
-        })
-        .then((value) => {
-          return value[0];
-        });
+      resolve: (rootValue, args, context) => {
+        return Memory.gen(context, args.id);
+        // return mysql.getMemoryByIdAndUserId({
+        //   id: args.id,
+        //   user_id: get(session, 'user.user_id'),
+        // })
+        // .then((value) => {
+        //   return value[0];
+        // });
       },
     },
   }),

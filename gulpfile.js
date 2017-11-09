@@ -7,7 +7,7 @@ const watch = require('gulp-watch');
 gulp.task('babel-schema', () => {
   return gulp.src('./schema/**/*.js')
   .pipe(babel({
-    // plugins: ['transform-runtime'],
+    plugins: ['transform-runtime'],
     presets: ['es2015', 'stage-0'],
   }))
   .pipe(gulp.dest('./schema-es5'));

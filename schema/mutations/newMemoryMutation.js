@@ -34,7 +34,7 @@ export const newMemoryMutation = {
   },
   resolve: (request, args, session) => {
     if (isLoggedIn(session)) {
-      const randid = randexp(/[a-zA-Z0-9_-]{12}/);
+      const randid = randexp(/[a-zA-Z0-9]{12}/);
       return mysql.insertMemory({
         memory_id: randid,
         title: args.title,

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
 
 import {
   createFragmentContainer,
@@ -14,6 +15,7 @@ class App extends React.Component {
       <div className="app">
         <Header
           user={this.props.viewer.me}
+          showEdit={this.props.viewer.me.id == this.props.viewer.memory.user.id}
         />
         <div className="content">
           {this.props.children}
@@ -33,6 +35,11 @@ export default createFragmentContainer(App, {
       me {
         id
         username
+      }
+      memory(id: $id) {
+        user {
+          id
+        }
       }
     }
   `,

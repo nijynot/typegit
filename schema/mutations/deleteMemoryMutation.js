@@ -22,15 +22,15 @@ export const deleteMemoryMutation = {
       type: GraphQLID,
     },
   },
-  resolve: (request, args, session) => {
-    if (isLoggedIn(session)) {
+  resolve: (request, args, context) => {
+    if (isLoggedIn(context)) {
       return mysql.getMemoryByIdAndUserId({
         id: args.id,
-        user_id: session.user.user_id,
+        user_id: context.user.user_id,
       })
       .then((res) => {
         const user_id = get(res, '[0].user_id');
-        if (isOwner(user_id, session)) {
+        if (isOwner(context, user_id)) {
           return mysql.deleteMemory({
             id: args.id,
           })

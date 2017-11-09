@@ -20,6 +20,26 @@ exports.getMemoryByIdAndUserId = ({ id, user_id }) => {
   });
 };
 
+exports.getMemoriesByIds = ({ ids }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `select
+    m.memory_id as id,
+    m.title,
+    m.body,
+    m.created,
+    m.user_id
+    from memories m
+    where m.memory_id in (?)
+    order by field(m.memory_id, ?);`;
+    sql = mysql.format(sql, [ids, ids]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
 exports.getMemories = ({ user_id }) => {
   return new Promise((resolve, reject) => {
     let sql = `select

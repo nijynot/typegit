@@ -37,6 +37,25 @@ exports.getUserById = ({ id }) => {
   });
 };
 
+exports.getUsersByIds = ({ ids }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `select
+    u.user_id as id,
+    u.username,
+    u.email,
+    u.created
+    from users u
+    where u.user_id in (?)
+    order by field(u.user_id, ?)`;
+    sql = mysql.format(sql, [ids, ids]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
 exports.getUserByUsername = ({ username }) => {
   return new Promise((resolve, reject) => {
     let sql = `select

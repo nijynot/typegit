@@ -14,8 +14,8 @@ function getUserId(session) {
 }
 exports.getUserId = getUserId;
 
-function isOwner(user_id, session) {
-  if (user_id === getUserId(session)) {
+function isOwner(context, user_id) {
+  if (user_id === getUserId(context)) {
     return true;
   }
   return false;

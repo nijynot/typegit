@@ -14,6 +14,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const schema = require('./schema-es5/schema.js');
+const loaders = require('./schema-es5/loaders');
 const template = require('./views/template.js');
 
 /* =================== */
@@ -32,6 +33,13 @@ const staticOptions = {
 const exists = (object, path) => {
   return !_.isEmpty(_.get(object, path));
 };
+
+function createLoaders() {
+  return {
+    UserLoader: loaders.UserLoader.getLoader(),
+    MemoryLoader: loaders.MemoryLoader.getLoader(),
+  };
+}
 
 const sessionOptions = {
   name: 'local',
@@ -69,7 +77,10 @@ app.use('/graphql', graphqlHTTP((request) => {
   return {
     schema,
     rootValue: { request },
-    context: { user: request.user },
+    context: {
+      user: request.user,
+      loaders: createLoaders(),
+    },
     pretty: true,
     graphiql: true,
   };

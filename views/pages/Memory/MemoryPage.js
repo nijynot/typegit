@@ -33,6 +33,9 @@ export default createFragmentContainer(MemoryPage, {
         title
         body
         created
+        user {
+          id
+        }
       }
     }
   `,
