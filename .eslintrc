@@ -26,7 +26,8 @@
     "import/prefer-default-export": 0,
     "indent": ["error", 2, { "MemberExpression": 0 }],
     "react/prop-types": [1, { ignore: [children] }],
-    "react/prefer-stateless-function": 0
+    "react/prefer-stateless-function": 0,
+    "import/no-extraneous-dependencies": 0
   },
   "extends": "airbnb",
   "env": {

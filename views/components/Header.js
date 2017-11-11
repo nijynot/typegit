@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 class Header extends React.Component {
   render() {
-    console.log(this.props.showEdit);
     return (
       <div className="header">
         <div className="header-top">
@@ -14,9 +13,12 @@ class Header extends React.Component {
           </span>
           <div className="header-profile right">
             {(this.props.showEdit) ?
-              <span>
+              <a
+                className="header-edit-btn"
+                href={`/${document.location.pathname.split('/', 2)[1]}/edit`}
+              >
                 Edit
-              </span> : null}
+              </a> : null}
             {this.props.user.username}
           </div>
         </div>

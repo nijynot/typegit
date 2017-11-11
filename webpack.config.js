@@ -7,8 +7,9 @@ const config = {
     // App: './views/',
     // FrontPage: './views/client-pages/FrontPage.js',
     HomePage: './views/client-pages/HomePage.js',
-    MemoryPage: './views/client-pages/MemoryPage.js',
     DraftingPage: './views/client-pages/DraftingPage.js',
+    MemoryPage: './views/client-pages/MemoryPage.js',
+    MemoryEditPage: './views/client-pages/MemoryEditPage.js',
     LoginPage: './views/client-pages/LoginPage.js',
   },
   output: {

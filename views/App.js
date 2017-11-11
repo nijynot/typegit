@@ -11,11 +11,12 @@ import Header from './components/Header.js';
 
 class App extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <div className="app">
         <Header
           user={this.props.viewer.me}
-          showEdit={this.props.viewer.me.id == this.props.viewer.memory.user.id}
+          showEdit={this.props.viewer.me.id === get(this.props, 'memory.memory.user.id')}
         />
         <div className="content">
           {this.props.children}
@@ -36,11 +37,15 @@ export default createFragmentContainer(App, {
         id
         username
       }
-      memory(id: $id) {
-        user {
-          id
-        }
+    }
+  `,
+  memory: graphql`
+  fragment App_memory on Viewer {
+    memory(id: $id) {
+      user {
+        id
       }
     }
+  }
   `,
 });

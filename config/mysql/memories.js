@@ -90,3 +90,19 @@ exports.deleteMemory = ({ id }) => {
     });
   });
 };
+
+exports.updateMemory = ({ id, title, body, created }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `update memories
+    set title = ?,
+    body = ?,
+    created = ?
+    where memory_id = ?;`;
+    sql = mysql.format(sql, [title, body, created, id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};

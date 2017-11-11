@@ -113,6 +113,9 @@ app.get('/new', (req, res) => {
 app.get('/:memory_id', (req, res) => {
   res.send(template({ title: 'Memory', script: 'MemoryPage.js' }));
 });
+app.get('/:memory_id/edit', (req, res) => {
+  res.send(template({ title: 'MemoryEdit', script: 'MemoryEditPage.js' }));
+});
 
 app.listen(PORT, () => {
   console.log(`NODE_ENV: ${process.env.NODE_ENV}`);

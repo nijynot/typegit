@@ -1,4 +1,5 @@
 @import "scss/spacing";
+@import "scss/buttons";
 
 .header {
 }
@@ -15,4 +16,20 @@
   font-size: $large;
 }
 .header-profile {
+}
+.header-edit-btn {
+  @include button();
+  padding: 5px 10px;
+  margin: 0 $small;
+  color: black;
+  // background-color: #222;
+  background-color: #fff;
+  border: 1px solid #000;
+  &:hover {
+    background-color: #ececec;
+    text-decoration: none;
+  }
+  &:active {
+    background-color: #bbb;
+  }
 }

@@ -9,7 +9,7 @@ import {
 import { modernEnvironment } from '../helpers.js';
 
 import App from '../App.js';
-import MemoryPage from '../pages/Memory/MemoryPage.js';
+import MemoryEditPage from '../pages/MemoryEdit/MemoryEditPage.js';
 
 const mountNode = document.getElementById('root');
 const memory_id = document.location.pathname.split('/', 2)[1];
@@ -18,11 +18,10 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query MemoryPageQuery($id: String!) {
+      query MemoryEditPageQuery($id: String!) {
         viewer {
-          ...App_viewer
-          ...App_memory
-          ...MemoryPage_viewer
+          ...App_viewer,
+          ...MemoryEditPage_viewer
         }
       }
     `}
@@ -30,11 +29,8 @@ ReactDOM.render(
     render={({ err, props }) => {
       if (props) {
         return (
-          <App
-            viewer={props.viewer}
-            memory={props.viewer}
-          >
-            <MemoryPage viewer={props.viewer} />
+          <App viewer={props.viewer}>
+            <MemoryEditPage viewer={props.viewer} />
           </App>
         );
       }

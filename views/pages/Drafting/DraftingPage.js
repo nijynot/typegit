@@ -9,7 +9,7 @@ import {
   graphql,
 } from 'react-relay';
 
-import Editor from './components/Editor.js';
+import Editor from 'global-components/Editor.js';
 
 import { NewMemoryMutation } from './mutations/NewMemoryMutation.js';
 

@@ -24,7 +24,7 @@ ReactDOM.render(
         }
       }
     `}
-    variables={{}}
+    variables={{ id: null }}
     render={({ err, props }) => {
       if (props) {
         console.log(props);
