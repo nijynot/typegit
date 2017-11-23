@@ -1,5 +1,6 @@
 @import "scss/spacing";
 @import "scss/buttons";
+@import "scss/colors";
 
 .header {
 }
@@ -16,11 +17,35 @@
   font-size: $large;
 }
 .header-profile {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+.header-new-btn {
+  display: inline-block;
+  border: 0;
+  padding: 0;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: sans-serif;
+  margin: 5px 16px 5px 5px;
+  color: black;
+  cursor: pointer;
+  background-color: transparent;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    color: $stripe-blue;
+    text-decoration: none;
+  }
+  &:active {
+    // background-color: #bbb;
+  }
 }
 .header-edit-btn {
   @include button();
+  display: inline-block;
   padding: 5px 10px;
-  margin: 0 $small;
+  margin-right: 5px;
   color: black;
   // background-color: #222;
   background-color: #fff;

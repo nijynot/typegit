@@ -29,10 +29,15 @@ ReactDOM.render(
       if (props) {
         console.log(props);
         return (
-          <App viewer={props.viewer}>
+          <App
+            viewer={props.viewer}
+            memory={null}
+          >
             <HomePage viewer={props.viewer} />
           </App>
         );
+      } else if (err) {
+        console.log(err);
       }
       return null;
     }}

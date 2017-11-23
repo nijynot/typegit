@@ -29,7 +29,10 @@ ReactDOM.render(
     render={({ err, props }) => {
       if (props) {
         return (
-          <App viewer={props.viewer}>
+          <App
+            viewer={props.viewer}
+            memory={null}
+          >
             <MemoryEditPage viewer={props.viewer} />
           </App>
         );

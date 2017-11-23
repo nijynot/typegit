@@ -11,7 +11,7 @@ import {
 import Editor from 'global-components/Editor.js';
 
 import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
-// import { EditMemoryMutation } from './mutations/EditMemoryMutation.js';
+import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
 
 class MemoryEditPage extends React.Component {
   constructor(props) {
@@ -19,18 +19,20 @@ class MemoryEditPage extends React.Component {
     this.state = {
       title: this.props.viewer.memory.title,
       body: this.props.viewer.memory.body,
-      created: new Date(),
+      created: this.props.viewer.memory.created,
+      save: false,
     };
     this.onChange = this.onChange.bind(this);
     this.onChangeEditor = this.onChangeEditor.bind(this);
     this.deleteMemoryMutation = this.deleteMemoryMutation.bind(this);
-    // this.editMemoryMutation = this.editMemoryMutation.bind(this);
+    this.updateMemoryMutation = this.updateMemoryMutation.bind(this);
     this.getState = this.getState.bind(this);
   }
   componentDidMount() {
     window.onbeforeunload = () => {
-      if (this.state.body !== this.props.viewer.memory.body
-      || this.state.title !== this.props.viewer.memory.title) {
+      if ((this.state.body !== this.props.viewer.memory.body
+      || this.state.title !== this.props.viewer.memory.title)
+      && !this.state.save) {
         return 'Unsaved changes.';
       }
       return;
@@ -55,18 +57,23 @@ class MemoryEditPage extends React.Component {
       });
     }
   }
-  // editMemoryMutation() {
-  //   const { title, body } = this.state;
-  //   EditMemoryMutation({
-  //     environment: this.props.relay.environment,
-  //     title,
-  //     body,
-  //     created: Date.UTC(this.state.created),
-  //   });
-  // }
+  updateMemoryMutation() {
+    const { title, body, created } = this.state;
+    UpdateMemoryMutation({
+      environment: this.props.relay.environment,
+      id: this.props.viewer.memory.id,
+      title,
+      body,
+      created,
+    }, () => {
+      this.setState({ save: true }, () => {
+        document.location.href = `/${this.props.viewer.memory.id}`;
+      });
+    });
+  }
   render() {
     return (
-      <div className="memoryeditpage">
+      <div className="memoryeditpage clearfix">
         <div>
           <input
             name="title"
@@ -77,7 +84,7 @@ class MemoryEditPage extends React.Component {
             onChange={this.onChange}
           />
         </div>
-        <div className="memoryedit-editor">
+        <div className="memoryedit-editor clearfix">
           <Editor
             value={this.state.body}
             onChange={this.onChangeEditor}
@@ -85,15 +92,15 @@ class MemoryEditPage extends React.Component {
           />
           <button
             className="memoryedit-btn memory right"
-            // onClick={this.newMemoryMutation}
+            onClick={this.updateMemoryMutation}
           >
-            Save as Memory
+            Save Memory
           </button>
           <button
             className="memoryedit-btn draft right"
             onClick={this.getState}
           >
-            Save as Draft
+            Save Draft
           </button>
           <input
             name="created"

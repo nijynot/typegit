@@ -38,6 +38,7 @@ function createLoaders() {
   return {
     UserLoader: loaders.UserLoader.getLoader(),
     MemoryLoader: loaders.MemoryLoader.getLoader(),
+    TagLoader: loaders.TagLoader.getLoader(),
   };
 }
 

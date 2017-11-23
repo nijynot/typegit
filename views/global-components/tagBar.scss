@@ -1,0 +1,17 @@
+@import "scss/border-radius";
+@import "scss/spacing";
+
+.tagbar {
+  @include border-radius(3px);
+  border: 1px #ccc solid;
+  width: 100%;
+  padding: 4px;
+  margin-top: $tiny;
+}
+.tagbar-tag {
+  margin-right: $tiny;
+}
+.tagbar-ctrl {
+  border: none;
+  outline: 0;
+}

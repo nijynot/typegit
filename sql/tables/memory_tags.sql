@@ -11,3 +11,10 @@ create table memory_tags (
     on update cascade
     on delete cascade
 ) engine=innodb;
+
+insert into memory_tags (
+  memory_id,
+  tag_id
+) values (
+  'PGBnC3HHvmwh', 1
+);

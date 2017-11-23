@@ -11,6 +11,7 @@ import {
 } from 'graphql';
 
 import get from 'lodash/get';
+import { fromGlobalId } from 'graphql-base64';
 
 import mysql from '../../config/mysql.js';
 import { memoryType } from '../types/memoryType.js';
@@ -36,16 +37,17 @@ export const updateMemoryMutation = {
     },
   },
   resolve: (request, args, context) => {
+    const { id } = fromGlobalId(args.id);
     if (isLoggedIn(context)) {
       return mysql.getMemoryByIdAndUserId({
-        id: args.id,
+        id,
         user_id: context.user.user_id,
       })
       .then((res) => {
         const user_id = get(res, '[0].user_id');
         if (isOwner(context, user_id)) {
           return mysql.updateMemory({
-            id: args.id,
+            id,
             title: args.title,
             body: args.body,
             created: args.created,

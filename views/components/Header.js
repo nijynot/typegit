@@ -11,16 +11,19 @@ class Header extends React.Component {
               DIARY
             </a>
           </span>
-          <div className="header-profile right">
-            {(this.props.showEdit) ?
-              <a
-                className="header-edit-btn"
-                href={`/${document.location.pathname.split('/', 2)[1]}/edit`}
-              >
-                Edit
-              </a> : null}
-            {this.props.user.username}
-          </div>
+        </div>
+        <div className="header-profile right">
+          {(this.props.showEdit) ?
+            <a
+              href={`/${document.location.pathname.split('/', 2)[1]}/edit`}
+              className="header-edit-btn"
+            >
+              Edit
+            </a> : null}
+          <a href="/new" className="header-new-btn">
+            + New Memory
+          </a>
+          {this.props.user.username}
         </div>
       </div>
     );

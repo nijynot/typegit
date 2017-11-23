@@ -9,8 +9,8 @@ export function fetchQuery(
   operation,
   variables
 ) {
-  console.log(operation);
-  console.log(variables);
+  // console.log(operation);
+  // console.log(variables);
   return fetch('/graphql', {
     method: 'POST',
     credentials: 'same-origin',

@@ -1,11 +1,22 @@
 create table tags (
-  tag_id int(12) unsigned not null auto_increment,
-  label varchar(39) not null,
-  color char(6) not null,
-  user_id int(12) unsigned not null,
-  primary key (tag_id),
-  foreign key (user_id)
-  references users(user_id)
+  tag varchar(255) not null,
+  memory_id char(12) collate utf8mb4_bin not null,
+  created datetime not null default now(),
+  primary key (tag, memory_id),
+  foreign key (memory_id)
+  references memories(memory_id)
     on update cascade
     on delete cascade
 ) engine=innodb;
+
+insert into tags (
+  tag, memory_id
+) values (
+  'slice-of-life', 'PGBnC3HHvmwh'
+);
+
+insert into tags (
+  tag, memory_id
+) values (
+  'tech', 'PGBnC3HHvmwh'
+);

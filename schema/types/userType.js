@@ -10,14 +10,17 @@ import {
 } from 'graphql';
 
 import get from 'lodash/get';
+import { globalIdField } from 'graphql-base64';
 import mysql from '../../config/mysql.js';
+
+import { tagType } from './tagType.js';
+
+import { Tag } from '../loaders/TagLoader.js';
 
 export const userType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: {
-      type: GraphQLID,
-    },
+    id: globalIdField(),
     username: {
       type: GraphQLString,
     },
@@ -28,6 +31,16 @@ export const userType = new GraphQLObjectType({
           return rootValue.email;
         }
         return null;
+      },
+    },
+    tags: {
+      type: new GraphQLList(tagType),
+      resolve: async (rootValue, args, context) => {
+        const tags = await mysql.getTagIdsByUserId({
+          user_id: context.user.user_id,
+        })
+        .then(rows => rows.map(row => Tag.gen(context, row.id)));
+        return tags;
       },
     },
   }),

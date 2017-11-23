@@ -11,6 +11,7 @@ import {
 } from 'graphql';
 
 import get from 'lodash/get';
+import { globalIdField } from 'graphql-base64';
 
 import mysql from '../../config/mysql.js';
 
@@ -23,9 +24,7 @@ import { Memory } from '../loaders/MemoryLoader.js';
 export const viewerType = new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
-    id: {
-      type: GraphQLID,
-    },
+    id: globalIdField(),
     me: {
       type: userType,
       resolve: (rootValue, _, session) => {

@@ -41,7 +41,7 @@ class Editor extends React.Component {
     }
   }
   showActions() {
-    console.log(this.state);
+    // console.log(this.state);
     this.setState({ showActions: true });
   }
   renderBody() {
