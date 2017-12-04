@@ -10,11 +10,13 @@ import {
   GraphQLString,
 } from 'graphql';
 
+import _ from 'lodash';
 import { randexp } from 'randexp';
 
 import mysql from '../../config/mysql.js';
 import { memoryType } from '../types/memoryType.js';
 import { isLoggedIn } from '../helpers.js';
+import twitter from '../../utils/twitter-text.js';
 
 export const newMemoryMutation = {
   type: memoryType,
@@ -43,13 +45,20 @@ export const newMemoryMutation = {
         user_id: session.user.user_id,
       })
       .then(() => {
+        const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(args.body)));
+        return Promise.all([
+          hashtags.map(hashtag => mysql.insertTag({
+            tag: hashtag,
+            memory_id: randid,
+          })),
+        ]);
+      })
+      .then(() => {
         return mysql.getMemoryByIdAndUserId({
           id: randid,
           user_id: session.user.user_id,
         })
-        .then((value) => {
-          return value[0];
-        });
+        .then(value => value[0]);
       });
     }
     return null;

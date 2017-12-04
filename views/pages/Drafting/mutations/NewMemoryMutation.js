@@ -25,7 +25,6 @@ exports.NewMemoryMutation = ({ environment, title, body, created }) => {
       title
       body
       created
-      tags {id}
     }
   }`;
 

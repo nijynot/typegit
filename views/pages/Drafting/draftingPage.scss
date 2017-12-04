@@ -7,6 +7,12 @@
   position: relative;
   width: 700px;
 }
+.drafting-hint {
+  color: #ccc;
+  font-size: 10px;
+  margin-bottom: 2px;
+  font-family: monospace;
+}
 .drafting-title-label {
   font-family: "NeueHaasGroteskDisp";
   font-weight: 500;
@@ -29,6 +35,9 @@
   margin-bottom: $tiny;
   font-size: 42px;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);
+}
+.drafting-action {
+  margin-right: $small;
 }
 .drafting-editor {
 }
@@ -84,3 +93,38 @@
     background-color: #981b1d;
   }
 }
+.dummyclass {
+  // @include border-radius(3px);
+  border: 0;
+  // padding: 4px;
+  font-size: 21px;
+  resize: none;
+  width: 700px;
+  // height: 100vh;
+  outline: 0;
+  padding: $tiny;
+  &:focus {
+    outline: 2px dashed #efefef;
+  }
+  box-sizing: content-box;
+}
+.drafting-actions-btn {
+  fill: #666;
+  width: 32px;
+  border: 0;
+  background-color: transparent;
+  font-family: serif;
+  font-size: 16px;
+  padding: 0;
+  cursor: pointer;
+  outline: 0;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  vertical-align: top;
+  &:hover {
+    fill: black;
+  }
+}
+// .drafting-svg-icon {
+//   position: relative;
+//   top: -2px;
+// }

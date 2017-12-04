@@ -7,6 +7,7 @@ import {
 } from 'react-relay';
 
 import CompactMemoryItem from './components/CompactMemoryItem.js';
+import MetaPortal from 'global-components/MetaPortal.js';
 
 class HomePage extends React.Component {
   render() {
@@ -16,6 +17,7 @@ class HomePage extends React.Component {
         {this.props.viewer.memories.map((memory) => {
           return (
             <CompactMemoryItem
+              key={memory.id}
               memory={memory}
             />
             // <div>
@@ -23,6 +25,11 @@ class HomePage extends React.Component {
             // </div>
           );
         })}
+        <MetaPortal>
+          <a href="/new" className="home-new-link right text">
+            + New Memory
+          </a>
+        </MetaPortal>
       </div>
     );
   }
@@ -40,11 +47,7 @@ export default createFragmentContainer(HomePage, {
         title
         body
         created
-        tags {
-          id
-          label
-          color
-        }
+        tags
       }
     }
   `,

@@ -18,3 +18,5 @@ module.exports = ({ script, title }) => {
   </html>
   `;
 };
+
+// <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.css" />

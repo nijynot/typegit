@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import format from 'date-fns/format';
+import { fromGlobalId } from 'graphql-base64';
 // import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 import moment from 'moment';
 
@@ -18,7 +19,7 @@ class CompactMemoryItem extends React.Component {
           'no-title': !this.props.memory.title,
         })}
         >
-          <a href={`/${this.props.memory.id}`}>
+          <a href={`/${fromGlobalId(this.props.memory.id).id}`}>
             {this.props.memory.title || '~ no title ~'}
           </a>
         </span>

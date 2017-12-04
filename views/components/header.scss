@@ -3,23 +3,58 @@
 @import "scss/colors";
 
 .header {
-}
-.header-top {
+  display: flex;
+  font-size: 18px;
+  height: 65px;
   margin: 0 auto;
+  position: relative;
   text-align: center;
   width: 980px;
-  margin-top: $small;
-  margin-bottom: $small;
+  align-items: center;
 }
 .header-heading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
   font-family: 'NeueHaasGroteskDisp';
   font-weight: 700;
-  font-size: $large;
+  font-size: 34px;
+  margin: 0 auto;
+  width: 110px;
+}
+.header-logo {
+  position: relative;
+  display: inline-block;
+  padding-top: 12px;
+}
+.header-metabar {
+  flex: 1 1 auto;
+  z-index: 500;
+  // height: 65px;
+}
+.header-actions {
+  display: flex!important;
+  align-items: center!important;
+}
+.header-actions .text {
+  line-height: 1;
+  display: block;
+  margin-top: 25px;
+}
+.header-actions .dots {
+  line-height: 1;
+  display: block;
+  margin-top: 22px;
+  height: 22px;
 }
 .header-profile {
-  position: absolute;
-  right: 16px;
-  top: 16px;
+  cursor: pointer;
+  font-size: 16px;
+  height: 65px;
+}
+#header-portal {
+  height: 65px;
 }
 .header-new-btn {
   display: inline-block;

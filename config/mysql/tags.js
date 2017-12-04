@@ -20,30 +20,12 @@ exports.getTagsByIds = ({ ids }) => {
   });
 };
 
-exports.getTagByIdAndUserId = ({ id, user_id }) => {
+exports.getTagsByMemoryId = ({ memory_id }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
-    m.tag_id as id,
-    m.label,
-    m.color,
-    m.user_id
-    from memories m
-    where tag_id = ? and user_id = ?;`;
-    sql = mysql.format(sql, [id, user_id]);
-
-    connection.query(sql, (err, results) => {
-      if (err) reject(err);
-      resolve(results);
-    });
-  });
-};
-
-exports.getTagIdsByMemoryId = ({ memory_id }) => {
-  return new Promise((resolve, reject) => {
-    let sql = `select
-    mt.tag_id as id
-    from memory_tags mt
-    where mt.memory_id = ?;`;
+    t.tag
+    from tags t
+    where t.memory_id = ?;`;
     sql = mysql.format(sql, [memory_id]);
 
     connection.query(sql, (err, results) => {
@@ -53,13 +35,27 @@ exports.getTagIdsByMemoryId = ({ memory_id }) => {
   });
 };
 
-exports.getTagIdsByUserId = ({ user_id }) => {
+exports.getTagsByUserId = ({ user_id }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
-    t.tag_id as id
+    t.tag
     from tags t
     where t.user_id = ?;`;
     sql = mysql.format(sql, [user_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.insertTag = ({ tag, memory_id }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `insert into tags (
+      tag, memory_id
+    ) values (?, ?);`;
+    sql = mysql.format(sql, [tag, memory_id]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

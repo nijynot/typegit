@@ -17,11 +17,10 @@ import mysql from '../../config/mysql.js';
 export const tagType = new GraphQLObjectType({
   name: 'Tag',
   fields: () => ({
-    id: globalIdField(),
     label: {
       type: GraphQLString,
     },
-    color: {
+    created: {
       type: GraphQLString,
     },
   }),

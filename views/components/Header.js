@@ -5,25 +5,24 @@ class Header extends React.Component {
   render() {
     return (
       <div className="header">
-        <div className="header-top">
+        <div className="header-metabar clearfix">
           <span className="header-heading">
-            <a href="/">
+            <a
+              href="/"
+              className="header-logo"
+            >
               DIARY
             </a>
           </span>
-        </div>
-        <div className="header-profile right">
-          {(this.props.showEdit) ?
-            <a
-              href={`/${document.location.pathname.split('/', 2)[1]}/edit`}
-              className="header-edit-btn"
-            >
-              Edit
-            </a> : null}
-          <a href="/new" className="header-new-btn">
-            + New Memory
-          </a>
-          {this.props.user.username}
+          <div className="header-actions right">
+            <div id="header-portal" className="right">
+            </div>
+            <div className="header-profile right">
+              <span className="text">
+                {this.props.user.username}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     );

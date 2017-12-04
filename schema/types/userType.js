@@ -34,13 +34,12 @@ export const userType = new GraphQLObjectType({
       },
     },
     tags: {
-      type: new GraphQLList(tagType),
+      type: new GraphQLList(GraphQLString),
       resolve: async (rootValue, args, context) => {
-        const tags = await mysql.getTagIdsByUserId({
-          user_id: context.user.user_id,
+        return mysql.getTagsByUserId({
+          user_id: rootValue.id,
         })
-        .then(rows => rows.map(row => Tag.gen(context, row.id)));
-        return tags;
+        .then(rows => rows.map(row => row.tag));
       },
     },
   }),

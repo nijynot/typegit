@@ -16,9 +16,6 @@ exports.UpdateMemoryMutation = ({ environment, id, title, body, created }, cb) =
       title
       body
       created
-      tags {
-        id
-      }
     }
   }`;
 

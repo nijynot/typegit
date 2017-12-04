@@ -11,7 +11,7 @@ import {
 } from 'graphql';
 
 import get from 'lodash/get';
-import { globalIdField } from 'graphql-base64';
+import { globalIdField, fromGlobalId } from 'graphql-base64';
 
 import mysql from '../../config/mysql.js';
 

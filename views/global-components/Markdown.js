@@ -48,7 +48,7 @@ class Markdown extends React.Component {
     } else if (this.props.format === 'inline') {
       html = this.md.renderInline(source);
     }
-    return <span dangerouslySetInnerHTML={{ __html: html }} />;
+    return <span className="markdown-body" dangerouslySetInnerHTML={{ __html: html }} />;
   }
 }
 

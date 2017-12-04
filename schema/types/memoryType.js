@@ -40,13 +40,12 @@ export const memoryType = new GraphQLObjectType({
       },
     },
     tags: {
-      type: new GraphQLList(tagType),
+      type: new GraphQLList(GraphQLString),
       resolve: async (rootValue, args, context) => {
-        const tag_ids = await mysql.getTagIdsByMemoryId({
+        return mysql.getTagsByMemoryId({
           memory_id: rootValue.id,
         })
-        .then(rows => rows.map(row => Tag.gen(context, row.id)));
-        return tag_ids;
+        .then(rows => rows.map(row => row.tag));
       },
     },
   }),

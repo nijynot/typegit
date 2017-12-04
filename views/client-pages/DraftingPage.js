@@ -13,13 +13,14 @@ import DraftingPage from '../pages/Drafting/DraftingPage.js';
 
 const mountNode = document.getElementById('root');
 
+
 ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
       query DraftingPageQuery {
         viewer {
-          ...App_viewer,
+          ...App_viewer
           ...DraftingPage_viewer
         }
       }
@@ -32,7 +33,9 @@ ReactDOM.render(
             viewer={props.viewer}
             memory={null}
           >
-            <DraftingPage viewer={props.viewer} />
+            <DraftingPage
+              viewer={props.viewer}
+            />
           </App>
         );
       }

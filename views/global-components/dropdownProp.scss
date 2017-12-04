@@ -1,0 +1,21 @@
+.dropdownprop {
+  position: relative;
+  width: auto;
+  height: auto;
+  // line-height: normal;
+  // display: block;
+  // position: absolute;
+  // top: 100%;
+  // z-index: 100;
+  // border: 1px solid rgba(27,31,35,0.15);
+  // box-shadow: 0 3px 12px rgba(27,31,35,0.15);
+}
+.dropdownprop-menu {
+  position: absolute;
+  z-index: 900;
+  line-height: initial;
+  // top: calc(100% - -10px - 2px);
+  // left: auto;
+  // right: calc(50% - 10px - 9px);
+  // background-clip: padding-box;
+}
