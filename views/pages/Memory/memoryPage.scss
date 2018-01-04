@@ -1,22 +1,36 @@
+@import "scss/colors";
 @import "scss/spacing";
 
 .memorypage {
-  margin: 0 auto;
+  margin: $large auto;
   width: 700px;
 }
 .memory-title {
-  font-size: 42px;
+  font-size: 46px;
   font-weight: 700;
+  font-family: "Garamond";
+  color: $deep-grey;
   // text-align: center;
+}
+.memory-timestamp {
+  color: $lightgrey;
+  font-size: 13px;
+  font-family: "Open Sans";
 }
 .memory-body {
   padding-top: $small;
   padding-bottom: $large;
-  font-size: 21px;
+  // font-size: px;
   line-height: 1.35;
+}
+.memory-count {
+  // margin-top: 22px;
+  // font-weight: 700;
 }
 .memory-edit-btn {
   font-size: 16px;
   font-weight: 700;
   margin-right: $small;
+  margin-top: 21px;
+  line-height: 24px;
 }

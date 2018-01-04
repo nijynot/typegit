@@ -1,8 +1,25 @@
 @import "scss/spacing";
 
+.homepage {
+  width: 700px;
+  margin: $small auto $small auto;
+}
 .home-new-link {
   // z-index: 1000;
-  margin-right: 12px;
-  font-size: 16px;
-  font-weight: 700;
+  // margin-right: 12px;
+  // font-size: 16px;
+  // font-weight: 700;
+}
+.home-tag {
+  margin-right: $tiny;
+  &:hover {
+    background-color: white;
+    color: blue;
+  }
+}
+.home-tag-count {
+  font-family: "Overpass Mono";
+  margin-left: 2px;
+  font-weight: 400;
+  padding: 3px 3px 0 3px;
 }

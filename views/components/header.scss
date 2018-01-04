@@ -10,50 +10,73 @@
   position: relative;
   text-align: center;
   width: 980px;
-  align-items: center;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  opacity: 1;
+  top: 0;
+  // align-items: center;
+}
+.header.hide {
+  opacity: 0.1;
 }
 .header-heading {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   top: 0;
-  right: 0;
-  left: 0;
   font-family: 'NeueHaasGroteskDisp';
   font-weight: 700;
   font-size: 34px;
   margin: 0 auto;
-  width: 110px;
 }
 .header-logo {
   position: relative;
   display: inline-block;
   padding-top: 12px;
+  z-index: 700;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    opacity: 1;
+  }
+}
+.header-container {
+  flex: 1 1 auto;
 }
 .header-metabar {
-  flex: 1 1 auto;
-  z-index: 500;
-  // height: 65px;
-}
-.header-actions {
+  width: 100%;
+  height: 100%;
   display: flex!important;
-  align-items: center!important;
+  justify-content: flex-end;
 }
-.header-actions .text {
-  line-height: 1;
-  display: block;
-  margin-top: 25px;
+// .header-metabar .text {
+//   line-height: 1;
+//   display: block;
+//   margin-top: 18px;
+//   cursor: pointer;
+// }
+.header-not-logged {
+  z-index: 500;
+  font-size: 16px;
 }
-.header-actions .dots {
-  line-height: 1;
-  display: block;
-  margin-top: 22px;
-  height: 22px;
+.header-action {
+  cursor: pointer;
+  margin-top: 21px;
+  line-height: 24px;
+  margin-left: $small;
 }
 .header-profile {
-  cursor: pointer;
+  z-index: 500;
   font-size: 16px;
-  height: 65px;
+}
+.header-username {
+  cursor: pointer;
+  margin-top: 21px;
+  line-height: 24px;
 }
 #header-portal {
+  z-index: 500;
+  width: 100%;
   height: 65px;
 }
 .header-new-btn {
@@ -62,7 +85,7 @@
   padding: 0;
   font-weight: 700;
   font-size: 13px;
-  font-family: sans-serif;
+  font-family: Georgia;
   margin: 5px 16px 5px 5px;
   color: black;
   cursor: pointer;

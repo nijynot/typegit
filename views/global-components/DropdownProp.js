@@ -31,7 +31,7 @@ class DropdownProp extends React.Component {
         className={classNames('dropdownprop', this.props.containerClassName)}
         ref={(input) => { this.area = input; }}
       >
-        {this.props.toogle(this.openDropdown)}
+        {this.props.toggle(this.openDropdown)}
         {(this.state.dropdownIsActive) ?
 
           <div
@@ -46,7 +46,7 @@ class DropdownProp extends React.Component {
 }
 
 DropdownProp.propTypes = {
-  toogle: PropTypes.func.isRequired,
+  toggle: PropTypes.func.isRequired,
   className: PropTypes.string,
   containerClassName: PropTypes.string,
 };

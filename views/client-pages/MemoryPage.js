@@ -21,7 +21,6 @@ ReactDOM.render(
       query MemoryPageQuery($id: String!) {
         viewer {
           ...App_viewer
-          ...App_memory
           ...MemoryPage_viewer
         }
       }
@@ -32,7 +31,6 @@ ReactDOM.render(
         return (
           <App
             viewer={props.viewer}
-            memory={props.viewer}
           >
             <MemoryPage viewer={props.viewer} />
           </App>

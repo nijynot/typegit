@@ -1,0 +1,92 @@
+@import "scss/border-radius";
+@import "scss/btn";
+@import "scss/colors";
+@import "scss/spacing";
+
+.settingsaccountpage {
+}
+.settingsaccountpage h1 {
+  color: $deep-grey;
+  font-family: "Garamond";
+  font-size: 46px;
+  font-weight: 700;
+}
+.settingsaccount-avatar-container {
+  text-align: center;
+}
+.settingsaccount-avatar {
+  @include border-radius(50%);
+  display: block;
+  margin: $small auto;
+  border: 3px solid $light-nude;
+  padding: 2px;
+  height: 150px;
+  width: 150px;
+}
+.settingsaccount-upload-success {
+  @include border-radius(3px);
+  background-color: rgba(34, 195, 91, .1);
+  border: 1px solid $stripegreen;
+  color: $stripegreen;
+  display: inline-block;
+  margin-bottom: $tiny;
+  padding: $tiny;
+}
+.settingsaccount-avatar-ctrl {
+  @include border-radius(3px);
+  width: 250px;
+  margin-right: $tiny;
+  border: 1px dashed $lightgrey;
+  padding: $tiny;
+  outline: 0;
+  font-family: monospace;
+  cursor: pointer;
+}
+.settingsaccount-upload-btn {
+  @include btn;
+  @include border-radius(20px);
+  background-color: $nude;
+  border: 0;
+  color: black;
+  font-family: "Open Sans";
+  font-weight: 700;
+  padding: $tiny $small;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}
+.settingsaccount-upload-label {
+  font-family: "Open Sans";
+  margin-left: 4px;
+}
+.settingsaccount-ctrl {
+  @include border-radius(3px);
+  border: 1px solid $lightgrey;
+  font-family: "Source Sans Pro";
+  font-size: 15px;
+  padding: 6px $tiny;
+  outline: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 250px;
+  &:focus {
+    box-shadow: 0 0 0 2px $nude;
+    border-color: $nude;
+  }
+}
+.settingsaccount-save-btn {
+  @include btn;
+  @include border-radius(20px);
+  background-color: $nude;
+  border: 0;
+  color: black;
+  font-family: "Open Sans";
+  font-weight: 700;
+  padding: $tiny $small;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}

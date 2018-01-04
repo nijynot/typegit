@@ -20,7 +20,7 @@ ReactDOM.render(
     query={graphql`
       query MemoryEditPageQuery($id: String!) {
         viewer {
-          ...App_viewer,
+          ...App_viewer
           ...MemoryEditPage_viewer
         }
       }
@@ -31,7 +31,6 @@ ReactDOM.render(
         return (
           <App
             viewer={props.viewer}
-            memory={null}
           >
             <MemoryEditPage viewer={props.viewer} />
           </App>

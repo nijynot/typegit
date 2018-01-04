@@ -3,7 +3,7 @@
 @import "scss/buttons";
 
 .memoryeditpage {
-  margin: 0 auto 128px auto;
+  margin: $large auto;
   position: relative;
   width: 700px
 }
@@ -23,12 +23,14 @@
   border-left: none;
   border-right: none;
   border-bottom: 2px solid #fff;
-  outline: none;
-  // padding: 5px;
-  width: 100%;
+  color: $deep-grey;
+  font-family: "Garamond";
+  font-weight: 700;
+  font-size: 46px;
   margin-bottom: $tiny;
-  font-size: 42px;
+  outline: none;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  width: 100%;
 }
 .memoryedit-editor {
   margin-bottom: 64px;

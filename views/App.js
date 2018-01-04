@@ -16,7 +16,6 @@ class App extends React.Component {
       <div className="app">
         <Header
           user={this.props.viewer.me}
-          showEdit={this.props.viewer.me.id === get(this.props, 'memory.memory.user.id')}
         />
         <div className="content">
           {this.props.children}
@@ -36,16 +35,8 @@ export default createFragmentContainer(App, {
       me {
         id
         username
+        heading
       }
     }
-  `,
-  memory: graphql`
-  fragment App_memory on Viewer {
-    memory(id: $id) {
-      user {
-        id
-      }
-    }
-  }
   `,
 });

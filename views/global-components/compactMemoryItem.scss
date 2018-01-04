@@ -1,0 +1,46 @@
+@import "scss/colors";
+@import "scss/spacing";
+
+.compactmemoryitem {
+  margin: 0 auto 4px auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 700px;
+  vertical-align: baseline;
+}
+.compactmemoryitem-created {
+  // padding-right: $tiny;
+  font-size: 10px;
+  color: $lightgrey;
+  opacity: 1;
+  font-family: "Open Sans";
+}
+.compactmemoryitem-title {
+  // &:before {
+  //   font-weight: 400;
+  //   content: "\00b7";
+  //   margin: 0 4px;
+  //   color: black;
+  //   opacity: 1!important;
+  // }
+  font-family: "Garamond";
+  font-size: 18px;
+  vertical-align: baseline;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.compactmemoryitem-title.no-title {
+  color: #aaa;
+  font-style: italic;
+  opacity: 0.5;
+}
+.compactmemoryitem-body {
+  color: #333;
+  opacity: 1;
+}
+.compactmemoryitem-body.no-body {
+  color: #000;
+  font-style: italic;
+  opacity: 0.5;
+}

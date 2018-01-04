@@ -1,0 +1,16 @@
+@import "scss/btn";
+@import "scss/colors";
+@import "scss/spacing";
+
+.homememories-load-btn {
+  @include btn;
+  display: block;
+  width: 100%;
+  padding: $tiny 0;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  margin-top: $tiny;
+  cursor: pointer;
+  font-family: "Open Sans";
+  font-weight: 600;
+}

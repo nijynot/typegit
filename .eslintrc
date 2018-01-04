@@ -27,7 +27,9 @@
     "indent": ["error", 2, { "MemberExpression": 0 }],
     "react/prop-types": [1, { ignore: [children] }],
     "react/prefer-stateless-function": 0,
-    "import/no-extraneous-dependencies": 0
+    "import/no-extraneous-dependencies": 0,
+    "no-underscore-dangle": 0,
+    "class-methods-use-this": 0
   },
   "extends": "airbnb",
   "env": {

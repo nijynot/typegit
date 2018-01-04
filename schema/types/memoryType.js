@@ -10,11 +10,16 @@ import {
 } from 'graphql';
 
 import { globalIdField } from 'graphql-base64';
+import {
+  connectionDefinitions,
+  connectionArgs,
+  connectionFromArray,
+} from 'graphql-connection';
 import mysql from '../../config/mysql.js';
 
 import { isOwner } from '../helpers.js';
 import { userType } from './userType.js';
-import { tagType } from './tagType.js';
+import { tagType, tagConnection } from './tagType.js';
 
 // import { Memory } from '../loaders/MemoryLoader.js';
 import { User } from '../loaders/UserLoader.js';
@@ -40,13 +45,18 @@ export const memoryType = new GraphQLObjectType({
       },
     },
     tags: {
-      type: new GraphQLList(GraphQLString),
+      type: new GraphQLList(tagType),
       resolve: async (rootValue, args, context) => {
-        return mysql.getTagsByMemoryId({
+        const array = await mysql.getTagsByMemoryId({
           memory_id: rootValue.id,
-        })
-        .then(rows => rows.map(row => row.tag));
+        });
+        return array;
       },
     },
   }),
+});
+
+export const memoryConnection = connectionDefinitions({
+  name: 'MemoryConnection',
+  type: memoryType,
 });

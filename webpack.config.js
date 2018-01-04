@@ -6,11 +6,18 @@ const config = {
   entry: {
     // App: './views/',
     // FrontPage: './views/client-pages/FrontPage.js',
+    LandingPage: './views/client-pages/LandingPage.js',
     HomePage: './views/client-pages/HomePage.js',
     DraftingPage: './views/client-pages/DraftingPage.js',
     MemoryPage: './views/client-pages/MemoryPage.js',
     MemoryEditPage: './views/client-pages/MemoryEditPage.js',
     LoginPage: './views/client-pages/LoginPage.js',
+    RegisterPage: './views/client-pages/RegisterPage.js',
+    TagPage: './views/client-pages/TagPage.js',
+    InsightsPage: './views/client-pages/InsightsPage.js',
+    SettingsAccountPage: './views/client-pages/SettingsAccountPage.js',
+    SettingsPasswordPage: './views/client-pages/SettingsPasswordPage.js',
+    SettingsSubscriptionPage: './views/client-pages/SettingsSubscriptionPage.js',
   },
   output: {
     path: path.resolve(__dirname, './public/js'),
@@ -55,6 +62,7 @@ const config = {
     // modulesDirectories: ['scss', 'views/global-components', 'config', 'node_modules'],
     alias: {
       'global-components': path.resolve(__dirname, 'views/global-components'),
+      'twitter-text': path.resolve('./utils/twitter-text.js'),
       // config: path.resolve('./config'),
       // pages: path.resolve('./views/pages'),
       // 'twitter-text': path.resolve('./config/twitter-text.js'),

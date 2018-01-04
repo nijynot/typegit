@@ -9,10 +9,14 @@ import {
 import { fromGlobalId } from 'graphql-base64';
 import partial from 'lodash/partial';
 import stringLength from 'string-length';
+import autosize from 'autosize';
+import classNames from 'classnames';
+import Mousetrap from 'mousetrap';
 
 import Editor from 'global-components/Editor.js';
 import MetaPortal from 'global-components/MetaPortal.js';
 import DropdownProp from 'global-components/DropdownProp.js';
+import Markdown from 'global-components/Markdown.js';
 
 import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
 import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
@@ -21,13 +25,13 @@ class MemoryEditPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      preview: false,
       title: this.props.viewer.memory.title,
       body: this.props.viewer.memory.body,
       created: this.props.viewer.memory.created,
       save: false,
     };
     this.onChange = this.onChange.bind(this);
-    this.onChangeEditor = this.onChangeEditor.bind(this);
     this.deleteMemoryMutation = this.deleteMemoryMutation.bind(this);
     this.updateMemoryMutation = this.updateMemoryMutation.bind(this);
     this.getState = this.getState.bind(this);
@@ -41,12 +45,19 @@ class MemoryEditPage extends React.Component {
       }
       return;
     };
+    autosize(document.querySelector('.dummyclass'));
+    Mousetrap.bind(['command+p', 'ctrl+p'], () => {
+      this.setState({ preview: !this.state.preview });
+      return false;
+    });
   }
   onChange(e, key) {
-    this.setState({ [key]: e.target.value });
-  }
-  onChangeEditor({ value }) {
-    this.setState({ body: value });
+    console.log(key);
+    if (key === 'preview') {
+      this.setState({ preview: !this.state.preview });
+    } else {
+      this.setState({ [key]: e.target.value });
+    }
   }
   getState() {
     console.log(this.state);
@@ -91,78 +102,60 @@ class MemoryEditPage extends React.Component {
           />
         </div>
         <div className="memoryedit-editor clearfix">
-          <textarea
-            className="dummyclass"
-            value={this.state.body}
-            onChange={partial(this.onChange, partial.placeholder, 'body')}
-            placeholder="What's on your mind?"
-          />
-          {/* <Editor
-            value={this.state.body}
-            onChange={this.onChangeEditor}
-            rows="16"
-          />
-          <button
-            className="memoryedit-btn memory right"
-            onClick={this.updateMemoryMutation}
-          >
-            Save Memory
-          </button>
-          <button
-            className="memoryedit-btn draft right"
-            onClick={this.getState}
-          >
-            Save Draft
-          </button>
-          <input
-            name="created"
-            className="memoryedit-date-ctrl right"
-            onChange={this.onChange}
-            placeholder="YYYY-MM-DD HH:mm:ss"
-            value={format(this.state.created, 'YYYY-MM-DD HH:mm:ss')}
-            // type="number"
-          />
-          <a
-            className="memoryedit-btn cancel left"
-            href="/"
-          >
-            cancel
-          </a>
-          <button
-            className="memoryedit-btn cancel left"
-            onClick={this.deleteMemoryMutation}
-          >
-            Delete Memory
-          </button> */}
+          {(this.state.preview) ?
+            <Markdown source={this.state.body || ''} /> :
+            <Editor
+              value={this.state.body}
+              onChange={partial(this.onChange, partial.placeholder, 'body')}
+            />}
         </div>
         <MetaPortal>
+          <span className="meta-count left">
+            <b>
+              {stringLength(this.props.viewer.memory.body || '') +
+                stringLength(this.props.viewer.memory.title || '')}
+            </b>{' '}characters
+          </span>
           <DropdownProp
             containerClassName="drafting-action right clearfix"
             className="ddmenu pull-left"
-            toogle={open => (
+            toggle={open => (
               <button
                 onClick={open}
-                className="drafting-actions-btn"
+                className="drafting-actions-btn meta-dots"
               >
-                <span className="drafting-svg-icon dots">
-                  <svg className="svgIcon-use" width="25" height="25" viewBox="0 0 25 25"><path d="M5 12.5c0 .552.195 1.023.586 1.414.39.39.862.586 1.414.586.552 0 1.023-.195 1.414-.586.39-.39.586-.862.586-1.414 0-.552-.195-1.023-.586-1.414A1.927 1.927 0 0 0 7 10.5c-.552 0-1.023.195-1.414.586-.39.39-.586.862-.586 1.414zm5.617 0c0 .552.196 1.023.586 1.414.391.39.863.586 1.414.586.552 0 1.023-.195 1.414-.586.39-.39.586-.862.586-1.414 0-.552-.195-1.023-.586-1.414a1.927 1.927 0 0 0-1.414-.586c-.551 0-1.023.195-1.414.586-.39.39-.586.862-.586 1.414zm5.6 0c0 .552.195 1.023.586 1.414.39.39.868.586 1.432.586.551 0 1.023-.195 1.413-.586.391-.39.587-.862.587-1.414 0-.552-.196-1.023-.587-1.414a1.927 1.927 0 0 0-1.413-.586c-.565 0-1.042.195-1.432.586-.39.39-.586.862-.587 1.414z" fillRule="evenodd"></path></svg>
-                </span>
+                <svg className="feather-dots" width="25" height="25" viewBox="0 0 25 25">
+                  <path d="M5 12.5c0 .552.195 1.023.586 1.414.39.39.862.586 1.414.586.552 0 1.023-.195 1.414-.586.39-.39.586-.862.586-1.414 0-.552-.195-1.023-.586-1.414A1.927 1.927 0 0 0 7 10.5c-.552 0-1.023.195-1.414.586-.39.39-.586.862-.586 1.414zm5.617 0c0 .552.196 1.023.586 1.414.391.39.863.586 1.414.586.552 0 1.023-.195 1.414-.586.39-.39.586-.862.586-1.414 0-.552-.195-1.023-.586-1.414a1.927 1.927 0 0 0-1.414-.586c-.551 0-1.023.195-1.414.586-.39.39-.586.862-.586 1.414zm5.6 0c0 .552.195 1.023.586 1.414.39.39.868.586 1.432.586.551 0 1.023-.195 1.413-.586.391-.39.587-.862.587-1.414 0-.552-.196-1.023-.587-1.414a1.927 1.927 0 0 0-1.413-.586c-.565 0-1.042.195-1.432.586-.39.39-.586.862-.587 1.414z" fillRule="evenodd" />
+                </svg>
               </button>
             )}
           >
             <li className="ddrow">
-              <button className="ddrow-btn">
-                Preview
+              <button
+                className={classNames('ddrow-btn', {
+                  preview: this.state.preview,
+                })}
+                onClick={partial(this.onChange, partial.placeholder, 'preview')}
+              >
+                Preview {(this.state.preview) ? '(Active)' : null}
               </button>
             </li>
-            <li className="ddrow">
+            {/* <li className="ddrow">
               <button className="ddrow-btn">
                 Change creation date
               </button>
-            </li>
+            </li> */}
             <li className="ddrow">
               <button className="ddrow-btn">
                 Keyboard shortcuts
+              </button>
+            </li>
+            <li className="ddrow">
+              <button className="ddrow-btn">
+                Toggle top-bar
+                <div className="ddrow-hint">
+                  ({stringLength(this.state.body || '') + stringLength(this.state.title || '')} characters)
+                </div>
               </button>
             </li>
             <li className="ddrow">
@@ -174,13 +167,14 @@ class MemoryEditPage extends React.Component {
                 Cancel Memory
               </a>
             </li>
+            <div className="dddivider" />
             <li className="ddrow">
-              <button className="ddrow-btn">
-                Toggle character count
+              <button
+                className="ddrow-btn"
+                onClick={this.deleteMemoryMutation}
+              >
+                Delete Memory
               </button>
-              <div className="ddrow-hint">
-                ({stringLength(this.state.body) + stringLength(this.state.title)} characters)
-              </div>
             </li>
             <div className="dddivider" />
             <li className="ddrow">
@@ -189,25 +183,6 @@ class MemoryEditPage extends React.Component {
                 onClick={this.updateMemoryMutation}
               >
                 Update Memory
-              </button>
-            </li>
-            <div className="dddivider" />
-            {/* <li className="ddrow">
-              <button className="ddrow-btn">
-                Save as Draft
-              </button>
-            </li>
-            <li className="ddrow">
-              <button className="ddrow-btn">
-                Save to Archive
-              </button>
-            </li> */}
-            <li className="ddrow">
-              <button
-                className="ddrow-btn"
-                onClick={this.deleteMemoryMutation}
-              >
-                Delete Memory
               </button>
             </li>
           </DropdownProp>

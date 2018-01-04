@@ -13,7 +13,6 @@ import DraftingPage from '../pages/Drafting/DraftingPage.js';
 
 const mountNode = document.getElementById('root');
 
-
 ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
@@ -31,7 +30,6 @@ ReactDOM.render(
         return (
           <App
             viewer={props.viewer}
-            memory={null}
           >
             <DraftingPage
               viewer={props.viewer}

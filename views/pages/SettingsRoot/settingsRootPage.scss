@@ -1,0 +1,80 @@
+@import "scss/border-radius";
+@import "scss/colors";
+@import "scss/spacing";
+
+.settingsrootpage {
+  width: 700px;
+  margin: 0 auto;
+}
+.settingsroot-sidebar {
+  // @include border-radius(3px);
+  // border: 1px solid $deep-grey;
+  margin-right: $small;
+  padding: $tiny 0;
+  width: calc(30% - 16px);
+  position: relative;
+}
+.settingsroot-tab {
+  display: block;
+  padding: 6px 0;
+  font-family: "Open Sans";
+  font-size: 13px;
+  height: 33px;
+  font-weight: 400;
+  color: $deep-grey;
+  &:hover {
+    color: black;
+    font-weight: 600;
+  }
+  &:hover:before {
+    content: '§';
+    position: absolute;
+    left: -$small;
+  }
+}
+.settingsroot-tab.active {
+  font-weight: 600;
+  &:before {
+    content: '§';
+    position: absolute;
+    left: -$small;
+  }
+}
+.settingsroot-content {
+  // @include border-radius(3px);
+  // border: 1px solid $deep-grey;
+  padding: $tiny;
+  width: 70%;
+}
+.settingsroot-form {
+  margin: $small 0;
+}
+.settingsroot-divider {
+  height: 1px;
+  margin: $small 0;
+  background-color: $nudegrey;
+}
+.settingsroot-label {
+  display: block;
+  font-size: 11px;
+  font-family: "Open Sans";
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.settingsroot-label.success {
+  color: $stripegreen;
+}
+.settingsroot-label.error {
+  color: $stripe-red;
+}
+.settingsroot-hint {
+  display: block;
+  color: #586069;
+  font-family: "Open Sans";
+  font-size: 11px;
+  margin-top: 2px;
+}
+.settingsroot-hint.error {
+  color: $stripe-red;
+  // font-weight: 700;
+}

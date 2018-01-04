@@ -1,0 +1,44 @@
+@import "scss/colors";
+@import "scss/spacing";
+
+.cozymemoryitem {
+  // margin-bottom: $small;
+  // width: 700px;
+  padding: $small 0;
+  border-bottom: 1px solid #e9e9e9;
+}
+.cozymemory-header {
+  margin-bottom: 2px;
+}
+.cozymemory-heading {
+  font-weight: 700;
+  font-size: 30px;
+  color: $deep-grey;
+  // font-family: "Roboto";
+  font-family: "Garamond";
+  // vertical-align: middle;
+}
+.cozymemory-timestamp {
+  font-size: 11px;
+  font-family: "Open Sans";
+  // margin-left: $tiny;
+  color: $lightgrey;
+  vertical-align: baseline;
+  display: block;
+  // &:before {
+  //   content: "\00b7";
+  //   margin: 0 8px;
+  // }
+}
+.cozymemory-content {
+  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+  overflow: hidden;
+  // margin: 0 auto;
+  // max-width: 400px;
+  font-size: 16px;
+  -webkit-box-orient: vertical;
+}

@@ -655,7 +655,10 @@
       result += nonEntity(text.substring(beginIndex, entity.indices[0]));
 
       if (entity.url) {
-        result += twttr.txt.linkToUrl(entity, text, options);
+        // console.log(nonEntity(text.substring(beginIndex, text.length)));
+        result += nonEntity(entity.url);
+        // result += twttr.txt.linkToUrl(entity, text, options);
+        // result += text;
       } else if (entity.hashtag) {
         result += twttr.txt.linkToHashtag(entity, text, options);
       } else if (entity.screenName) {

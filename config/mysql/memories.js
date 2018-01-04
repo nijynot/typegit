@@ -40,7 +40,7 @@ exports.getMemoriesByIds = ({ ids }) => {
   });
 };
 
-exports.getMemories = ({ user_id }) => {
+exports.getMemories = ({ user_id, limit }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
     m.memory_id as id,
@@ -50,8 +50,9 @@ exports.getMemories = ({ user_id }) => {
     m.user_id
     from memories m
     where user_id = ?
-    order by created desc;`;
-    sql = mysql.format(sql, [user_id]);
+    order by created desc
+    limit ?;`;
+    sql = mysql.format(sql, [user_id, limit]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

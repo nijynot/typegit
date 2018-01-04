@@ -1,0 +1,180 @@
+@import "scss/border-radius";
+@import "scss/btn";
+@import "scss/colors";
+@import "scss/spacing";
+
+.settingssubscription-sub-heading {
+  font-size: 24px;
+  margin-bottom: $tiny;
+}
+.settingssubscription-cancel-btn {
+  @include btn;
+  @include border-radius(20px);
+  background-color: $deep-grey;
+  border: 0;
+  color: white;
+  font-family: "Open Sans";
+  font-weight: 700;
+  padding: $tiny $small;
+  &:hover {
+    background-color: $stripe-red;
+    color: $stripe-blue;
+  }
+}
+.settingssubscription-activate-btn {
+  @include btn;
+  @include border-radius(20px);
+  background-color: $stripe-blue;
+  border: 0;
+  color: white;
+  font-family: "Open Sans";
+  font-weight: 700;
+  padding: $tiny $small;
+  &:hover {
+    background-color: $royalblue;
+    // color: $;
+  }
+}
+.settingssubscription-card-peek {
+  @include border-radius(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6772e5;
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  color: #c4f0ff;
+  font-family: "Roboto", "Open Sans", "Segoe UI", sans-serif;
+  padding: 12px $small;
+}
+.settingssubscription-card-type {
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: $tiny;
+}
+.settingssubscription-last4 {
+  margin-left: 32px;
+  margin-right: $small;
+}
+.settingssubscription-hl {
+  // margin: 0 15px 20px;
+  padding: 0;
+  border-style: none;
+  background-color: #7795f8;
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #829fff;
+  border-radius: 4px;
+  padding: 4px $tiny;
+}
+.settingssubscription-hl svg {
+  position: relative;
+  top: 8px;
+  margin-right: 4px;
+}
+.settingssubscription-edit-card-btn {
+  @include btn;
+  @include border-radius(3px);
+  background-color: $nude;
+  border: 0;
+  color: black;
+  display: block;
+  font-family: "Open Sans";
+  font-weight: 700;
+  // font-size: 14px;
+  margin-top: $tiny;
+  padding: $tiny $small;
+  // box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}
+.settingssubscription-cancel-update-btn {
+  @include btn;
+  @include border-radius(3px);
+  border: 0;
+  color: black;
+  background-color: $nude;
+  font-family: "Open Sans";
+  font-weight: 700;
+  // font-size: 14px;
+  margin-top: $tiny;
+  padding: $tiny $small;
+  // box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  display: inline-block;
+  width: 100%;
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}
+.settingssubscription-stripe-brand {
+  margin-top: $small;
+  display: inline-block;
+}
+.settingssubscription-charge {
+  color: $deep-grey;
+  font-family: "Open Sans";
+  font-size: 14px;
+  border-top: 1px solid $nudegrey;
+  padding: $tiny;
+  &:last-child {
+    border-bottom: 1px solid $nudegrey;
+    margin-bottom: $small;
+  }
+}
+.settingssubscription-period {
+  font-family: "Open Sans";
+  font-size: 14px;
+  // margin-bottom: $tiny;
+}
+
+// Loading animation
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes void-animation-out {
+  0%,
+  to {
+    opacity: 1;
+  }
+}
+
+// .border {
+//   stroke-dasharray: 251;
+//   stroke-dashoffset: 62.75;
+//   transform-origin: 50% 50%;
+//   transition: stroke-dashoffset 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+//   animation: spin 1s linear infinite;
+// }
+
+.svg-spinner {
+  width: 0;
+  opacity: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.svg-spinner.active {
+  width: 18px;
+  opacity: 1;
+}
+
+.border {
+  stroke-dasharray: 53;
+  stroke-dashoffset: 27.9;
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: spin 1s linear infinite;
+}
+
+.settingssubscription-cancel-btn svg,
+.settingssubscription-activate-btn svg {
+  margin-left: $tiny;
+  vertical-align: bottom;
+  will-change: transform;
+}

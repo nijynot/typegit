@@ -1,0 +1,39 @@
+@import "scss/colors";
+@import "scss/spacing";
+
+.insights-row {
+  margin: $large 0;
+}
+.insights-panel {
+  width: 50%;
+  text-align: center;
+}
+.insights-panel h2 {
+  // width: 300px;
+  // margin: 0 auto;
+  font-size: 21px;
+}
+.insights-number {
+  font-size: 42px;
+}
+.insights-tag {
+  font-size: 28px;
+}
+.insights-tag a {
+  &:hover ~ span {
+    background-color: blue;
+    color: white;
+  }
+}
+.insights-tag-count {
+  color: white;
+  font-family: 'Overpass Mono', monospace;
+  font-weight: 400;
+  font-size: 28px;
+  margin-left: $tiny;
+  // background-color: $deep-grey;
+  color: blue;
+  background-color: white;
+  padding: 3px 3px 0 3px;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+}

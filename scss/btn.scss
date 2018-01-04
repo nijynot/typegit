@@ -1,0 +1,19 @@
+@mixin btn() {
+  cursor: pointer;
+  outline: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  font-family: "Open Sans";
+}
+@mixin ctrl() {
+  @include border-radius(3px);
+  border: 1px solid $lightgrey;
+  font-family: "Source Sans Pro";
+  font-size: 15px;
+  padding: 6px $tiny;
+  outline: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:focus {
+    box-shadow: 0 0 0 2px $nude;
+    border-color: $nude;
+  }
+}

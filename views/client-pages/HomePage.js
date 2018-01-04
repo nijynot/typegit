@@ -17,21 +17,20 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query HomePageQuery {
+      query HomePageQuery($query: String) {
         viewer {
-          ...App_viewer,
+          ...App_viewer
           ...HomePage_viewer
         }
       }
     `}
-    variables={{ id: null }}
+    variables={{ search: '' }}
     render={({ err, props }) => {
       if (props) {
         console.log(props);
         return (
           <App
             viewer={props.viewer}
-            memory={null}
           >
             <HomePage viewer={props.viewer} />
           </App>

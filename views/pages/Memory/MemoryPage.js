@@ -5,8 +5,11 @@ import {
   graphql,
 } from 'react-relay';
 import { fromGlobalId } from 'graphql-base64';
+import stringLength from 'string-length';
+import moment from 'moment';
 
 import MetaPortal from 'global-components/MetaPortal.js';
+import Markdown from 'global-components/Markdown.js';
 
 class MemoryPage extends React.Component {
   render() {
@@ -15,13 +18,25 @@ class MemoryPage extends React.Component {
         <h1 className="memory-title">
           {this.props.viewer.memory.title}
         </h1>
-        <p className="memory-body pre-wrap">
+        <span className="memory-timestamp">{moment(this.props.viewer.memory.created).format('dddd, MMMM Do, YYYY')}</span>
+        <div className="markdown-body memory-body">
+          <Markdown
+            source={this.props.viewer.memory.body || ''}
+          />
+        </div>
+        {/* <p className="memory-body pre-wrap">
           {this.props.viewer.memory.body}
-        </p>
+        </p> */}
         <MetaPortal>
+          <span className="meta-count left">
+            <b>
+              {stringLength(this.props.viewer.memory.body || '') +
+                stringLength(this.props.viewer.memory.title || '')}
+            </b>{' '}characters
+          </span>
           <a
             href={`/${fromGlobalId(this.props.viewer.memory.id).id}/edit`}
-            className="memory-edit-btn right text"
+            className="memory-edit-btn right"
           >
             Edit
           </a>

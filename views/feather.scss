@@ -1,0 +1,47 @@
+@import "scss/spacing";
+
+.meta-count {
+  margin-top: 21px;
+  line-height: 24px;
+}
+.feather {
+  vertical-align: top;
+}
+
+.meta-search {
+  cursor: pointer;
+  margin-top: 21px;
+  margin-right: 10px;
+}
+.feather-search {
+  stroke: #888;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  &:hover {
+    stroke: black;
+  }
+}
+
+.meta-plus {
+  margin-top: 21px;
+  margin-right: 10px;
+}
+.feather-plus {
+  stroke: #888;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  &:hover {
+    stroke: black;
+  }
+}
+
+.meta-dots {
+  margin-top: 21px;
+  margin-right: $small;
+  opacity: 1!important;
+}
+.feather-dots {
+  line-height: 1;
+  vertical-align: top;
+  // display: block;
+  // margin-top: 22px;
+  // height: 22px;
+}

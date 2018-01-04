@@ -1,0 +1,115 @@
+@import "scss/btn";
+@import "scss/border-radius";
+@import "scss/colors";
+@import "scss/spacing";
+
+.landingpage {
+  width: 700px;
+  margin: 0 auto;
+}
+.landingpage h2 {
+  font-size: 32px;
+  font-family: "Open Sans";
+  font-weight: 700;
+  margin-bottom: $tiny;
+}
+.landingpage p {
+  font-size: 16px;
+}
+.landing-pitch {
+  margin-top: 45px;
+  list-style-type: none;
+  margin-bottom: 60px;
+}
+.landing-pitch li {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.landing-content {
+  max-width: 500px;
+}
+.landing-heading {
+  font-size: 44px;
+  display: block;
+  text-align: center;
+  margin-top: $large;
+  font-family: "Open Sans";
+  font-weight: 700;
+  margin-bottom: $small;
+}
+.landing-timestamp {
+  display: block;
+  color: $lightgrey;
+  font-size: 13px;
+  font-family: "Open Sans";
+  margin-bottom: $small;
+}
+.landing-body {
+  font-size: 18px;
+  display: block;
+  text-align: center;
+}
+.landing-divider {
+  height: 1px;
+  border-top: 2px dotted $nudegrey;
+  margin: 42px 0 42px 0;
+}
+// .landing-paper-shadow {
+//
+// }
+.landing-paper {
+  margin: $small auto;
+  height: 425px;
+  width: 700px;
+  box-shadow:
+    0 15px 35px rgba(50,50,93,.1),
+    0 5px 15px rgba(0,0,0,.07);
+  padding: 30px 46px;
+  overflow: hidden;
+  // border-bottom: 3px dotted rgba(50,50,93,.1);
+  position: relative;
+}
+.landing-paper-heading {
+  font-size: 46px;
+  font-family: "Garamond";
+  font-weight: 700;
+  color: $deep-grey;
+}
+.landing-cursor {
+  border-left: 2px solid black;
+  width: 2px;
+  height: 19px;
+  position: absolute;
+  right: 0;
+}
+.landingpage > .feather-dots {
+  fill: $lightgrey;
+  width: 100%;
+  margin: $tiny auto 0 auto;
+}
+.landing-pricing {
+  text-align: center;
+  // font-family: "Open Sans";
+  font-size: 18px;
+}
+.landing-sign-btn {
+  @include btn;
+  @include border-radius(30px);
+  padding: 12px 20px;
+  margin-top: $base;
+  text-align: center;
+  font-weight: 700;
+  background-color: $nude;
+  border: 0;
+  font-size: 14px;
+  font-family: "Open Sans";
+  &:hover {
+    color: white;
+    background-color: $deep-grey;
+    box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+}
