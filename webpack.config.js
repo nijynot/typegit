@@ -1,4 +1,5 @@
-// const CompressionPlugin = require('compression-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -83,15 +84,24 @@ const config = {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
-    // new CompressionPlugin({
-    //   asset: '[path].gz',
-    //   algorithm: 'gzip',
-    //   // test: /\.js$|\.html$/,
-    //   test: /\.js$/,
-    //   threshold: 0,
-    //   minRatio: 0.8,
-    //   // blocksplittingmax: 33,
-    // }),
+    new CompressionPlugin({
+      asset: '[path].gz',
+      algorithm: 'gzip',
+      // test: /\.js$|\.html$/,
+      test: /\.js$/,
+      threshold: 0,
+      minRatio: 0.8,
+      // blocksplittingmax: 33,
+    }),
+    new UglifyJsPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+        ecma: 8,
+        compress: {
+          warnings: false,
+        },
+      },
+    }),
   ] : [],
 };
 
