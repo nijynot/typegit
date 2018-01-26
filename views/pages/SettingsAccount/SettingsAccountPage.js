@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   createFragmentContainer,
+  createRefetchContainer,
   graphql,
 } from 'react-relay';
 import partial from 'lodash/partial';
 import { fromGlobalId } from 'graphql-base64';
+import cx from 'classnames';
 // import stringLength from 'string-length';
 // import moment from 'moment';
 
@@ -14,26 +16,55 @@ import { UpdateAvatarMutation } from './mutations/UpdateAvatarMutation.js';
 
 // import MetaPortal from 'global-components/MetaPortal.js';
 
+const { placeholder } = partial;
+
 class SettingsAccountPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: this.props.viewer.me.email || '',
       heading: this.props.viewer.me.heading || '',
       imageUploaded: false,
+      accountUpdated: false,
     };
     this.onChange = this.onChange.bind(this);
     this.updateUserMutation = this.updateUserMutation.bind(this);
     this.updateAvatarMutation = this.updateAvatarMutation.bind(this);
+    this._validateEmail = this._validateEmail.bind(this);
   }
   onChange(e, key) {
-    this.setState({ [key]: e.target.value });
+    if (this._throttleTimeout) {
+      clearTimeout(this._throttleTimeout);
+    }
+    if (key === 'email') {
+      this._throttleTimeout = setTimeout(
+        this._validateEmail,
+        200
+      );
+    } else {
+      this.setState({ [key]: e.target.value });
+    }
   }
   updateUserMutation() {
-    UpdateUserMutation({
-      environment: this.props.relay.environment,
-      heading: this.state.heading,
-    });
+    if (
+      (this.props.viewer.emailIsValid !== false ||
+        this.props.viewer.me.email === this.email.value) &&
+      this.email.value.length > 0
+    ) {
+      UpdateUserMutation({
+        environment: this.props.relay.environment,
+        heading: this.state.heading,
+        email: this.email.value,
+      })
+      .then((res) => {
+        if (res.updateUser) {
+          this.setState({ accountUpdated: true });
+          setTimeout(
+            () => { this.setState({ accountUpdated: false }); },
+            3000
+          );
+        }
+      });
+    }
   }
   updateAvatarMutation() {
     UpdateAvatarMutation({
@@ -43,9 +74,18 @@ class SettingsAccountPage extends React.Component {
       },
     })
     .then((res) => {
-      console.log(res);
       this.setState({ imageUploaded: true });
+      setTimeout(
+        () => { this.setState({ imageUploaded: false }); },
+        3000
+      );
     });
+  }
+  _validateEmail() {
+    const refetchVariables = () => ({
+      email: this.email.value,
+    });
+    this.props.relay.refetch(refetchVariables, null);
   }
   render() {
     return (
@@ -84,16 +124,54 @@ class SettingsAccountPage extends React.Component {
           </button>
         </div>
         <div className="settingsroot-divider"></div>
+        {(this.state.accountUpdated) ?
+          <div className="settingsaccount-upload-success">
+            Account settings updated successfully.
+          </div> : null}
         <div className="settingsroot-form">
           <span className="settingsroot-label">Name</span>
           <input
             className="settingsaccount-ctrl"
-            placeholder="Default: DIARY"
+            placeholder="Default: AUTOMEMOIRDOLL"
             value={this.state.heading}
             onChange={partial(this.onChange, partial.placeholder, 'heading')}
           />
         </div>
         <div className="settingsroot-form">
+          <span className={cx('settingsroot-label', {
+            success: this.props.viewer.emailIsValid,
+            error: (this.props.viewer.emailIsValid === false) &&
+              (this.props.viewer.me.email !== this.email.value),
+          })}
+          >
+            Email address&nbsp;
+            {(this.props.viewer.emailIsValid) ? '✓' : null}
+          </span>
+          <input
+            ref={(node) => { this.email = node; }}
+            className="settingsaccount-ctrl"
+            placeholder="some@email.com"
+            defaultValue={this.props.viewer.me.email}
+            onChange={partial(this.onChange, placeholder, 'email')}
+            type="email"
+            required
+          />
+          {/* <input
+            ref={(node) => { this.email = node; }}
+            className="register-ctrl"
+            type="email"
+            onChange={partial(this.onChange, placeholder, 'email')}
+            required
+          /> */}
+          {(this.props.viewer.emailIsValid === false) && (this.props.viewer.me.email !== this.email.value) ?
+            <span className="settingsroot-hint error">
+              Email is invalid or already taken.
+            </span> :
+            <span className="settingsroot-hint">
+              Your email will never be shared with anyone.
+            </span>}
+        </div>
+        {/* <div className="settingsroot-form">
           <span className="settingsroot-label">Email</span>
           <input
             className="settingsaccount-ctrl"
@@ -101,12 +179,12 @@ class SettingsAccountPage extends React.Component {
             value={this.state.email}
             onChange={partial(this.onChange, partial.placeholder, 'email')}
           />
-        </div>
+        </div> */}
         <button
           className="settingsaccount-save-btn"
           onClick={this.updateUserMutation}
         >
-          Save changes
+          Update account settings
         </button>
       </div>
     );
@@ -117,15 +195,41 @@ SettingsAccountPage.propTypes = {
   viewer: PropTypes.object.isRequired,
 };
 
-export default createFragmentContainer(SettingsAccountPage, {
-  viewer: graphql`
-    fragment SettingsAccountPage_viewer on Viewer {
-      me {
-        id
-        username
-        email
-        heading
+// export default createFragmentContainer(SettingsAccountPage, {
+//   viewer: graphql`
+//     fragment SettingsAccountPage_viewer on Viewer {
+//       me {
+//         id
+//         username
+//         email
+//         heading
+//       }
+//     }
+//   `,
+// });
+
+export default createRefetchContainer(
+  SettingsAccountPage,
+  {
+    viewer: graphql`
+      fragment SettingsAccountPage_viewer on Viewer @argumentDefinitions(
+        email: { type: "String", defaultValue: "" }
+      ) {
+        me {
+          id
+          username
+          email
+          heading
+        }
+        emailIsValid(email: $email)
+      }
+    `,
+  },
+  graphql`
+    query SettingsAccountPageRefetchQuery($email: String) {
+      viewer {
+        ...SettingsAccountPage_viewer @arguments(email: $email)
       }
     }
   `,
-});
+);

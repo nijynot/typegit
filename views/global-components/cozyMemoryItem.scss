@@ -9,13 +9,15 @@
 }
 .cozymemory-header {
   margin-bottom: 2px;
+  text-decoration: none !important;
 }
 .cozymemory-heading {
   font-weight: 700;
   font-size: 30px;
   color: $deep-grey;
   // font-family: "Roboto";
-  font-family: "Garamond";
+  font-family: "EB Garamond";
+  text-decoration: none !important;
   // vertical-align: middle;
 }
 .cozymemory-timestamp {

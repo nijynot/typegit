@@ -8,16 +8,18 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-
-import { globalIdField } from 'graphql-base64';
 import {
-  connectionDefinitions,
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  connectionDefinitions,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
 import mysql from '../../config/mysql.js';
 
-export const chargeType = new GraphQLObjectType({
+export const chargeType = registerType(new GraphQLObjectType({
   name: 'Charge',
   fields: () => ({
     id: globalIdField(),
@@ -31,9 +33,8 @@ export const chargeType = new GraphQLObjectType({
       type: GraphQLString,
     },
   }),
-});
+}));
 
-export const chargeConnection = connectionDefinitions({
-  name: 'ChargeConnection',
-  type: chargeType,
+export const { connectionType: chargeConnection } = connectionDefinitions({
+  nodeType: chargeType,
 });

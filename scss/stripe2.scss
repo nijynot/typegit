@@ -60,7 +60,8 @@ main > .container-lg .example {
 }
 
 main > .container-lg .example.submitted form,
-main > .container-lg .example.submitting form {
+main > .container-lg .example.submitting form,
+main > .container-lg .example.error form {
   opacity: 0;
   transform: scale(0.9);
   pointer-events: none;
@@ -94,6 +95,45 @@ main > .container-lg .example.submitted .success > :nth-child(4) {
 
 main > .container-lg .example.submitted .success .icon .border,
 main > .container-lg .example.submitted .success .icon .checkmark {
+  opacity: 1;
+  stroke-dashoffset: 0 !important;
+}
+
+main > .container-lg .example.submitting .fail,
+main > .container-lg .example.submitted .fail {
+  opacity: 0;
+  display: none;
+}
+
+main > .container-lg .example.error .fail,
+main > .container-lg .example.error .fail {
+  pointer-events: all;
+}
+
+main > .container-lg .example.error .fail .icon {
+  opacity: 1;
+}
+
+main > .container-lg .example.error .fail > * {
+  opacity: 1;
+  transform: none !important;
+}
+
+main > .container-lg .example.error .fail > :nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+main > .container-lg .example.error .fail > :nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+main > .container-lg .example.error .fail > :nth-child(4) {
+  transition-delay: 0.3s;
+}
+
+main > .container-lg .example.error .fail .icon .border,
+main > .container-lg .example.error .fail .icon .feather-x {
+  color: white;
   opacity: 1;
   stroke-dashoffset: 0 !important;
 }
@@ -264,6 +304,12 @@ main > .container-lg .example .success .icon .checkmark {
   transition: stroke-dashoffset 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) 0.35s;
 }
 
+// main > .container-lg .example .fail .icon .feather-x {
+//   stroke-dasharray: 60;
+//   stroke-dashoffset: 60;
+//   transition: stroke-dashoffset 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) 0.35s;
+// }
+
 main > .container-lg .example .success .title {
   font-size: 17px;
   font-weight: 500;
@@ -278,6 +324,7 @@ main > .container-lg .example .success .message {
 }
 
 main > .container-lg .example .success .message span {
+  display: block;
   font-size: inherit;
 }
 

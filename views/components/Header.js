@@ -4,6 +4,7 @@ import cx from 'classnames';
 import screenfull from 'screenfull';
 import Mousetrap from 'mousetrap';
 import get from 'lodash/get';
+import { fromGlobalId } from 'graphql-base64';
 
 import DropdownProp from 'global-components/DropdownProp.js';
 
@@ -41,7 +42,11 @@ class Header extends React.Component {
                 onClick={open}
                 className="dd-btn header-username"
               >
-                {this.props.user.username}
+                <img
+                  className="profile24"
+                  src={`/assets/u/${fromGlobalId(this.props.user.id).id}`}
+                />
+                {/* {this.props.user.username} */}
               </span>
             )}
           >
@@ -96,6 +101,12 @@ class Header extends React.Component {
     return (
       <div className="header-not-logged clearfix">
         <a
+          href="/faq"
+          className="dd-btn header-action left"
+        >
+          FAQ
+        </a>
+        <a
           href="/login"
           className="dd-btn header-action left"
         >
@@ -129,7 +140,7 @@ class Header extends React.Component {
               href="/"
               className="header-logo"
             >
-              {get(this.props.user, 'heading') || 'DIARY'}
+              {get(this.props.user, 'heading') || 'AUTOMEMOIRDOLL'}
             </a>
           </span>
         </div>

@@ -8,16 +8,15 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-
-import { globalIdField } from 'graphql-base64';
 import {
-  connectionDefinitions,
-  connectionArgs,
-  connectionFromArray,
-} from 'graphql-connection';
+  globalIdField,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
 import mysql from '../../config/mysql.js';
 
-export const subscriptionType = new GraphQLObjectType({
+export const subscriptionType = registerType(new GraphQLObjectType({
   name: 'Subscription',
   fields: () => ({
     id: globalIdField(),
@@ -34,7 +33,7 @@ export const subscriptionType = new GraphQLObjectType({
       type: GraphQLBoolean,
     },
   }),
-});
+}));
 
 // export const invoiceConnection = connectionDefinitions({
 //   name: 'InvoiceConnection',

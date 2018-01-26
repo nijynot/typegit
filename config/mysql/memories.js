@@ -40,19 +40,36 @@ exports.getMemoriesByIds = ({ ids }) => {
   });
 };
 
-exports.getMemories = ({ user_id, limit }) => {
+// exports.getMemories = ({ user_id, limit }) => {
+//   return new Promise((resolve, reject) => {
+//     let sql = `select
+//     m.memory_id as id,
+//     m.title,
+//     m.body,
+//     m.created,
+//     m.user_id
+//     from memories m
+//     where user_id = ?
+//     order by created desc
+//     limit ?;`;
+//     sql = mysql.format(sql, [user_id, limit]);
+//
+//     connection.query(sql, (err, results) => {
+//       if (err) reject(err);
+//       resolve(results);
+//     });
+//   });
+// };
+
+exports.getMemoryIdsByUserId = ({ user_id, limit, offset }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
-    m.memory_id as id,
-    m.title,
-    m.body,
-    m.created,
-    m.user_id
+    m.memory_id as id
     from memories m
-    where user_id = ?
+    where m.user_id = ?
     order by created desc
-    limit ?;`;
-    sql = mysql.format(sql, [user_id, limit]);
+    limit ? offset ?;`;
+    sql = mysql.format(sql, [user_id, limit, offset]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

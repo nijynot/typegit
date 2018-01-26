@@ -30,6 +30,7 @@ class MemoryEditPage extends React.Component {
       body: this.props.viewer.memory.body,
       created: this.props.viewer.memory.created,
       save: false,
+      error: false,
     };
     this.onChange = this.onChange.bind(this);
     this.deleteMemoryMutation = this.deleteMemoryMutation.bind(this);
@@ -38,9 +39,12 @@ class MemoryEditPage extends React.Component {
   }
   componentDidMount() {
     window.onbeforeunload = () => {
-      if ((this.state.body !== this.props.viewer.memory.body
-      || this.state.title !== this.props.viewer.memory.title)
-      && !this.state.save) {
+      if (
+        (
+          this.state.body !== this.props.viewer.memory.body ||
+          this.state.title !== this.props.viewer.memory.title
+        )
+      ) {
         return 'Unsaved changes.';
       }
       return;
@@ -67,8 +71,13 @@ class MemoryEditPage extends React.Component {
       DeleteMemoryMutation({
         environment: this.props.relay.environment,
         id: this.props.viewer.memory.id,
-      }, () => {
-        document.location.href = '/';
+      })
+      .then((res) => {
+        if (res.deleteMemory) {
+          document.location.href = '/';
+        } else {
+          this.setState({ error: true });
+        }
       });
     }
   }
@@ -80,15 +89,31 @@ class MemoryEditPage extends React.Component {
       title,
       body,
       created,
-    }, () => {
-      this.setState({ save: true }, () => {
+    })
+    .then((res) => {
+      if (res.updateMemory) {
+        window.onbeforeunload = null;
         document.location.href = `/${fromGlobalId(this.props.viewer.memory.id).id}`;
-      });
+      } else {
+        this.setState({ error: true });
+      }
     });
   }
   render() {
     return (
       <div className="memoryeditpage clearfix">
+        {(this.state.error) ?
+          <div className="home-msg-container">
+            <span className="home-read-only-msg">
+              Something went wrong. Are you{' '}
+              <a
+                className="home-sub-link"
+                href="/settings/subscription"
+              >
+                subscribed?
+              </a>
+            </span>
+          </div> : null}
         <div className="drafting-hint">
           /* edit {fromGlobalId(this.props.viewer.memory.id).id} */
         </div>
@@ -99,6 +124,15 @@ class MemoryEditPage extends React.Component {
             type="text"
             value={this.state.title}
             onChange={partial(this.onChange, partial.placeholder, 'title')}
+          />
+        </div>
+        <div>
+          <input
+            className="memoryedit-created"
+            placeholder="date"
+            type="text"
+            value={this.state.created}
+            onChange={partial(this.onChange, partial.placeholder, 'created')}
           />
         </div>
         <div className="memoryedit-editor clearfix">
@@ -124,7 +158,7 @@ class MemoryEditPage extends React.Component {
                 onClick={open}
                 className="drafting-actions-btn meta-dots"
               >
-                <svg className="feather-dots" width="25" height="25" viewBox="0 0 25 25">
+                <svg className="feather-dots" width="24" height="24" viewBox="0 0 24 24">
                   <path d="M5 12.5c0 .552.195 1.023.586 1.414.39.39.862.586 1.414.586.552 0 1.023-.195 1.414-.586.39-.39.586-.862.586-1.414 0-.552-.195-1.023-.586-1.414A1.927 1.927 0 0 0 7 10.5c-.552 0-1.023.195-1.414.586-.39.39-.586.862-.586 1.414zm5.617 0c0 .552.196 1.023.586 1.414.391.39.863.586 1.414.586.552 0 1.023-.195 1.414-.586.39-.39.586-.862.586-1.414 0-.552-.195-1.023-.586-1.414a1.927 1.927 0 0 0-1.414-.586c-.551 0-1.023.195-1.414.586-.39.39-.586.862-.586 1.414zm5.6 0c0 .552.195 1.023.586 1.414.39.39.868.586 1.432.586.551 0 1.023-.195 1.413-.586.391-.39.587-.862.587-1.414 0-.552-.196-1.023-.587-1.414a1.927 1.927 0 0 0-1.413-.586c-.565 0-1.042.195-1.432.586-.39.39-.586.862-.587 1.414z" fillRule="evenodd" />
                 </svg>
               </button>
@@ -150,14 +184,14 @@ class MemoryEditPage extends React.Component {
                 Keyboard shortcuts
               </button>
             </li>
-            <li className="ddrow">
+            {/* <li className="ddrow">
               <button className="ddrow-btn">
                 Toggle top-bar
                 <div className="ddrow-hint">
                   ({stringLength(this.state.body || '') + stringLength(this.state.title || '')} characters)
                 </div>
               </button>
-            </li>
+            </li> */}
             <li className="ddrow">
               <a
                 className="ddrow-btn"

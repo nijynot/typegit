@@ -1,22 +1,22 @@
 const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
 
-// stripe.invoices.retrieveUpcoming('cus_C0dGvAfQIxfCoR')
+// stripe.invoices.retrieveUpcoming('cus_C4jZnuoBo5VHnY')
 // .then((value) => {
 //   console.log(value);
 // })
 // .catch((err) => console.log(err));
 
-// stripe.subscriptions.list({
-//   customer: 'cus_C0dGvAfQIxfCoR',
-// })
-// .then((value) => {
-//   console.log(value);
-//   // const subId = value.data[0].id;
-//   // stripe.subscriptions.update(subId)
-// });
+stripe.subscriptions.list({
+  customer: 'cus_C0dGvAfQIxfCoR',
+})
+.then((value) => {
+  console.log(value);
+  // const subId = value.data[0].id;
+  // stripe.subscriptions.update(subId)
+});
 
-stripe.subscriptions.retrieve('sub_C16CdgpoSTp1J1')
-.then(value => console.log(value));
+// stripe.subscriptions.retrieve('sub_C16CdgpoSTp1J1')
+// .then(value => console.log(value));
 
 // Cancel sub at period end
 // stripe.subscriptions.del('sub_C154l6PhdyIK42', {

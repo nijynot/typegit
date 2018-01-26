@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import mixpanel from 'mixpanel-browser';
 
 import Markdown from 'global-components/Markdown.js';
 
-const str = `A simple diary which you can come back to whenever you want.`;
+mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
 class LandingPage extends React.Component {
   render() {
@@ -20,26 +21,34 @@ class LandingPage extends React.Component {
             <div className="landing-content">
               <h2>Minimalist</h2>
               <p>
-                Simple and easy diary keeping. Aims to be a simple and useable as possible.
+                Simple and easy diary keeping. Aims to be as simple and useable as possible.
               </p>
             </div>
           </li>
           <li>
             <div className="landing-content">
-              <h2>Made to last forever</h2>
+              <h2>Made to last</h2>
               <p>
                 {/* If you quit along the way and then decide to come back, know that your diary will be just like you left it. */}
-                Even if you quit along the way your diary will be safe.
-                When you decide to come back, know that your diary will be just like you left it.
+                Even if you quit along the way, your diary will be safe.
+                And when you do return, your diary will be just like you left it.
               </p>
             </div>
           </li>
           <li>
             <div className="landing-content">
-              <h2>No hacks</h2>
+              <h2>No &#8220;productivity hacks&#8221;</h2>
               <p>
                 {/* If you quit along the way and then decide to come back, know that your diary will be just like you left it. */}
-                No gamification or hacks to make you keep a diary. Just you and your diary with nothing inbetween.
+                No gamification or productivity hacks to make you keep a diary. Just you and your diary and nothing inbetween.
+                {/* Just write when you feel like it, no need to force it. */}
+              </p>
+            </div>
+          </li>
+          <li>
+            <div className="landing-content">
+              <p>
+                Check out the <a href="/faq">FAQ</a> for more information.
               </p>
             </div>
           </li>
@@ -47,11 +56,19 @@ class LandingPage extends React.Component {
         <div className="landing-pricing">
           <div>
             Pricing is&nbsp;<b>$3</b>&nbsp;monthly.
-            Cancel anytime.
+            Cancel&nbsp;
+            <i>
+              anytime.
+            </i>
           </div>
           <a href="/register">
-            <button className="landing-sign-btn">
-              Sign up for Diary
+            <button
+              className="landing-sign-btn"
+              onClick={() => {
+                mixpanel.track('Signup start');
+              }}
+            >
+              Create Account
             </button>
           </a>
         </div>

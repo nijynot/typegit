@@ -7,7 +7,7 @@ yarn-error.log
 db
 links
 events
-to_the_archives.sql
+diary.sql
 sql/redis-2017-10-02.rdb
 
 # Personal

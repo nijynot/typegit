@@ -99,13 +99,49 @@ canvas {
   margin: 0 auto;
   width: 980px;
 }
+@media (max-width: 1012px) and (min-width: 767px) {
+  .content {
+    width: 700px;
+  }
+  .header {
+    width: 700px !important;
+  }
+}
+@media (max-width: 767px) {
+  .content {
+    width: 100%;
+    padding: 0 $small;
+  }
+  .header {
+    width: 100% !important;
+    padding: 0 $small;
+    // overflow: hidden;
+  }
+}
+.content a {
+  // text-decoration: underline;
+  // transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  // color: blue;
+  // &:hover {
+  //   color: blue;
+  // }
+}
+
+.profile24 {
+  @include border-radius(50%);
+  border: 2px solid $light-nude;
+  height: 30px;
+  width: 30px;
+  vertical-align: top;
+  padding: 1px;
+}
 
 .tweet-url.hashtag {
   // color: #0366d6;
   color: blue;
   text-decoration: none;
   &:hover {
-      text-decoration: underline;
+    text-decoration: underline;
   }
 }
 

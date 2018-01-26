@@ -225,7 +225,8 @@
 }
 
 .markdown-body a {
-  color: #0366d6;
+  // color: #0366d6;
+  color: blue;
   text-decoration: none;
 }
 
@@ -701,7 +702,8 @@
 .markdown-body :checked+.radio-label {
   position: relative;
   z-index: 1;
-  border-color: #0366d6;
+  // border-color: #0366d6;
+  border-color: blue;
 }
 
 .markdown-body .task-list-item {

@@ -18,6 +18,8 @@ import { memoryType } from '../types/memoryType.js';
 import { isLoggedIn } from '../helpers.js';
 import twitter from '../../utils/twitter-text.js';
 
+const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
+
 export const newMemoryMutation = {
   type: memoryType,
   args: {
@@ -34,15 +36,26 @@ export const newMemoryMutation = {
       type: new GraphQLList(GraphQLString),
     },
   },
-  resolve: (request, args, session) => {
-    if (isLoggedIn(session)) {
+  resolve: async (request, args, context) => {
+    const customer_id = await mysql.getCustomerIdByUserId({
+      user_id: _.get(context, 'user.user_id'),
+    })
+    .then(value => value[0].customer_id);
+    const subscription = await stripe.subscriptions.list({
+      customer: customer_id,
+    })
+    .catch(err => console.log(err));
+    if (
+      isLoggedIn(context) &&
+      !_.isEmpty(_.get(subscription, 'data'))
+    ) {
       const randid = randexp(/[a-zA-Z0-9]{12}/);
       return mysql.insertMemory({
         memory_id: randid,
         title: args.title,
         body: args.body,
         created: args.created,
-        user_id: session.user.user_id,
+        user_id: context.user.user_id,
       })
       .then(() => {
         const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(args.body)));
@@ -56,7 +69,7 @@ export const newMemoryMutation = {
       .then(() => {
         return mysql.getMemoryByIdAndUserId({
           id: randid,
-          user_id: session.user.user_id,
+          user_id: context.user.user_id,
         })
         .then(value => value[0]);
       });

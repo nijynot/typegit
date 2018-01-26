@@ -1,0 +1,43 @@
+@import "scss/btn";
+@import "scss/border-radius";
+@import "scss/colors";
+@import "scss/spacing";
+
+.paymentpage {
+  width: 580px;
+  margin: 0 auto;
+  // display: flex;
+  // justify-content: center;
+  // flex-direction: column;
+  // text-align: center;
+}
+.paymentpage h1 {
+  // display: block;
+  color: $deep-grey;
+  font-family: "EB Garamond";
+  font-size: 46px;
+  font-weight: 700;
+  margin: 0 auto $tiny auto;
+}
+.paymentpage h3 {
+  // display: block;
+  color: $deep-grey;
+  font-family: "EB Garamond";
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: $tiny;
+}
+.payment-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: $small;
+}
+.payment-divider {
+  height: 1px;
+  margin: $base 0 18px 0;
+  background-color: $nudegrey;
+}
+.payment-skip-link {
+  color: $lightgrey;
+  font-family: monospace;
+}

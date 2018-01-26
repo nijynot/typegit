@@ -30,7 +30,7 @@ exports.UpdateCustomerMutation = ({ environment, token }) => {
         // window.onbeforeunload = null;
         // window.location.href = '/';
       },
-      onError: err => console.error(err),
+      onError: err => reject(err),
     });
   });
 };

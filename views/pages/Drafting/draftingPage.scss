@@ -9,10 +9,11 @@
   width: 700px;
 }
 .drafting-hint {
-  color: #ccc;
-  font-size: 10px;
+  color: $stripe-blue;
+  font-size: 11px;
   margin-bottom: 2px;
   font-family: monospace;
+  font-weight: 700;
 }
 .drafting-title-label {
   font-family: "NeueHaasGroteskDisp";
@@ -27,7 +28,7 @@
 .drafting-title {
   // letter-spacing: 2px;
   color: #383434;
-  font-family: "Garamond";
+  font-family: "EB Garamond";
   font-weight: 700;
   border-top: none;
   border-left: none;

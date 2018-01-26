@@ -4,11 +4,7 @@ const connection = require('../connection.js');
 exports.searchMemories = ({ user_id, query }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
-    m.memory_id as id,
-    m.title,
-    m.body,
-    m.created,
-    m.user_id
+    m.memory_id as id
     from memories m
     where m.user_id = ?
     and match(title, body) against (? in natural language mode);`;

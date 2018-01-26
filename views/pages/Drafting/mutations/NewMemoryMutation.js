@@ -68,15 +68,18 @@ exports.NewMemoryMutation = ({ environment, title, body, created }) => {
   //     commitMutation(environment, config);
   //   },
   // };
-
-  commitMutation(environment, {
-    mutation,
-    variables,
-    onCompleted: (response, errors) => {
-      console.log(response);
-      window.onbeforeunload = null;
-      window.location.href = '/';
-    },
-    onError: err => console.error(err),
+  return new Promise((resolve, reject) => {
+    commitMutation(environment, {
+      mutation,
+      variables,
+      onCompleted: (res, err) => {
+        if (err) {
+          console.log(err);
+          resolve(err);
+        }
+        resolve(res);
+      },
+      onError: err => reject(err),
+    });
   });
 };

@@ -18,6 +18,9 @@ const config = {
     SettingsAccountPage: './views/client-pages/SettingsAccountPage.js',
     SettingsPasswordPage: './views/client-pages/SettingsPasswordPage.js',
     SettingsSubscriptionPage: './views/client-pages/SettingsSubscriptionPage.js',
+    PaymentPage: './views/client-pages/PaymentPage.js',
+    ErrorPage: './views/client-pages/ErrorPage.js',
+    FaqPage: './views/client-pages/FaqPage.js',
   },
   output: {
     path: path.resolve(__dirname, './public/js'),
@@ -62,6 +65,7 @@ const config = {
     // modulesDirectories: ['scss', 'views/global-components', 'config', 'node_modules'],
     alias: {
       'global-components': path.resolve(__dirname, 'views/global-components'),
+      'global-mutations': path.resolve(__dirname, 'views/global-mutations'),
       'twitter-text': path.resolve('./utils/twitter-text.js'),
       // config: path.resolve('./config'),
       // pages: path.resolve('./views/pages'),

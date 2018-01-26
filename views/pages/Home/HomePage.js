@@ -7,6 +7,7 @@ import {
 import Chart from 'chart.js';
 import Color from 'color';
 import quantile from 'compute-quantile';
+import isEmpty from 'lodash/isEmpty';
 
 import CompactMemoryItem from 'global-components/CompactMemoryItem.js';
 import CozyMemoryItem from 'global-components/CozyMemoryItem.js';
@@ -56,33 +57,49 @@ class HomePage extends React.Component {
   render() {
     return (
       <div className="homepage">
-        <div className="clearfix">
+        {(this.props.viewer.me.subscription.current_period_end) ?
+          null :
+          <div className="home-msg-container">
+            <span className="home-read-only-msg">
+              Read-Only Mode.&nbsp;
+              <a
+                className="home-sub-link"
+                href="/settings/subscription"
+              >
+                Subscribe
+              </a>
+              &nbsp;to gain full permissions.
+            </span>
+          </div>}
+        <div className="home-tags clearfix">
           {this.props.viewer.me.tags.map(tag => (
             <a
               key={tag.id}
               href={`/tag/${tag.tag}`}
               className="tweet-url hashtag home-tag left"
               style={{
-                color: Color('blue').darken(indicator(cdf(this.getData()), tag.count)),
+                // color: Color('blue').darken(indicator(cdf(this.getData()), tag.count)),
                 // color: 'white',
                 // padding: '2px 2px 0 4px',
                 // backgroundColor: Color('blue').darken(this.assignQuantile(tag.count)),
               }}
             >
-              <b>
-                #{tag.tag}
-                <span
-                  className="home-tag-count"
-                  style={{
-                    // backgroundColor: Color('blue').darken(this.assignQuantile(tag.count)),
-                    // color: 'white',
-                  }}
-                >
-                  {tag.count}
-                </span>
-              </b>
+              #{tag.tag}
+              {/* <span
+                className="home-tag-count"
+                style={{
+                  // backgroundColor: Color('blue').darken(this.assignQuantile(tag.count)),
+                  // color: 'white',
+                }}
+              >
+                ({tag.count})
+              </span> */}
             </a>
           ))}
+          {(isEmpty(this.props.viewer.me.tags)) ?
+            <span className="home-empty-tag-msg">
+              No hashtags yet.
+            </span> : null}
         </div>
         <HomeMemories viewer={this.props.viewer} />
         <MetaPortal>
@@ -111,6 +128,9 @@ export default createFragmentContainer(HomePage, {
           id
           tag
           count
+        }
+        subscription {
+          current_period_end
         }
       }
       ...Search_viewer @arguments(query: $query)

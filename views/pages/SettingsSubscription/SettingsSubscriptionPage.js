@@ -14,16 +14,13 @@ import moment from 'moment';
 import partial from 'lodash/partial';
 import get from 'lodash/get';
 import cx from 'classnames';
+import mixpanel from 'mixpanel-browser';
 
-// import { fromGlobalId } from 'graphql-base64';
-// import stringLength from 'string-length';
+import CardForm from 'global-components/CardForm.js';
 
-import { UpdateSubscriptionMutation } from './mutations/UpdateSubscriptionMutation.js';
-import { UpdateCustomerMutation } from './mutations/UpdateCustomerMutation.js';
+import { UpdateSubscriptionMutation } from 'global-mutations/UpdateSubscriptionMutation.js';
 
-// import MetaPortal from 'global-components/MetaPortal.js';
-
-import CardForm from './components/CardForm.js';
+mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
 const { placeholder } = partial;
 
@@ -47,6 +44,11 @@ class SettingsSubscriptionPage extends React.Component {
     this.setState({ [key]: e.target.value });
   }
   updateSubscriptionMutation(action) {
+    if (action === 'activate') {
+      mixpanel.track('Subscription activate');
+    } else if (action === 'cancel') {
+      mixpanel.track('Subscription cancel');
+    }
     this.setState({ loading: true });
     UpdateSubscriptionMutation({
       environment: this.props.relay.environment,
@@ -64,11 +66,11 @@ class SettingsSubscriptionPage extends React.Component {
           <span className="settingssubscription-card-type">Card Type</span>
           <span className="settingssubscription-hl">
             {/* {this.renderBrand()} */}
-            {this.props.viewer.me.card.brand}
+            {get(this.props.viewer.me, 'card.brand') || 'N/A'}
           </span>
           <span className="settingssubscription-last4">Last 4</span>
           <span className="settingssubscription-hl">
-            •••• •••• •••• {this.props.viewer.me.card.last4}
+            •••• •••• •••• {get(this.props.viewer.me, 'card.last4') || 'N/A'}
           </span>
         </div>
         <button
@@ -121,7 +123,11 @@ class SettingsSubscriptionPage extends React.Component {
   renderCurrentPeriod() {
     if (!this.props.viewer.me.subscription.current_period_start &&
         !this.props.viewer.me.subscription.current_period_end) {
-      return 'Not Active';
+      return (
+        <span className="settingssubscription-not-active">
+          Not Active
+        </span>
+      );
     }
     return `${moment.unix(this.props.viewer.me.subscription.current_period_start).format('MMMM Do, YYYY')}–${moment.unix(this.props.viewer.me.subscription.current_period_end).format('MMMM Do, YYYY')}`;
   }
@@ -139,7 +145,9 @@ class SettingsSubscriptionPage extends React.Component {
             <div className="settingssubscription-charge clearfix">
               <span>
                 <div>
-                  {moment.unix(get(this.props.viewer.me.upcomingInvoice, 'date')).format('MMMM Do, YYYY')}
+                  {(get(this.props.viewer.me.upcomingInvoice, 'date')) ?
+                    moment.unix(get(this.props.viewer.me.upcomingInvoice, 'date')).format('MMMM Do, YYYY') :
+                    'Never'}
                 </div>
                 <small>Next Payment</small>
               </span>
@@ -147,16 +155,16 @@ class SettingsSubscriptionPage extends React.Component {
                 ${get(this.props.viewer.me.upcomingInvoice, 'amount_due') / 100}
               </span>
             </div>
-            {this.props.viewer.me.charges.edges.map(charge => (
+            {this.props.viewer.me.charges.edges.map(edge => (
               <div
-                key={charge.id}
+                key={edge.node.id}
                 className="settingssubscription-charge clearfix"
               >
                 <span>
-                  {moment.unix(charge.created).format('MMMM Do, YYYY')}
+                  {moment.unix(edge.node.created).format('MMMM Do, YYYY')}
                 </span>
                 <span className="right">
-                  ${charge.amount / 100}
+                  ${edge.node.amount / 100}
                 </span>
               </div>
             ))}
@@ -180,12 +188,12 @@ class SettingsSubscriptionPage extends React.Component {
             Subscription Status
           </h2>
           <div className="settingssubscription-period">
-            <i>Cancel Subscription when current period ends:</i> {(this.props.viewer.me.subscription.cancel_at_period_end) ? <b>Yes</b> : <b>No</b>}
-            <br />
             <i>
               Current Period:
             </i>&nbsp;
             {this.renderCurrentPeriod()}
+            <br />
+            <i>Cancel Subscription when current period ends:</i> {(this.props.viewer.me.subscription.cancel_at_period_end) ? <b>Yes</b> : <b>No</b>}
           </div>
           <div className="settingsroot-divider" />
           {this.renderSubscriptionBtn()}
@@ -211,12 +219,14 @@ export default createFragmentContainer(SettingsSubscriptionPage, {
           last4
           brand
         }
-        charges(limit: 10) {
+        charges(first: 10) {
           edges {
-            id
-            amount
-            created
-            invoice
+            node {
+              id
+              amount
+              created
+              invoice
+            }
           }
         }
         upcomingInvoice {
@@ -231,6 +241,7 @@ export default createFragmentContainer(SettingsSubscriptionPage, {
           cancel_at_period_end
         }
       }
+      ...CardForm_viewer
     }
   `,
 });

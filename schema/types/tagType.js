@@ -9,23 +9,25 @@ import {
   GraphQLString,
 } from 'graphql';
 
-import { globalIdField } from 'graphql-base64';
 import {
-  connectionDefinitions,
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  connectionDefinitions,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
 import mysql from '../../config/mysql.js';
 
 import { isOwner } from '../helpers.js';
 
 import { memoryType, memoryConnection } from './memoryType.js';
 
-import { Memory } from '../loaders/MemoryLoader.js';
-// import { User } from '../loaders/UserLoader.js';
-// import { Tag } from '../loaders/TagLoader.js';
+import { Memory } from '../models/Memory.js';
+import { Tag } from '../models/Tag.js';
 
-export const tagType = new GraphQLObjectType({
+export const tagType = registerType(new GraphQLObjectType({
   name: 'Tag',
   fields: () => ({
     id: globalIdField(),
@@ -36,11 +38,7 @@ export const tagType = new GraphQLObjectType({
       type: GraphQLInt,
       resolve: async (rootValue, args, context) => {
         if (!rootValue.count) {
-          return mysql.getTagCountByTag({
-            user_id: context.user.user_id,
-            tag: rootValue.tag,
-          })
-          .then(value => value[0].count);
+          return Tag.count(context, rootValue.id);
         }
         return rootValue.count;
       },
@@ -54,16 +52,15 @@ export const tagType = new GraphQLObjectType({
         const array = await mysql.getMemoryIdsByTagAndUserId({
           tag: rootValue.tag,
           user_id: context.user.user_id,
-          limit: args.limit + 1,
+          limit: args.first + 1,
         })
         .then(rows => rows.map(row => Memory.gen(context, row.id)));
-        return connectionFromArray({ array, args });
+        return connectionFromArray(array, args);
       },
     },
   }),
-});
+}));
 
-export const tagConnection = connectionDefinitions({
-  name: 'TagConnection',
-  type: tagType,
+export const { connectionType: tagConnection } = connectionDefinitions({
+  nodeType: tagType,
 });

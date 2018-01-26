@@ -160,6 +160,7 @@
   transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 .svg-spinner.active {
+  margin-left: $tiny;
   width: 18px;
   opacity: 1;
 }
@@ -174,7 +175,7 @@
 
 .settingssubscription-cancel-btn svg,
 .settingssubscription-activate-btn svg {
-  margin-left: $tiny;
+  // margin-left: $tiny;
   vertical-align: bottom;
   will-change: transform;
 }

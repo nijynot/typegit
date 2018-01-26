@@ -9,17 +9,18 @@ import {
   GraphQLString,
 } from 'graphql';
 
-import { globalIdField } from 'graphql-base64';
 import {
-  connectionDefinitions,
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  connectionDefinitions,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
 import mysql from '../../config/mysql.js';
 
-import { isOwner } from '../helpers.js';
-
-export const cardType = new GraphQLObjectType({
+export const cardType = registerType(new GraphQLObjectType({
   name: 'Card',
   fields: () => ({
     last4: {
@@ -29,9 +30,8 @@ export const cardType = new GraphQLObjectType({
       type: GraphQLString,
     },
   }),
-});
+}));
 
-export const cardConnection = connectionDefinitions({
-  name: 'CardConnection',
-  type: cardType,
+export const { connectionType: cardConnection } = connectionDefinitions({
+  nodeType: cardType,
 });

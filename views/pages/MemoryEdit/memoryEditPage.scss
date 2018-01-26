@@ -2,6 +2,15 @@
 @import "scss/spacing";
 @import "scss/buttons";
 
+@media (max-width: 767px) {
+  .memoryeditpage {
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  .memoryedit-editor {
+    margin-bottom: $base !important;
+  }
+}
 .memoryeditpage {
   margin: $large auto;
   position: relative;
@@ -19,18 +28,23 @@
 }
 .memoryedit-title {
   // letter-spacing: 2px;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 2px solid #fff;
+  border: 0;
   color: $deep-grey;
-  font-family: "Garamond";
+  font-family: "EB Garamond";
   font-weight: 700;
   font-size: 46px;
-  margin-bottom: $tiny;
   outline: none;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);
   width: 100%;
+}
+.memoryedit-created {
+  border: 0;
+  font-family: monospace;
+  font-size: 14px;
+  // height: 24px;
+  outline: 0;
+  width: 100%;
+  margin-bottom: $small;
 }
 .memoryedit-editor {
   margin-bottom: 64px;

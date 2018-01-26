@@ -25,7 +25,7 @@ export const updateAvatarMutation = {
   args: {
   },
   resolve: async (rootValue, args, context) => {
-    const file = _.get(rootValue, 'request.files.file[0]', []);
+    const file = _.get(rootValue, 'req.files.file[0]', []);
     const { size } = file;
     const tmpPath = file.path;
 
@@ -44,7 +44,6 @@ export const updateAvatarMutation = {
       .resize(500, 500)
       .toFormat('jpeg', { quality: 95 })
       .toFile(uPath, async () => {
-        console.log(mime);
         const user = await mysql.getUserById({
           id: context.user.user_id,
         })

@@ -1,29 +1,49 @@
+// Express and server stuff
+const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const multer = require('multer');
-const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
 const _ = require('lodash');
 const uuidV4 = require('uuid/v4');
-// const path = require('path');
-// const fs = require('fs');
-// const bcrypt = require('bcryptjs');
+const redis = require('redis');
+const mysql = require('./config/mysql.js');
 
+// Redis Client
+const client = redis.createClient();
+client.select(4);
+
+// Authentication
 const passport = require('passport');
 require('./config/authentication/passport.js');
-
 const session = require('express-session');
-// const RedisStore = require('connect-redis')(session);
+const RedisStore = require('connect-redis')(session);
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+// GraphQL
 const schema = require('./schema-es5/schema.js');
-const loaders = require('./schema-es5/loaders');
+const getLoaders = require('./schema-es5/loaders/getLoaders.js');
 const template = require('./views/template.js');
 
 /* ===== Constants and Helpers ===== */
 
-const PORT = 1337;
+let PORT;
+let privateKey;
+let publicKey;
+let domain;
+
+if (process.env.NODE_ENV === 'production') {
+  PORT = 443;
+  domain = 'https://lowerset.com';
+  privateKey = fs.readFileSync('/etc/letsencrypt/live/lowerset.com/privkey.pem');
+  publicKey = fs.readFileSync('/etc/letsencrypt/live/lowerset.com/fullchain.pem');
+} else {
+  PORT = 8080;
+  domain = 'http://localhost:8080';
+}
+
 const staticOptions = {
   setHeaders: (res) => {
     if (process.env.NODE_ENV === 'production') {
@@ -33,25 +53,21 @@ const staticOptions = {
   },
 };
 
-const exists = (object, path) => {
-  return !_.isEmpty(_.get(object, path));
+const redisOptions = {
+  client,
+  host: 'localhost',
+  port: 6379,
 };
-
-function createLoaders() {
-  return {
-    UserLoader: loaders.UserLoader.getLoader(),
-    MemoryLoader: loaders.MemoryLoader.getLoader(),
-    TagLoader: loaders.TagLoader.getLoader(),
-  };
-}
 
 const sessionOptions = {
   name: 'local',
-  // store: new RedisStore(redisOptions),
+  store: new RedisStore(redisOptions),
   saveUninitialized: true,
   resave: false,
   secret: 'FJ9y5po5aWYGlpFoEDwXeRYMU68TcQWTKNMqu8pU',
   cookie: {
+    // maxAge: 2592000000,
+    maxAge: 72576000,
     secure: false,
   },
 };
@@ -73,8 +89,17 @@ const fileFields = [
 /* ===== Middleware ===== */
 
 const app = express();
+let appHttp;
+if (process.env.NODE_ENV === 'production') {
+  appHttp = express();
+}
+
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+}
 
 // Static
+app.use('/.well-known/acme-challenge', express.static('./.well-known/acme-challenge'));
 app.use('/assets', express.static('./public/js', staticOptions));
 app.use('/assets/css', express.static('./public/css', staticOptions));
 app.use('/assets/fonts', express.static('./public/fonts', staticOptions));
@@ -85,7 +110,7 @@ app.use('/assets/u', express.static('./public/img/u', {
 }));
 
 // Authentication, session, cookies. (Passport)
-app.use(cookieParser('keyboard cat'));
+app.use(cookieParser('FJ9y5po5aWYGlpFoEDwXeRYMU68TcQWTKNMqu8pU'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
@@ -95,13 +120,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/graphql', multer({ storage: diskStorage }).fields(fileFields));
-app.use('/graphql', graphqlHTTP((request) => {
+app.use('/graphql', graphqlHTTP((req, res) => {
   return {
     schema,
-    rootValue: { request },
+    rootValue: { req, res },
     context: {
-      user: request.user,
-      loaders: createLoaders(),
+      user: req.user || { user_id: null },
+      loaders: getLoaders(),
+      // loaders: createLoaders(),
     },
     pretty: true,
     graphiql: true,
@@ -118,56 +144,98 @@ app.get('/assets/u/:userId', (req, res) => {
   });
 });
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (_.get(req.user, 'user_id')) {
-    res.send(template({ title: 'Diary', script: 'HomePage.js' }));
+    const name = await mysql.getUserById({
+      id: req.user.user_id,
+    })
+    .then(value => value[0].heading);
+    res.send(template({ title: name, script: 'HomePage.js' }));
   } else {
-    res.send(template({ title: 'Diary', script: 'LandingPage.js' }));
+    res.send(template({ title: 'AUTOMEMOIRDOLL', script: 'LandingPage.js' }));
   }
 });
 
 app.get('/login', (req, res) => {
-  // res.send('test');
   res.send(template({ title: 'Login', script: 'LoginPage.js' }));
 });
 app.get('/register', (req, res) => {
-  // res.send('test');
   res.send(template({ title: 'Register', script: 'RegisterPage.js' }));
+});
+app.get('/payment', (req, res) => {
+  res.send(template({ title: 'Payment settings', script: 'PaymentPage.js' }));
+});
+app.get('/faq', (req, res) => {
+  res.send(template({ title: 'FAQ', script: 'FaqPage.js' }));
 });
 app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
 
-app.get('/new', (req, res) => {
-  res.send(template({ title: 'New memory', script: 'DraftingPage.js' }));
+app.get('/new', async (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: 'New memory', script: 'DraftingPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
+});
+app.get('/insights', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: 'Insights', script: 'InsightsPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
 });
 
-app.get('/insights', (req, res) => {
-  res.send(template({ title: 'tag', script: 'InsightsPage.js' }));
+app.get('/:memory_id', async (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: req.params.memory_id, script: 'MemoryPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
+});
+app.get('/:memory_id/edit', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: `Edit - ${req.params.memory_id}`, script: 'MemoryEditPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
 });
 
-app.get('/:memory_id', (req, res) => {
-  res.send(template({ title: 'Memory', script: 'MemoryPage.js' }));
-});
-app.get('/:memory_id/edit', (req, res) => {
-  res.send(template({ title: 'MemoryEdit', script: 'MemoryEditPage.js' }));
-});
-
-app.get('/tag/:tag', (req, res) => {
-  res.send(template({ title: 'tag', script: 'TagPage.js' }));
+app.get('/tag/:tag', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: `#${req.params.tag}`, script: 'TagPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
 });
 
-app.get('/settings/account', (req, res) => {
-  res.send(template({ title: 'Account', script: 'SettingsAccountPage.js' }));
+app.get('/settings/account', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: 'Account', script: 'SettingsAccountPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
 });
-app.get('/settings/password', (req, res) => {
-  res.send(template({ title: 'Account', script: 'SettingsPasswordPage.js' }));
+app.get('/settings/password', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: 'Password', script: 'SettingsPasswordPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
 });
-app.get('/settings/subscription', (req, res) => {
-  res.send(template({ title: 'Account', script: 'SettingsSubscriptionPage.js' }));
+app.get('/settings/subscription', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: 'Subscription', script: 'SettingsSubscriptionPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
 });
-
+app.use((err, req, res, next) => {
+  res.status(404);
+  res.send(template({ title: '404 - Page not found', script: 'ErrorPage.js' }));
+});
 
 /* ===== Post Routes ===== */
 app.post('/login', passport.authenticate(
@@ -178,50 +246,23 @@ app.post('/login', passport.authenticate(
   }
 ));
 
-app.get('/plan/create', (req, res) => {
-  stripe.plans.create({
-    name: 'test plan',
-    id: 'test-plan',
-    interval: 'month',
-    currency: 'usd',
-    amount: '5',
-  }, (err, plan) => {
-    console.log(err);
-    res.json(plan);
+if (process.env.NODE_ENV === 'production') {
+  https.createServer({
+    key: privateKey,
+    cert: publicKey,
+  }, app).listen(PORT);
+  appHttp.get('*', (req, res) => {
+    res.redirect(`${domain}${req.url}`);
   });
-});
-
-app.get('/customer/create', (req, res) => {
-  stripe.customers.create({
-    email: 'nijynot@gmail.com',
-    metadata: {
-      username: 'asdf',
-    },
-  }, (err, customer) => {
-    console.log(err);
-    res.json(customer);
+  appHttp.listen(80);
+} else {
+  app.listen(PORT, () => {
+    console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`Listening on port: ${PORT}`);
   });
-});
+}
 
-app.get('/subscription/create', (req, res) => {
-  stripe.subscriptions.create({
-    customer: 'cus_C0dI7dl46xOETl',
-    items: [
-      { plan: 'basic-monthly' },
-    ],
-  }, (err, subscription) => {
-    console.log(err);
-    res.json(subscription);
-  });
-});
-
-app.post('/payments/card', (req, res) => {
-  console.log(req.body);
-  res.status(200);
-  // res.send('ok');
-});
-
-app.listen(PORT, () => {
-  console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-  console.log(`Listening on port: ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+//   console.log(`Listening on port: ${PORT}`);
+// });

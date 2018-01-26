@@ -5,13 +5,14 @@
 
 .landingpage {
   width: 700px;
-  margin: 0 auto;
+  margin: 0 auto $small auto;
 }
 .landingpage h2 {
   font-size: 32px;
-  font-family: "Open Sans";
+  font-family: "EB Garamond";
   font-weight: 700;
   margin-bottom: $tiny;
+  color: $deep-grey;
 }
 .landingpage p {
   font-size: 16px;
@@ -26,19 +27,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: $base;
 }
 .landing-content {
   max-width: 500px;
+}
+.landing-content a {
+  text-decoration: underline;
 }
 .landing-heading {
   font-size: 44px;
   display: block;
   text-align: center;
   margin-top: $large;
-  font-family: "Open Sans";
+  font-family: "EB Garamond";
   font-weight: 700;
   margin-bottom: $small;
+  color: black;
 }
 .landing-timestamp {
   display: block;
@@ -74,7 +79,7 @@
 }
 .landing-paper-heading {
   font-size: 46px;
-  font-family: "Garamond";
+  font-family: "EB Garamond";
   font-weight: 700;
   color: $deep-grey;
 }
@@ -98,7 +103,7 @@
 .landing-sign-btn {
   @include btn;
   @include border-radius(30px);
-  padding: 12px 20px;
+  padding: 12px 32px;
   margin-top: $base;
   text-align: center;
   font-weight: 700;

@@ -10,9 +10,34 @@ exports.UpdateSubscriptionMutation = ({ environment, action }) => {
       action: $action
     ) {
       id
-      cancel_at_period_end
-      current_period_end
-      current_period_start
+      username
+      heading
+      customer_id
+      card {
+        last4
+        brand
+      }
+      charges(first: 10) {
+        edges {
+          node {
+            id
+            amount
+            created
+            invoice
+          }
+        }
+      }
+      upcomingInvoice {
+        amount_due
+        date
+        currency
+      }
+      subscription {
+        id
+        current_period_end
+        current_period_start
+        cancel_at_period_end
+      }
     }
   }`;
 
@@ -23,7 +48,8 @@ exports.UpdateSubscriptionMutation = ({ environment, action }) => {
       mutation,
       variables,
       // uploadables: 'test',
-      onCompleted: (res, errors) => {
+      onCompleted: (res, err) => {
+        if (err) console.log(err);
         console.log(res);
         resolve(res);
         // window.onbeforeunload = null;

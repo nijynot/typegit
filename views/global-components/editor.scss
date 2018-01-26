@@ -1,5 +1,13 @@
 @import "scss/spacing";
 
+@media (max-width: 767px) {
+  .editor-ctrl {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    position: inherit !important;
+  }
+}
 .editor {
   font-size: 19px;
   &::before {

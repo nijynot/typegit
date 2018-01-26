@@ -9,15 +9,18 @@ import {
   GraphQLString,
 } from 'graphql';
 
-import { globalIdField } from 'graphql-base64';
 import {
-  connectionDefinitions,
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  connectionDefinitions,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
 import mysql from '../../config/mysql.js';
 
-export const upcomingInvoiceType = new GraphQLObjectType({
+export const upcomingInvoiceType = registerType(new GraphQLObjectType({
   name: 'UpcomingInvoice',
   fields: () => ({
     amount_due: {
@@ -30,7 +33,7 @@ export const upcomingInvoiceType = new GraphQLObjectType({
       type: GraphQLString,
     },
   }),
-});
+}));
 
 // export const invoiceConnection = connectionDefinitions({
 //   name: 'InvoiceConnection',

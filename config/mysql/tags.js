@@ -1,17 +1,17 @@
 const mysql = require('mysql');
 const connection = require('../connection.js');
 
-exports.getTagsByIds = ({ ids }) => {
+exports.getTagsBytags = ({ tags }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
-    t.tag_id as id,
-    t.label,
+    t.tag as id,
+    t.tag,
     t.color,
     t.user_id
     from tags t
-    where t.tag_id in (?)
-    order by field(t.tag_id, ?);`;
-    sql = mysql.format(sql, [ids, ids]);
+    where t.tag in (?)
+    order by field(t.tag, ?);`;
+    sql = mysql.format(sql, [tags, tags]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);
@@ -95,6 +95,19 @@ exports.getMemoryIdsByTagAndUserId = ({ tag, user_id, limit }) => {
     order by m.created desc
     limit ?;`;
     sql = mysql.format(sql, [tag, user_id, limit]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.clearTags = ({ memory_id }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `delete from tags
+    where memory_id = ?;`;
+    sql = mysql.format(sql, [memory_id]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

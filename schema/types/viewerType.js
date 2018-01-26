@@ -9,13 +9,19 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql';
-
-import _ from 'lodash';
-import { globalIdField, fromGlobalId } from 'graphql-base64';
 import {
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  getOffsetWithDefault,
+  connectionFromPromisedArray,
+  connectionFromArraySlice,
+  cursorToOffset,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
+import _ from 'lodash';
 import validator from 'validator';
 
 import mysql from '../../config/mysql.js';
@@ -25,22 +31,21 @@ import { userType } from './userType.js';
 import { memoryType, memoryConnection } from './memoryType.js';
 import { tagType } from './tagType.js';
 
-import { Memory } from '../loaders/MemoryLoader.js';
+import { User } from '../models/User.js';
+import { Memory } from '../models/Memory.js';
 
-export const viewerType = new GraphQLObjectType({
+import { connectionFromArrayInterval } from '../definitions/connectionFromArrayInterval.js';
+import { connectionFromArrayBasic } from '../definitions/connectionFromArrayBasic.js';
+
+export const viewerType = registerType(new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
     id: globalIdField(),
     me: {
       type: userType,
-      resolve: (rootValue, _, session) => {
-        if (isLoggedIn(session)) {
-          return mysql.getUserById({
-            id: session.user.user_id,
-          })
-          .then((value) => {
-            return value[0];
-          });
+      resolve: (rootValue, args, context) => {
+        if (isLoggedIn(context)) {
+          return User.gen(context, context.user.user_id);
         }
         return null;
       },
@@ -75,42 +80,38 @@ export const viewerType = new GraphQLObjectType({
       type: memoryConnection,
       args: {
         ...connectionArgs,
+        limit: {
+          type: GraphQLInt,
+          defaultValue: 10,
+        },
+        offset: {
+          type: GraphQLInt,
+          defaultValue: 0,
+        },
       },
       resolve: async (rootValue, args, context) => {
-        if (isLoggedIn(context)) {
-          const array = await mysql.getMemories({
-            user_id: context.user.user_id,
-            limit: args.limit + 1,
-          });
-          return connectionFromArray({ array, args });
-        }
-        return [];
-      },
-      // type: new GraphQLList(memoryType),
-      // resolve: (rootValue, _, session) => {
-      //   if (isLoggedIn(session)) {
-      //     return mysql.getMemories({
-      //       user_id: session.user.user_id,
-      //     })
-      //     .then((value) => {
-      //       return value;
-      //     });
-      //   }
-      //   return [];
-      // },
-    },
-    memoryCount: {
-      type: GraphQLInt,
-      resolve: (rootValue, args, context) => {
-
+        // const offset = getOffsetWithDefault(args.after, -1) + 1;
+        const array = await mysql.getMemoryIdsByUserId({
+          user_id: context.user.user_id,
+          limit: args.limit + 1,
+          offset: args.offset,
+        })
+        .then(rows => rows.map(row => Memory.gen(context, row.id)));
+        return connectionFromArrayBasic(array, args);
       },
     },
-    tagCount: {
-      type: GraphQLInt,
-      resolve: (rootValue, args, context) => {
-
-      },
-    },
+    // memoryCount: {
+    //   type: GraphQLInt,
+    //   resolve: (rootValue, args, context) => {
+    //
+    //   },
+    // },
+    // tagCount: {
+    //   type: GraphQLInt,
+    //   resolve: (rootValue, args, context) => {
+    //
+    //   },
+    // },
     search: {
       type: memoryConnection,
       args: {
@@ -123,9 +124,10 @@ export const viewerType = new GraphQLObjectType({
         const array = await mysql.searchMemories({
           user_id: context.user.user_id,
           query: args.query,
-          limit: args.limit + 1,
-        });
-        return connectionFromArray({ array, args });
+          limit: args.first + 1,
+        })
+        .then(rows => rows.map(row => Memory.gen(context, row.id)));
+        return connectionFromArray(array, args);
       },
     },
     usernameIsValid: {
@@ -160,14 +162,14 @@ export const viewerType = new GraphQLObjectType({
         },
       },
       resolve: async (rootValue, args) => {
-        const { validate } = await mysql.validateEmail({
-          username: args.email,
+        const doesEmailExist = await mysql.doesEmailExist({
+          email: args.email,
         })
-        .then(value => value[0]);
+        .then(value => value[0].doesEmailExist);
         if (args.email.length < 1) {
           return null;
         } else if (
-          validate ||
+          doesEmailExist ||
           args.email.length > 255 ||
           !validator.isEmail(args.email)
         ) {
@@ -177,4 +179,4 @@ export const viewerType = new GraphQLObjectType({
       },
     },
   }),
-});
+}));

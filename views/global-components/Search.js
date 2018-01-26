@@ -81,7 +81,7 @@ class Search extends React.Component {
                       Search in&nbsp;
                     </span>
                     <a href="/">
-                      {this.props.viewer.me.heading || 'DIARY'}
+                      {this.props.viewer.me.heading || 'AUTOMEMOIRDOLL'}
                     </a>
                     <button
                       onClick={this.closeModal}
@@ -101,10 +101,10 @@ class Search extends React.Component {
                   onChange={this.onChangeSearch}
                 />
                 <div className="search-results">
-                  {get(this.props.viewer, 'search.edges', []).map(memory => (
+                  {get(this.props.viewer, 'search.edges', []).map(edge => (
                     <CozyMemoryItem
-                      key={memory.id}
-                      memory={memory}
+                      key={edge.node.id}
+                      memory={edge.node}
                     />
                   ))}
                 </div>
@@ -130,9 +130,11 @@ export default createRefetchContainer(
       me {
         heading
       }
-      search(query: $query, limit: 10) {
+      search(query: $query, first: 10) {
         edges {
-          ...CozyMemoryItem_memory
+          node {
+            ...CozyMemoryItem_memory
+          }
         }
       }
     }

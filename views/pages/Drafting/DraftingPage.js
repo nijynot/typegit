@@ -10,14 +10,19 @@ import autosize from 'autosize';
 import stringLength from 'string-length';
 import partial from 'lodash/partial';
 import classNames from 'classnames';
+import Mousetrap from 'mousetrap';
+import mixpanel from 'mixpanel-browser';
 
 import Editor from 'global-components/Editor.js';
 import MetaPortal from 'global-components/MetaPortal.js';
 // import Dropdown from 'global-components/Dropdown.js';
 import DropdownProp from 'global-components/DropdownProp.js';
 import Markdown from 'global-components/Markdown.js';
+import { fromGlobalId } from 'graphql-base64';
 
 import { NewMemoryMutation } from './mutations/NewMemoryMutation.js';
+
+mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
 class DraftingPage extends React.Component {
   constructor(props) {
@@ -27,12 +32,17 @@ class DraftingPage extends React.Component {
       body: '',
       created: new Date(),
       preview: false,
+      error: false,
     };
     this.onChange = this.onChange.bind(this);
     this.newMemoryMutation = this.newMemoryMutation.bind(this);
     this.getState = this.getState.bind(this);
   }
   componentDidMount() {
+    mixpanel.register({
+      id: fromGlobalId(this.props.viewer.me.id).id,
+      email: this.props.viewer.me.email,
+    });
     window.onbeforeunload = () => {
       if (this.state.body || this.state.title) {
         return 'Unsaved changes.';
@@ -40,9 +50,12 @@ class DraftingPage extends React.Component {
       return;
     };
     autosize(document.querySelector('.dummyclass'));
+    Mousetrap.bind(['command+p', 'ctrl+p'], () => {
+      this.setState({ preview: !this.state.preview });
+      return false;
+    });
   }
   onChange(e, key) {
-    console.log(key);
     if (key === 'preview') {
       this.setState({ preview: !this.state.preview });
     } else {
@@ -59,11 +72,33 @@ class DraftingPage extends React.Component {
       title,
       body,
       created: Date.UTC(created),
+    })
+    .then((res) => {
+      console.log(res);
+      if (res.newMemory) {
+        mixpanel.track('Create memory');
+        window.onbeforeunload = null;
+        window.location.href = '/';
+      } else {
+        this.setState({ error: true });
+      }
     });
   }
   render() {
     return (
       <div className="draftingpage">
+        {(this.state.error) ?
+          <div className="home-msg-container">
+            <span className="home-read-only-msg">
+              Something went wrong. Are you{' '}
+              <a
+                className="home-sub-link"
+                href="/settings/subscription"
+              >
+                subscribed?
+              </a>
+            </span>
+          </div> : null}
         <div className="drafting-hint">
           /* new */
         </div>
@@ -142,14 +177,14 @@ class DraftingPage extends React.Component {
                   Cancel Memory
                 </a>
               </li>
-              <li className="ddrow">
+              {/* <li className="ddrow">
                 <button className="ddrow-btn">
                   Toggle character count
                   <div className="ddrow-hint">
                     ({stringLength(this.state.body) + stringLength(this.state.title)} characters)
                   </div>
                 </button>
-              </li>
+              </li> */}
               <div className="dddivider" />
               <li className="ddrow">
                 <button
@@ -177,6 +212,10 @@ export default createFragmentContainer(DraftingPage, {
   viewer: graphql`
     fragment DraftingPage_viewer on Viewer {
       id
+      me {
+        id
+        email
+      }
     }
   `,
 });

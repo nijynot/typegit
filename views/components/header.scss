@@ -25,9 +25,11 @@
   justify-content: center;
   position: absolute;
   top: 0;
-  font-family: 'NeueHaasGroteskDisp';
+  left: 0;
+  // font-family: 'NeueHaasGroteskDisp';
+  font-family: "Source Sans Pro";
   font-weight: 700;
-  font-size: 34px;
+  font-size: 36px;
   margin: 0 auto;
 }
 .header-logo {
@@ -71,8 +73,9 @@
 }
 .header-username {
   cursor: pointer;
-  margin-top: 21px;
+  margin-top: 18px;
   line-height: 24px;
+  height: 27px;
 }
 #header-portal {
   z-index: 500;

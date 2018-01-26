@@ -5,13 +5,9 @@ import {
   graphql,
 } from 'react-relay';
 import partial from 'lodash/partial';
-// import { fromGlobalId } from 'graphql-base64';
-// import stringLength from 'string-length';
-// import moment from 'moment';
+import cx from 'classnames';
 
 import { UpdatePasswordMutation } from './mutations/UpdatePasswordMutation.js';
-
-// import MetaPortal from 'global-components/MetaPortal.js';
 
 const { placeholder } = partial;
 
@@ -27,12 +23,16 @@ class SettingsPasswordPage extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.updatePasswordMutation = this.updatePasswordMutation.bind(this);
     this.renderPasswordMsg = this.renderPasswordMsg.bind(this);
+    this._validatePassword = this._validatePassword.bind(this);
   }
   onChange(e, key) {
     this.setState({ [key]: e.target.value });
   }
   async updatePasswordMutation() {
-    if (this.state.newPassword === this.state.verifyPassword) {
+    if (
+      this.state.newPassword === this.state.verifyPassword &&
+      this.state.newPassword.length >= 7
+    ) {
       const data = await UpdatePasswordMutation({
         environment: this.props.relay.environment,
         oldPassword: this.state.oldPassword,
@@ -49,8 +49,6 @@ class SettingsPasswordPage extends React.Component {
       } else {
         this.setState({ success: false });
       }
-    } else {
-      this.setState({ success: 'typo' });
     }
 
     if (this._throttleTimeout) {
@@ -60,6 +58,21 @@ class SettingsPasswordPage extends React.Component {
       () => { this.setState({ success: null }); },
       5000
     );
+  }
+  _validatePassword() {
+    if (
+      this.state.newPassword === this.state.verifyPassword &&
+      this.state.newPassword !== '' &&
+      this.state.newPassword.length >= 7
+    ) {
+      return true;
+    } else if (
+      this.state.newPassword.length > 0 &&
+      this.state.verifyPassword.length > 0
+    ) {
+      return false;
+    }
+    return null;
   }
   renderPasswordMsg() {
     if (this.state.success === true) {
@@ -75,14 +88,6 @@ class SettingsPasswordPage extends React.Component {
         <div>
           <span className="settingspassword-fail-msg">
             Password change failed!
-          </span>
-        </div>
-      );
-    } else if (this.state.newPassword !== this.state.verifyPassword) {
-      return (
-        <div>
-          <span className="settingspassword-match-msg">
-            Passwords don&#39;t match
           </span>
         </div>
       );
@@ -103,9 +108,51 @@ class SettingsPasswordPage extends React.Component {
             type="password"
             onChange={partial(this.onChange, placeholder, 'oldPassword')}
             value={this.state.oldPassword}
+            required
           />
         </div>
         <div className="settingsroot-form">
+          <span className={cx('settingsroot-label', {
+            success: this._validatePassword() === true,
+            error: this._validatePassword() === false,
+          })}
+          >
+            New Password&nbsp;
+            {(this._validatePassword()) ? '✓' : null}
+          </span>
+          <input
+            className="settingspassword-ctrl"
+            type="password"
+            onChange={partial(this.onChange, placeholder, 'newPassword')}
+            value={this.state.newPassword}
+            required
+          />
+          {(this._validatePassword() === false) ?
+            <span className="settingsroot-hint error">
+              Make sure your password is at least 7 characters and match!
+            </span> :
+            <span className="settingsroot-hint">
+              At least 7 characters. Make sure to keep it a secret.
+            </span>}
+        </div>
+        <div className="settingsroot-form">
+          <span className={cx('settingsroot-label', {
+            success: this._validatePassword() === true,
+            error: this._validatePassword() === false,
+          })}
+          >
+            Verify password&nbsp;
+            {(this._validatePassword()) ? '✓' : null}
+          </span>
+          <input
+            className="settingspassword-ctrl"
+            type="password"
+            onChange={partial(this.onChange, placeholder, 'verifyPassword')}
+            value={this.state.verifyPassword}
+            required
+          />
+        </div>
+        {/* <div className="settingsroot-form">
           <span className="settingsroot-label">New password</span>
           <input
             className="settingspassword-ctrl"
@@ -122,7 +169,7 @@ class SettingsPasswordPage extends React.Component {
             onChange={partial(this.onChange, placeholder, 'verifyPassword')}
             value={this.state.verifyPassword}
           />
-        </div>
+        </div> */}
         <button
           className="settingspassword-btn"
           onClick={this.updatePasswordMutation}

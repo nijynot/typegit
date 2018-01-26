@@ -7,7 +7,7 @@ exports.getLoader = () => {
 };
 
 const viewerCanSee = (context, data) => {
-  if (get(context, 'user.user_id') === data.id) {
+  if (get(context, 'user.user_id') === get(data, 'id')) {
     return true;
   }
   return false;
@@ -17,6 +17,7 @@ export class User {
   constructor(data) {
     this.id = data.id;
     this.username = data.username;
+    this.heading = data.heading;
     this.email = data.email;
     this.created = data.created;
   }
@@ -29,5 +30,9 @@ export class User {
       return null;
     }
     return viewerCanSee(context, data) ? new User(data) : null;
+  }
+
+  static async clear(context, id) {
+    context.loaders.UserLoader.clear(id);
   }
 }

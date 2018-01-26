@@ -9,6 +9,11 @@ import isEmail from 'validator/lib/isEmail';
 import get from 'lodash/get';
 import partial from 'lodash/partial';
 import cx from 'classnames';
+import mixpanel from 'mixpanel-browser';
+
+import { RegisterMutation } from './mutations/RegisterMutation.js';
+
+mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
 const { placeholder } = partial;
 
@@ -25,6 +30,7 @@ class RegisterPage extends React.PureComponent {
     this._validateUsername = this._validateUsername.bind(this);
     this._validateEmail = this._validateEmail.bind(this);
     this.registerMutation = this.registerMutation.bind(this);
+    this.onClickRegister = this.onClickRegister.bind(this);
   }
   onChange(e, key) {
     if (this._throttleTimeout) {
@@ -42,6 +48,17 @@ class RegisterPage extends React.PureComponent {
       );
     } else {
       this.setState({ [key]: e.target.value });
+    }
+  }
+  onClickRegister() {
+    if (
+      this.props.viewer.usernameIsValid &&
+      this.props.viewer.emailIsValid &&
+      this.state.password === this.state.verifyPassword
+    ) {
+      this.registerMutation();
+    } else {
+      console.log('not register');
     }
   }
   _validateUsername() {
@@ -74,15 +91,16 @@ class RegisterPage extends React.PureComponent {
     return null;
   }
   registerMutation() {
-    if (
-      this.props.viewer.usernameIsValid &&
-      this.props.viewer.emailIsValid &&
-      this.state.password === this.state.verifyPassword
-    ) {
-      console.log('register');
-    } else {
-      console.log('not register');
-    }
+    RegisterMutation({
+      environment: this.props.relay.environment,
+      username: this.username.value,
+      email: this.email.value,
+      password: this.state.password,
+    })
+    .then(() => {
+      mixpanel.track('Signup register');
+      window.location.href = '/payment';
+    });
   }
   render() {
     return (
@@ -184,7 +202,7 @@ class RegisterPage extends React.PureComponent {
           <button
             className="register-btn"
             type="button"
-            onClick={this.registerMutation}
+            onClick={this.onClickRegister}
           >
             Register
           </button>
@@ -197,14 +215,6 @@ class RegisterPage extends React.PureComponent {
 RegisterPage.propTypes = {
   viewer: PropTypes.object.isRequired,
 };
-
-// export default createFragmentContainer(RegisterPage, {
-//   viewer: graphql`
-//     fragment RegisterPage_viewer on Viewer {
-//       id
-//     }
-//   `,
-// });
 
 export default createRefetchContainer(
   RegisterPage,

@@ -1,6 +1,12 @@
 @import "scss/colors";
 @import "scss/spacing";
 
+@media (max-width: 767px) {
+  .memorypage {
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
+}
 .memorypage {
   margin: $large auto;
   width: 700px;
@@ -8,7 +14,7 @@
 .memory-title {
   font-size: 46px;
   font-weight: 700;
-  font-family: "Garamond";
+  font-family: "EB Garamond";
   color: $deep-grey;
   // text-align: center;
 }

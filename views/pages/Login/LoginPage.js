@@ -10,7 +10,9 @@ class LoginPage extends React.PureComponent {
   render() {
     return (
       <div className="loginpage">
-        {this.props.viewer.id}
+        <h1>
+          Login
+        </h1>
         <form method="post" action="/login">
           <input
             className="login-control"
@@ -24,11 +26,9 @@ class LoginPage extends React.PureComponent {
             type="password"
             placeholder="Password"
           />
-          <input
-            className="login-button"
-            type="submit"
-            value="Login"
-          />
+          <button className="login-btn">
+            Login
+          </button>
         </form>
       </div>
     );

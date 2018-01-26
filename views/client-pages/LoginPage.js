@@ -8,7 +8,7 @@ import {
 
 import { modernEnvironment } from '../helpers.js';
 
-// import App from '../App.js';
+import App from '../App.js';
 import LoginPage from '../pages/Login/LoginPage.js';
 
 const mountNode = document.getElementById('root');
@@ -19,6 +19,7 @@ ReactDOM.render(
     query={graphql`
       query LoginPageQuery {
         viewer {
+          ...App_viewer
           ...LoginPage_viewer
         }
       }
@@ -29,7 +30,9 @@ ReactDOM.render(
       if (props) {
         console.log('render');
         return (
-          <LoginPage viewer={props.viewer} />
+          <App viewer={props.viewer}>
+            <LoginPage viewer={props.viewer} />
+          </App>
         );
       } else if (err) {
         console.log(err);

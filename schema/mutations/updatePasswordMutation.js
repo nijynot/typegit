@@ -29,7 +29,10 @@ export const updatePasswordMutation = {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(args.newPassword, salt);
     const user = await mysql.password({ user_id: context.user.user_id });
-    if (bcrypt.compareSync(args.oldPassword, user[0].password)) {
+    if (
+      bcrypt.compareSync(args.oldPassword, user[0].password) &&
+      args.newPassword.length >= 7
+    ) {
       await mysql.updatePassword({
         user_id: context.user.user_id,
         password: hash,

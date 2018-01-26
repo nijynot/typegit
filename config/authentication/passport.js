@@ -1,18 +1,24 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
+const _ = require('lodash');
 
 const mysql = require('../mysql.js');
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser');
-  console.log(user.username);
-  return done(null, user.username);
+  console.log(`serializeUser: ${user.username}`);
+  return done(null, _.get(user, 'username', false));
 });
 
 passport.deserializeUser((username, done) => {
   mysql.user(username).then((user) => {
+    if (_.isEmpty(user)) {
+      return done(null, false);
+    }
     return done(null, user[0]);
+  })
+  .catch((err) => {
+    return done(err, false);
   });
 });
 

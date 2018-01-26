@@ -3,28 +3,29 @@ import {
   graphql,
 } from 'react-relay';
 
-exports.UpdateUserMutation = ({ environment, heading }) => {
+exports.UpdateUserMutation = ({ environment, heading, email }) => {
   const mutation = graphql`
-  mutation UpdateUserMutation($heading: String) {
+  mutation UpdateUserMutation($heading: String, $email: String!) {
     updateUser(
-      heading: $heading
+      heading: $heading, email: $email
     ) {
       id
       heading
+      email
     }
   }`;
 
-  const variables = { heading };
+  const variables = { heading, email };
 
-  commitMutation(environment, {
-    mutation,
-    variables,
-    // uploadables: 'test',
-    onCompleted: (response, errors) => {
-      console.log(response);
-      // window.onbeforeunload = null;
-      // window.location.href = '/';
-    },
-    onError: err => console.error(err),
+  return new Promise((resolve, reject) => {
+    commitMutation(environment, {
+      mutation,
+      variables,
+      onCompleted: (res, err) => {
+        if (err) console.log(err);
+        resolve(res);
+      },
+      onError: err => reject(err),
+    });
   });
 };

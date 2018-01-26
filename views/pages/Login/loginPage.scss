@@ -1,0 +1,51 @@
+@import "scss/border-radius";
+@import "scss/btn";
+@import "scss/colors";
+@import "scss/spacing";
+
+.loginpage {
+  width: 600px;
+  margin: 0 auto;
+}
+.loginpage h1 {
+  font-size: 46px;
+  color: $deep-grey;
+  font-family: "EB Garamond";
+  font-weight: 700;
+  margin-bottom: $small;
+}
+.login-control {
+  @include border-radius(3px);
+  display: block;
+  border: 1px solid $lightgrey;
+  font-family: "Source Sans Pro";
+  font-size: 15px;
+  padding: 6px $tiny;
+  outline: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 250px;
+  margin-bottom: $small;
+  &:focus {
+    box-shadow: 0 0 0 2px $nude;
+    border-color: $nude;
+  }
+}
+.login-btn {
+  @include btn;
+  @include border-radius(30px);
+  padding: $tiny 20px;
+  // margin-top: $base;
+  text-align: center;
+  font-weight: 700;
+  background-color: $nude;
+  border: 0;
+  font-size: 14px;
+  font-family: "Open Sans";
+  margin: 0 auto;
+  &:hover {
+    color: white;
+    background-color: $deep-grey;
+    box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+}

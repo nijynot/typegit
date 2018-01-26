@@ -14,7 +14,7 @@ exports.user = (username) => {
     where u.username = ?;`;
     sql = mysql.format(sql, [username]);
     connection.query(sql, (err, results) => {
-      if (err) console.log(err);
+      if (err) reject(err);
       resolve(results);
     });
   });
@@ -108,13 +108,13 @@ exports.getUserByUsername = ({ username }) => {
   });
 };
 
-exports.updateUser = ({ user_id, heading }) => {
+exports.updateUser = ({ user_id, heading, email }) => {
   return new Promise((resolve, reject) => {
     let sql = `update users
-    set heading = ?
+    set heading = ?, email = ?
     where user_id = ?
     limit 1;`;
-    sql = mysql.format(sql, [heading, user_id]);
+    sql = mysql.format(sql, [heading, email, user_id]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);
@@ -155,14 +155,14 @@ exports.validateUsername = ({ username }) => {
   });
 };
 
-exports.validateEmail = ({ email }) => {
+exports.doesEmailExist = ({ email }) => {
   return new Promise((resolve, reject) => {
     let sql = `select exists(
       select
       1
       from users u
       where u.email = ?
-    ) as validate;`;
+    ) as doesEmailExist;`;
     sql = mysql.format(sql, [email]);
 
     connection.query(sql, (err, results) => {

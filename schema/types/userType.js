@@ -8,28 +8,31 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-
-import _ from 'lodash';
-import get from 'lodash/get';
-import { globalIdField } from 'graphql-base64';
 import {
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  connectionDefinitions,
+  getOffsetWithDefault,
+  fromGlobalId,
+} from 'graphql-relay';
+import _ from 'lodash';
+
+import { registerType } from '../definitions/node.js';
+import { connectionFromArrayInterval } from '../definitions/connectionFromArrayInterval.js';
 
 import mysql from '../../config/mysql.js';
-import { isLoggedIn } from '../helpers.js';
 import { tagType, tagConnection } from './tagType.js';
 import { cardType } from './cardType.js';
 import { chargeConnection } from './chargeType.js';
 import { upcomingInvoiceType } from './upcomingInvoiceType.js';
 import { subscriptionType } from './subscriptionType.js';
 
-import { Tag } from '../loaders/TagLoader.js';
+import { Tag } from '../models/Tag.js';
 
 const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
 
-export const userType = new GraphQLObjectType({
+export const userType = registerType(new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: globalIdField(),
@@ -120,35 +123,46 @@ export const userType = new GraphQLObjectType({
           })
           .then(value => value[0].customer_id);
 
-          const { last4, brand } = await stripe.customers.listCards(customer_id)
-          .then(cards => cards.data[0]);
-          return {
-            last4,
-            brand,
-          };
+          const cards = await stripe.customers.listCards(customer_id);
+          if (!_.isEmpty(cards.data)) {
+            return {
+              last4: cards.data[0].last4,
+              brand: cards.data[0].brand,
+            };
+          }
         }
-        return null;
+        return {
+          last4: null,
+          brand: null,
+        };
       },
     },
     charges: {
       type: chargeConnection,
       args: {
         ...connectionArgs,
+        starting_after: {
+          type: GraphQLString,
+          defaultValue: '',
+        },
       },
       resolve: async (rootValue, args, context) => {
-        if (isLoggedIn(context)) {
-          const customer_id = await mysql.getCustomerIdByUserId({
-            user_id: context.user.user_id,
-          })
-          .then(value => value[0].customer_id);
-          const charges = await stripe.charges.list({
-            customer: customer_id,
-            limit: args.limit + 1,
-          })
-          .then(value => value.data);
-          return connectionFromArray({ array: charges, args });
+        // const offset = getOffsetWithDefault(args.after, -1) + 1;
+        const starting_after = fromGlobalId(args.starting_after).id;
+        const customer_id = await mysql.getCustomerIdByUserId({
+          user_id: context.user.user_id,
+        })
+        .then(value => value[0].customer_id);
+        const options = {
+          customer: customer_id,
+          limit: args.first + 1,
+        };
+        if (args.starting_after) {
+          options.starting_after = starting_after;
         }
-        return null;
+        const charges = await stripe.charges.list(options)
+        .then(value => value.data);
+        return connectionFromArrayInterval(charges, args);
       },
     },
     subscription: {
@@ -162,10 +176,25 @@ export const userType = new GraphQLObjectType({
           const subscription = await stripe.subscriptions.list({
             customer: customer_id,
           })
-          .then(subscriptions => _.get(subscriptions, 'data[0]'));
-          return subscription;
+          .catch(err => console.log(err));
+          if (_.isEmpty(subscription.data)) {
+            return {
+              id: null,
+              amount: null,
+              current_period_end: null,
+              current_period_start: null,
+              cancel_at_period_end: null,
+            };
+          }
+          return subscription.data[0];
         }
-        return null;
+        return {
+          id: null,
+          amount: null,
+          current_period_end: null,
+          current_period_start: null,
+          cancel_at_period_end: null,
+        };
       },
     },
     // isSubscriptionActive: {
@@ -197,12 +226,23 @@ export const userType = new GraphQLObjectType({
           const upcomingInvoice = await stripe.invoices.retrieveUpcoming(customer_id)
           .catch((err) => {
             console.log(err);
-            return null;
+            // return null;
           });
+          if (upcomingInvoice === undefined) {
+            return {
+              amount_due: null,
+              date: null,
+              currency: null,
+            };
+          }
           return upcomingInvoice;
         }
-        return null;
+        return {
+          amount_due: null,
+          date: null,
+          currency: null,
+        };
       },
     },
   }),
-});
+}));

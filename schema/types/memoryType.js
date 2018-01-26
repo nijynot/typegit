@@ -8,24 +8,25 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-
-import { globalIdField } from 'graphql-base64';
 import {
-  connectionDefinitions,
+  globalIdField,
   connectionArgs,
   connectionFromArray,
-} from 'graphql-connection';
+  connectionDefinitions,
+} from 'graphql-relay';
+
+import { registerType } from '../definitions/node.js';
+
 import mysql from '../../config/mysql.js';
 
 import { isOwner } from '../helpers.js';
 import { userType } from './userType.js';
 import { tagType, tagConnection } from './tagType.js';
 
-// import { Memory } from '../loaders/MemoryLoader.js';
-import { User } from '../loaders/UserLoader.js';
-import { Tag } from '../loaders/TagLoader.js';
+import { Memory } from '../models/Memory.js';
+import { User } from '../models/User.js';
 
-export const memoryType = new GraphQLObjectType({
+export const memoryType = registerType(new GraphQLObjectType({
   name: 'Memory',
   fields: () => ({
     id: globalIdField(),
@@ -47,16 +48,12 @@ export const memoryType = new GraphQLObjectType({
     tags: {
       type: new GraphQLList(tagType),
       resolve: async (rootValue, args, context) => {
-        const array = await mysql.getTagsByMemoryId({
-          memory_id: rootValue.id,
-        });
-        return array;
+        return Memory.tags(context, rootValue.id);
       },
     },
   }),
-});
+}));
 
-export const memoryConnection = connectionDefinitions({
-  name: 'MemoryConnection',
-  type: memoryType,
-});
+export const { connectionType: memoryConnection } = registerType(connectionDefinitions({
+  nodeType: memoryType,
+}));

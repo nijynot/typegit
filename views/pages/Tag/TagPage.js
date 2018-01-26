@@ -13,11 +13,11 @@ class TagPage extends React.Component {
   render() {
     return (
       <div className="homepage">
-        {this.props.viewer.tag.memories.edges.map((memory) => {
+        {this.props.viewer.tag.memories.edges.map((edge) => {
           return (
             <CompactMemoryItem
-              key={memory.id}
-              memory={memory}
+              key={edge.node.id}
+              memory={edge.node}
             />
           );
         })}
@@ -50,9 +50,11 @@ export default createFragmentContainer(TagPage, {
     fragment TagPage_viewer on Viewer {
       ...Search_viewer @arguments(query: $query)
       tag(tag: $tag) {
-        memories(limit: 10) {
+        memories(first: 10) {
           edges {
-            ...CompactMemoryItem_memory
+            node {
+              ...CompactMemoryItem_memory
+            }
           }
         }
       }
