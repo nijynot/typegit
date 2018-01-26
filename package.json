@@ -9,7 +9,10 @@
     "build": "npm run update-schema && npm run relay-compile -- --watch",
     "sass": "gulp watch",
     "webpack.dev": "cross-env NODE_ENV=development webpack --progress --watch",
+    "webpack.prod": "cross-env NODE_ENV=production webpack -p --progress",
     "start.dev": "nodemon server.js",
+    "start.prod": "cross-env NODE_ENV=production nodemon server.js",
+    "deamon.prod": "cross-env NODE_ENV=production pm2 start server.js",
     "dump": "mysqldump --databases diary > ./sql/diary.sql -u root -p",
     "dump.no-data": "mysqldump --databases --no-data diary > ./sql/diary-nodata.sql -u root -p"
   },
