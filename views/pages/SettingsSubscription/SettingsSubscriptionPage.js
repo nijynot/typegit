@@ -20,6 +20,8 @@ import CardForm from 'global-components/CardForm.js';
 
 import { UpdateSubscriptionMutation } from 'global-mutations/UpdateSubscriptionMutation.js';
 
+import { STRIPE_PK } from '../../../config/constants.js';
+
 mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
 const { placeholder } = partial;
@@ -133,7 +135,7 @@ class SettingsSubscriptionPage extends React.Component {
   }
   render() {
     return (
-      <StripeProvider apiKey="pk_test_aiHj0bwZIsrbUcVqTGUMCDUu">
+      <StripeProvider apiKey={STRIPE_PK}>
         <div className="settingspasswordpage">
           <h1>
             Subscription

@@ -12,6 +12,8 @@ import get from 'lodash/get';
 import partial from 'lodash/partial';
 import cx from 'classnames';
 
+import { STRIPE_PK } from '../../../config/constants.js';
+
 import PaymentForm from './components/PaymentForm.js';
 
 const { placeholder } = partial;
@@ -60,7 +62,7 @@ class PaymentPage extends React.PureComponent {
   }
   render() {
     return (
-      <StripeProvider apiKey="pk_test_aiHj0bwZIsrbUcVqTGUMCDUu">
+      <StripeProvider apiKey={STRIPE_PK}>
         <div className="paymentpage">
           <h1>
             Subscribe
