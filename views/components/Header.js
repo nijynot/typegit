@@ -140,7 +140,7 @@ class Header extends React.Component {
               href="/"
               className="header-logo"
             >
-              {get(this.props.user, 'heading') || 'AUTOMEMOIRDOLL'}
+              {get(this.props.user, 'heading') || 'PILECROW'}
             </a>
           </span>
         </div>

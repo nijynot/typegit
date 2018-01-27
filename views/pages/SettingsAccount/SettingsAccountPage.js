@@ -132,7 +132,7 @@ class SettingsAccountPage extends React.Component {
           <span className="settingsroot-label">Name</span>
           <input
             className="settingsaccount-ctrl"
-            placeholder="Default: AUTOMEMOIRDOLL"
+            placeholder="Default: PILECROW"
             value={this.state.heading}
             onChange={partial(this.onChange, partial.placeholder, 'heading')}
           />

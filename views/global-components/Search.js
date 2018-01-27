@@ -81,7 +81,7 @@ class Search extends React.Component {
                       Search in&nbsp;
                     </span>
                     <a href="/">
-                      {this.props.viewer.me.heading || 'AUTOMEMOIRDOLL'}
+                      {this.props.viewer.me.heading || 'PILECROW'}
                     </a>
                     <button
                       onClick={this.closeModal}

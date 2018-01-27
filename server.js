@@ -152,7 +152,7 @@ app.get('/', async (req, res) => {
     .then(value => value[0].heading);
     res.send(template({ title: name, script: 'HomePage.js' }));
   } else {
-    res.send(template({ title: 'AUTOMEMOIRDOLL', script: 'LandingPage.js' }));
+    res.send(template({ title: 'PILECROW', script: 'LandingPage.js' }));
   }
 });
 
