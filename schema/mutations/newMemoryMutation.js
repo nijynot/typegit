@@ -14,11 +14,13 @@ import _ from 'lodash';
 import { randexp } from 'randexp';
 
 import mysql from '../../config/mysql.js';
+import { STRIPE_SK } from '../../config/constants.js';
+
 import { memoryType } from '../types/memoryType.js';
 import { isLoggedIn } from '../helpers.js';
 import twitter from '../../utils/twitter-text.js';
 
-const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
+const stripe = require('stripe')(STRIPE_SK);
 
 export const newMemoryMutation = {
   type: memoryType,

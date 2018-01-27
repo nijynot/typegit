@@ -22,6 +22,7 @@ import { registerType } from '../definitions/node.js';
 import { connectionFromArrayInterval } from '../definitions/connectionFromArrayInterval.js';
 
 import mysql from '../../config/mysql.js';
+import { STRIPE_SK } from '../../config/constants.js';
 import { tagType, tagConnection } from './tagType.js';
 import { cardType } from './cardType.js';
 import { chargeConnection } from './chargeType.js';
@@ -30,7 +31,7 @@ import { subscriptionType } from './subscriptionType.js';
 
 import { Tag } from '../models/Tag.js';
 
-const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
+const stripe = require('stripe')(STRIPE_SK);
 
 export const userType = registerType(new GraphQLObjectType({
   name: 'User',

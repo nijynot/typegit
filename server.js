@@ -9,6 +9,7 @@ const _ = require('lodash');
 const uuidV4 = require('uuid/v4');
 const redis = require('redis');
 const mysql = require('./config/mysql.js');
+const constants = require('./config/constants.js');
 
 // Redis Client
 const client = redis.createClient();
@@ -35,12 +36,12 @@ let publicKey;
 let domain;
 
 if (process.env.NODE_ENV === 'production') {
-  PORT = 443;
-  domain = 'https://lowerset.com';
-  privateKey = fs.readFileSync('/etc/letsencrypt/live/lowerset.com/privkey.pem');
-  publicKey = fs.readFileSync('/etc/letsencrypt/live/lowerset.com/fullchain.pem');
+  PORT = constants.HTTPS_PORT;
+  domain = constants.DOMAIN;
+  privateKey = fs.readFileSync(constants.LETSENCRYPT_SK);
+  publicKey = fs.readFileSync(constants.LETSENCRYPT_PK);
 } else {
-  PORT = 8080;
+  PORT = constants.DEV_PORT;
   domain = 'http://localhost:8080';
 }
 
@@ -56,7 +57,7 @@ const staticOptions = {
 const redisOptions = {
   client,
   host: 'localhost',
-  port: 6379,
+  port: constants.REDIS_PORT,
 };
 
 const sessionOptions = {
@@ -64,7 +65,7 @@ const sessionOptions = {
   store: new RedisStore(redisOptions),
   saveUninitialized: true,
   resave: false,
-  secret: 'FJ9y5po5aWYGlpFoEDwXeRYMU68TcQWTKNMqu8pU',
+  secret: constants.SESSION_SK,
   cookie: {
     // maxAge: 2592000000,
     maxAge: 72576000,
@@ -99,10 +100,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Static
-app.use('/.well-known/acme-challenge', express.static('./.well-known/acme-challenge'));
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/.well-known/acme-challenge', express.static('./.well-known/acme-challenge'));
+}
 app.use('/assets', express.static('./public/js', staticOptions));
-app.use('/assets/css', express.static('./public/css', staticOptions));
-app.use('/assets/fonts', express.static('./public/fonts', staticOptions));
+app.use('/assets/css', express.static('./public/css'));
+app.use('/assets/fonts', express.static('./public/fonts'));
 app.use('/assets/u', express.static('./public/img/u', {
   setHeaders: (res) => {
     return res.setHeader('Content-Type', 'image/jpeg');
@@ -110,7 +113,7 @@ app.use('/assets/u', express.static('./public/img/u', {
 }));
 
 // Authentication, session, cookies. (Passport)
-app.use(cookieParser('FJ9y5po5aWYGlpFoEDwXeRYMU68TcQWTKNMqu8pU'));
+app.use(cookieParser(constants.SESSION_SK));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,

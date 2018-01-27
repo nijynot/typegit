@@ -15,6 +15,7 @@ import get from 'lodash/get';
 import { fromGlobalId } from 'graphql-base64';
 
 import mysql from '../../config/mysql.js';
+import { STRIPE_SK } from '../../config/constants.js';
 import twitter from '../../utils/twitter-text.js';
 import { memoryType } from '../types/memoryType.js';
 
@@ -22,7 +23,7 @@ import { Memory } from '../models/Memory.js';
 
 import { isOwner, isLoggedIn } from '../helpers.js';
 
-const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
+const stripe = require('stripe')(STRIPE_SK);
 
 export const updateMemoryMutation = {
   type: memoryType,

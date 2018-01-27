@@ -16,11 +16,12 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 
 import mysql from '../../config/mysql.js';
+import { STRIPE_SK } from '../../config/constants.js';
 import { isOwner, isLoggedIn } from '../helpers.js';
 
 import { userType } from '../types/userType.js';
 
-const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
+const stripe = require('stripe')(STRIPE_SK);
 
 const passport = require('passport');
 require('../../config/authentication/passport.js');
