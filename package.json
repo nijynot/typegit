@@ -12,7 +12,9 @@
     "webpack.prod": "cross-env NODE_ENV=production webpack --progress --define process.env.NODE_ENV=\"'production'\"",
     "start.dev": "nodemon server.js",
     "start.prod": "cross-env NODE_ENV=production nodemon server.js",
+    "deamon.dev": "pm2 start server.js",
     "deamon.prod": "cross-env NODE_ENV=production pm2 start server.js",
+    "deamon.prod.restart": "cross-env NODE_ENV=production pm2 restart server.js",
     "dump": "mysqldump --databases diary > ./sql/diary.sql -u root -p",
     "dump.no-data": "mysqldump --databases --no-data diary > ./sql/diary-nodata.sql -u root -p"
   },
