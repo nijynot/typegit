@@ -8,6 +8,7 @@ db
 links
 events
 diary.sql
+diary*.sql
 sql/redis-2017-10-02.rdb
 
 # Personal
