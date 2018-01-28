@@ -18,7 +18,7 @@ class MemoryPage extends React.Component {
         <h1 className="memory-title">
           {this.props.viewer.memory.title}
         </h1>
-        <span className="memory-timestamp">{moment(this.props.viewer.memory.created).format('dddd, MMMM Do, YYYY')}</span>
+        <span className="memory-timestamp">{moment.utc(this.props.viewer.memory.created).local().format('dddd, MMMM Do, YYYY')}</span>
         <div className="markdown-body memory-body">
           <Markdown
             source={this.props.viewer.memory.body || ''}

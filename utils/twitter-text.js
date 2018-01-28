@@ -619,14 +619,14 @@
 
     options.hashtagClass = options.hashtagClass || DEFAULT_HASHTAG_CLASS;
     // options.hashtagUrlBase = options.hashtagUrlBase || "https://twitter.com/#!/search?q=%23";
-    options.hashtagUrlBase = options.hashtagUrlBase || "http://localhost:1337/tag/";
+    options.hashtagUrlBase = options.hashtagUrlBase || "https://pilecrow.com/tag/";
     options.cashtagClass = options.cashtagClass || DEFAULT_CASHTAG_CLASS;
     // options.cashtagUrlBase = options.cashtagUrlBase || "https://twitter.com/#!/search?q=%24";
-    options.cashtagUrlBase = options.cashtagUrlBase || "http://localhost:1337/tag/";
+    options.cashtagUrlBase = options.cashtagUrlBase || "https://pilecrow.com/tag/";
     options.listClass = options.listClass || DEFAULT_LIST_CLASS;
     options.usernameClass = options.usernameClass || DEFAULT_USERNAME_CLASS;
-    options.usernameUrlBase = options.usernameUrlBase || "http://localhost:1337/";
-    options.listUrlBase = options.listUrlBase || "http://localhost:1337/";
+    options.usernameUrlBase = options.usernameUrlBase || "https://pilecrow.com/";
+    options.listUrlBase = options.listUrlBase || "https://pilecrow.com/";
     options.htmlAttrs = twttr.txt.extractHtmlAttrsFromOptions(options);
     options.invisibleTagAttrs = options.invisibleTagAttrs || "style='position:absolute;left:-9999px;'";
 

@@ -22,7 +22,7 @@ class CompactMemoryItem extends React.Component {
     //   return moment(this.props.memory.created).format('DD-MM-YYYY');
     // }
     // return moment(moment.utc(this.props.memory.created)).fromNow();
-    return moment(this.props.memory.created).format('dd, MMM Do, YYYY');
+    return moment.utc(this.props.memory.created).local().format('dddd, MMMM Do, YYYY');
   }
   render() {
     return (

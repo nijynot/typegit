@@ -18,7 +18,7 @@ class CozyMemoryItem extends React.Component {
   }
   renderTimestamp() {
     const diff = differenceInMinutes(new Date(), new Date(`${this.props.memory.created}Z`));
-    return moment(this.props.memory.created).format('dddd, MMMM Do, YYYY');
+    return moment.utc(this.props.memory.created).local().format('dddd, MMMM Do, YYYY');
     // if (diff > 4320) {
     //   return moment(this.props.memory.created).format('dddd, MMMM Do, YYYY');
     // }
