@@ -4,6 +4,7 @@ module.exports = ({ script, title }) => {
     <html>
       <head>
         <meta charset="utf-8">
+          <meta name="viewport" content="initial-scale=1, width=device-width">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/yui/3.18.1/cssreset/cssreset-min.css" />
         <link rel="stylesheet" href="/assets/css/style.css" />
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
@@ -39,6 +40,7 @@ module.exports = ({ script, title }) => {
   <html>
     <head>
       <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/yui/3.18.1/cssreset/cssreset-min.css" />
       <link rel="stylesheet" href="/assets/css/style.css" />
       <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
