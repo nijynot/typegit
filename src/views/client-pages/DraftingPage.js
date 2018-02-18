@@ -18,9 +18,8 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query DraftingPageQuery {
-        viewer {
-          ...App_ztingPage_viewer
-        }
+        ...App_query
+        ...DraftingPage_query
       }
     `}
     variables={{}}
@@ -28,10 +27,10 @@ ReactDOM.render(
       if (props) {
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
             <DraftingPage
-              viewer={props.viewer}
+              query={props}
             />
           </App>
         );

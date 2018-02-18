@@ -53,13 +53,13 @@ class SettingsRootPage extends React.Component {
 }
 
 SettingsRootPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
   active: PropTypes.string,
 };
 
 export default createFragmentContainer(SettingsRootPage, {
-  viewer: graphql`
-    fragment SettingsRootPage_viewer on Viewer {
+  query: graphql`
+    fragment SettingsRootPage_query on Query {
       me {
         id
         username

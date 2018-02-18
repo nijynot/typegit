@@ -81,7 +81,7 @@ class Search extends React.Component {
                       Search in&nbsp;
                     </span>
                     <a href="/">
-                      {this.props.viewer.me.heading || 'PILECROW'}
+                      {this.props.query.me.heading || 'PILECROW'}
                     </a>
                     <button
                       onClick={this.closeModal}
@@ -101,7 +101,7 @@ class Search extends React.Component {
                   onChange={this.onChangeSearch}
                 />
                 <div className="search-results">
-                  {get(this.props.viewer, 'search.edges', []).map(edge => (
+                  {get(this.props.query, 'search.edges', []).map(edge => (
                     <CozyMemoryItem
                       key={edge.node.id}
                       memory={edge.node}
@@ -117,13 +117,13 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createRefetchContainer(
   Search,
   graphql`
-    fragment Search_viewer on Viewer
+    fragment Search_query on Query
     @argumentDefinitions(
       query: { type: "String", defaultValue: "" }
     ) {
@@ -141,9 +141,7 @@ export default createRefetchContainer(
   `,
   graphql`
     query SearchRefetchQuery($query: String) {
-      viewer {
-        ...Search_viewer @arguments(query: $query)
-      }
+      ...Search_query @arguments(query: $query)
     }
   `
 );

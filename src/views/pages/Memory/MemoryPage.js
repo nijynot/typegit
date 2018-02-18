@@ -16,26 +16,26 @@ class MemoryPage extends React.Component {
     return (
       <div className="memorypage">
         <h1 className="memory-title">
-          {this.props.viewer.memory.title}
+          {this.props.query.memory.title}
         </h1>
-        <span className="memory-timestamp">{moment.utc(this.props.viewer.memory.created).local().format('dddd, MMMM Do, YYYY')}</span>
+        <span className="memory-timestamp">{moment.utc(this.props.query.memory.created).local().format('dddd, MMMM Do, YYYY')}</span>
         <div className="markdown-body memory-body">
           <Markdown
-            source={this.props.viewer.memory.body || ''}
+            source={this.props.query.memory.body || ''}
           />
         </div>
         {/* <p className="memory-body pre-wrap">
-          {this.props.viewer.memory.body}
+          {this.props.query.memory.body}
         </p> */}
         <MetaPortal>
           <span className="meta-count left">
             <b>
-              {stringLength(this.props.viewer.memory.body || '') +
-                stringLength(this.props.viewer.memory.title || '')}
+              {stringLength(this.props.query.memory.body || '') +
+                stringLength(this.props.query.memory.title || '')}
             </b>{' '}characters
           </span>
           <a
-            href={`/${fromGlobalId(this.props.viewer.memory.id).id}/edit`}
+            href={`/${fromGlobalId(this.props.query.memory.id).id}/edit`}
             className="memory-edit-btn right"
           >
             Edit
@@ -47,12 +47,12 @@ class MemoryPage extends React.Component {
 }
 
 MemoryPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(MemoryPage, {
-  viewer: graphql`
-    fragment MemoryPage_viewer on Viewer {
+  query: graphql`
+    fragment MemoryPage_query on Query {
       memory(id: $id) {
         id
         title

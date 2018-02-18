@@ -183,12 +183,12 @@ class SettingsPasswordPage extends React.Component {
 }
 
 SettingsPasswordPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(SettingsPasswordPage, {
-  viewer: graphql`
-    fragment SettingsPasswordPage_viewer on Viewer {
+  query: graphql`
+    fragment SettingsPasswordPage_query on Query {
       me {
         id
         username

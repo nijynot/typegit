@@ -46,7 +46,7 @@ class HomePage extends React.Component {
   }
   getData() {
     const arr = [];
-    const { tags } = this.props.viewer.me;
+    const { tags } = this.props.query.me;
     for (let i = 0; i < tags.length; i += 1) {
       if (tags[i].count !== 1) {
         arr.push(tags[i].count);
@@ -57,7 +57,7 @@ class HomePage extends React.Component {
   render() {
     return (
       <div className="homepage">
-        {(this.props.viewer.me.subscription.current_period_end) ?
+        {(this.props.query.me.subscription.current_period_end) ?
           null :
           <div className="home-msg-container">
             <span className="home-read-only-msg">
@@ -72,7 +72,7 @@ class HomePage extends React.Component {
             </span>
           </div>}
         <div className="home-tags clearfix">
-          {this.props.viewer.me.tags.map(tag => (
+          {this.props.query.me.tags.map(tag => (
             <a
               key={tag.id}
               href={`/tag/${tag.tag}`}
@@ -96,12 +96,12 @@ class HomePage extends React.Component {
               </span> */}
             </a>
           ))}
-          {(isEmpty(this.props.viewer.me.tags)) ?
+          {(isEmpty(this.props.query.me.tags)) ?
             <span className="home-empty-tag-msg">
               No hashtags yet.
             </span> : null}
         </div>
-        <HomeMemories viewer={this.props.viewer} />
+        <HomeMemories query={this.props.query} />
         <MetaPortal>
           <a href="/new" className="meta-plus home-new-link right">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-plus">
@@ -109,7 +109,7 @@ class HomePage extends React.Component {
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </a>
-          <Search viewer={this.props.viewer} />
+          <Search query={this.props.query} />
         </MetaPortal>
       </div>
     );
@@ -117,12 +117,12 @@ class HomePage extends React.Component {
 }
 
 HomePage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(HomePage, {
-  viewer: graphql`
-    fragment HomePage_viewer on Viewer {
+  query: graphql`
+    fragment HomePage_query on Query {
       me {
         tags {
           id
@@ -133,8 +133,8 @@ export default createFragmentContainer(HomePage, {
           current_period_end
         }
       }
-      ...Search_viewer @arguments(query: $query)
-      ...HomeMemories_viewer
+      ...Search_query @arguments(query: $query)
+      ...HomeMemories_query
     }
   `,
 });

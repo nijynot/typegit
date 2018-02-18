@@ -18,18 +18,15 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query ErrorPageQuery {
-        viewer {
-          ...App_viewer
-        }
+        ...App_query
       }
     `}
     variables={{}}
     render={({ err, props }) => {
       if (props) {
-        console.log(props);
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
             <ErrorPage />
           </App>

@@ -26,9 +26,9 @@ class MemoryEditPage extends React.Component {
     super(props);
     this.state = {
       preview: false,
-      title: this.props.viewer.memory.title,
-      body: this.props.viewer.memory.body,
-      created: this.props.viewer.memory.created,
+      title: this.props.query.memory.title,
+      body: this.props.query.memory.body,
+      created: this.props.query.memory.created,
       save: false,
       error: false,
     };
@@ -41,8 +41,8 @@ class MemoryEditPage extends React.Component {
     window.onbeforeunload = () => {
       if (
         (
-          this.state.body !== this.props.viewer.memory.body ||
-          this.state.title !== this.props.viewer.memory.title
+          this.state.body !== this.props.query.memory.body ||
+          this.state.title !== this.props.query.memory.title
         )
       ) {
         return 'Unsaved changes.';
@@ -70,7 +70,7 @@ class MemoryEditPage extends React.Component {
     if (window.confirm('Are you sure you want to delete this Memory?') === true) {
       DeleteMemoryMutation({
         environment: this.props.relay.environment,
-        id: this.props.viewer.memory.id,
+        id: this.props.query.memory.id,
       })
       .then((res) => {
         if (res.deleteMemory) {
@@ -85,7 +85,7 @@ class MemoryEditPage extends React.Component {
     const { title, body, created } = this.state;
     UpdateMemoryMutation({
       environment: this.props.relay.environment,
-      id: this.props.viewer.memory.id,
+      id: this.props.query.memory.id,
       title,
       body,
       created,
@@ -93,7 +93,7 @@ class MemoryEditPage extends React.Component {
     .then((res) => {
       if (res.updateMemory) {
         window.onbeforeunload = null;
-        document.location.href = `/${fromGlobalId(this.props.viewer.memory.id).id}`;
+        document.location.href = `/${fromGlobalId(this.props.query.memory.id).id}`;
       } else {
         this.setState({ error: true });
       }
@@ -115,7 +115,7 @@ class MemoryEditPage extends React.Component {
             </span>
           </div> : null}
         <div className="drafting-hint">
-          /* edit {fromGlobalId(this.props.viewer.memory.id).id} */
+          /* edit {fromGlobalId(this.props.query.memory.id).id} */
         </div>
         <div>
           <input
@@ -146,8 +146,8 @@ class MemoryEditPage extends React.Component {
         <MetaPortal>
           <span className="meta-count left">
             <b>
-              {stringLength(this.props.viewer.memory.body || '') +
-                stringLength(this.props.viewer.memory.title || '')}
+              {stringLength(this.props.query.memory.body || '') +
+                stringLength(this.props.query.memory.title || '')}
             </b>{' '}characters
           </span>
           <DropdownProp
@@ -195,7 +195,7 @@ class MemoryEditPage extends React.Component {
             <li className="ddrow">
               <a
                 className="ddrow-btn"
-                href={`/${fromGlobalId(this.props.viewer.memory.id).id}`}
+                href={`/${fromGlobalId(this.props.query.memory.id).id}`}
                 style={{ display: 'block' }}
               >
                 Cancel Memory
@@ -227,12 +227,12 @@ class MemoryEditPage extends React.Component {
 }
 
 MemoryEditPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(MemoryEditPage, {
-  viewer: graphql`
-    fragment MemoryEditPage_viewer on Viewer {
+  query: graphql`
+    fragment MemoryEditPage_query on Query {
       memory(id: $id) {
         id
         title

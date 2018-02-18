@@ -52,8 +52,8 @@ class RegisterPage extends React.PureComponent {
   }
   onClickRegister() {
     if (
-      this.props.viewer.usernameIsValid &&
-      this.props.viewer.emailIsValid &&
+      this.props.query.usernameIsValid &&
+      this.props.query.emailIsValid &&
       this.state.password === this.state.verifyPassword
     ) {
       this.registerMutation();
@@ -111,12 +111,12 @@ class RegisterPage extends React.PureComponent {
         <form>
           <div className="settingsroot-form">
             <span className={cx('settingsroot-label', {
-              success: this.props.viewer.usernameIsValid,
-              error: this.props.viewer.usernameIsValid === false,
+              success: this.props.query.usernameIsValid,
+              error: this.props.query.usernameIsValid === false,
             })}
             >
               Username&nbsp;
-              {(this.props.viewer.usernameIsValid) ? '✓' : null}
+              {(this.props.query.usernameIsValid) ? '✓' : null}
             </span>
             <input
               ref={(node) => { this.username = node; }}
@@ -125,7 +125,7 @@ class RegisterPage extends React.PureComponent {
               onChange={partial(this.onChange, placeholder, 'username')}
               required
             />
-            {(this.props.viewer.usernameIsValid === false) ?
+            {(this.props.query.usernameIsValid === false) ?
               <span className="settingsroot-hint error">
                 Username is invalid or already taken.
               </span> :
@@ -136,12 +136,12 @@ class RegisterPage extends React.PureComponent {
           </div>
           <div className="settingsroot-form">
             <span className={cx('settingsroot-label', {
-              success: this.props.viewer.emailIsValid,
-              error: this.props.viewer.emailIsValid === false,
+              success: this.props.query.emailIsValid,
+              error: this.props.query.emailIsValid === false,
             })}
             >
               Email address&nbsp;
-              {(this.props.viewer.emailIsValid) ? '✓' : null}
+              {(this.props.query.emailIsValid) ? '✓' : null}
             </span>
             <input
               ref={(node) => { this.email = node; }}
@@ -150,7 +150,7 @@ class RegisterPage extends React.PureComponent {
               onChange={partial(this.onChange, placeholder, 'email')}
               required
             />
-            {(this.props.viewer.emailIsValid === false) ?
+            {(this.props.query.emailIsValid === false) ?
               <span className="settingsroot-hint error">
                 Email is invalid or already taken.
               </span> :
@@ -213,14 +213,14 @@ class RegisterPage extends React.PureComponent {
 }
 
 RegisterPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createRefetchContainer(
   RegisterPage,
   {
-    viewer: graphql`
-      fragment RegisterPage_viewer on Viewer @argumentDefinitions(
+    query: graphql`
+      fragment RegisterPage_query on Query @argumentDefinitions(
         username: { type: "String", defaultValue: "" },
         email: { type: "String", defaultValue: "" }
       ) {
@@ -232,9 +232,7 @@ export default createRefetchContainer(
   },
   graphql`
     query RegisterPageRefetchQuery($username: String, $email: String) {
-      viewer {
-        ...RegisterPage_viewer @arguments(username: $username, email: $email)
-      }
+      ...RegisterPage_query @arguments(username: $username, email: $email)
     }
   `,
 );

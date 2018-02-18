@@ -27,7 +27,7 @@ class PaymentPage extends React.PureComponent {
     this.renderSubscriptionBtn = this.renderSubscriptionBtn.bind(this);
   }
   renderSubscriptionBtn() {
-    // if (this.props.viewer.me.subscription.cancel_at_period_end === false) {
+    // if (this.props.query.me.subscription.cancel_at_period_end === false) {
     //   return (
     //     <button
     //       className="settingssubscription-cancel-btn"
@@ -99,17 +99,17 @@ class PaymentPage extends React.PureComponent {
 }
 
 PaymentPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(PaymentPage, {
-  viewer: graphql`
-    fragment PaymentPage_viewer on Viewer {
+  query: graphql`
+    fragment PaymentPage_query on Query {
       me {
         id
         username
       }
-      ...PaymentForm_viewer
+      ...PaymentForm_query
     }
   `,
 });

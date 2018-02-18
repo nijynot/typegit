@@ -68,11 +68,11 @@ class SettingsSubscriptionPage extends React.Component {
           <span className="settingssubscription-card-type">Card Type</span>
           <span className="settingssubscription-hl">
             {/* {this.renderBrand()} */}
-            {get(this.props.viewer.me, 'card.brand') || 'N/A'}
+            {get(this.props.query.me, 'card.brand') || 'N/A'}
           </span>
           <span className="settingssubscription-last4">Last 4</span>
           <span className="settingssubscription-hl">
-            •••• •••• •••• {get(this.props.viewer.me, 'card.last4') || 'N/A'}
+            •••• •••• •••• {get(this.props.query.me, 'card.last4') || 'N/A'}
           </span>
         </div>
         <button
@@ -85,7 +85,7 @@ class SettingsSubscriptionPage extends React.Component {
     );
   }
   renderSubscriptionBtn() {
-    if (this.props.viewer.me.subscription.cancel_at_period_end === false) {
+    if (this.props.query.me.subscription.cancel_at_period_end === false) {
       return (
         <button
           className="settingssubscription-cancel-btn"
@@ -123,15 +123,15 @@ class SettingsSubscriptionPage extends React.Component {
     );
   }
   renderCurrentPeriod() {
-    if (!this.props.viewer.me.subscription.current_period_start &&
-        !this.props.viewer.me.subscription.current_period_end) {
+    if (!this.props.query.me.subscription.current_period_start &&
+        !this.props.query.me.subscription.current_period_end) {
       return (
         <span className="settingssubscription-not-active">
           Not Active
         </span>
       );
     }
-    return `${moment.unix(this.props.viewer.me.subscription.current_period_start).format('MMMM Do, YYYY')}–${moment.unix(this.props.viewer.me.subscription.current_period_end).format('MMMM Do, YYYY')}`;
+    return `${moment.unix(this.props.query.me.subscription.current_period_start).format('MMMM Do, YYYY')}–${moment.unix(this.props.query.me.subscription.current_period_end).format('MMMM Do, YYYY')}`;
   }
   render() {
     return (
@@ -147,17 +147,17 @@ class SettingsSubscriptionPage extends React.Component {
             <div className="settingssubscription-charge clearfix">
               <span>
                 <div>
-                  {(get(this.props.viewer.me.upcomingInvoice, 'date')) ?
-                    moment.unix(get(this.props.viewer.me.upcomingInvoice, 'date')).format('MMMM Do, YYYY') :
+                  {(get(this.props.query.me.upcomingInvoice, 'date')) ?
+                    moment.unix(get(this.props.query.me.upcomingInvoice, 'date')).format('MMMM Do, YYYY') :
                     'Never'}
                 </div>
                 <small>Next Payment</small>
               </span>
               <span className="right">
-                ${get(this.props.viewer.me.upcomingInvoice, 'amount_due') / 100}
+                ${get(this.props.query.me.upcomingInvoice, 'amount_due') / 100}
               </span>
             </div>
-            {this.props.viewer.me.charges.edges.map(edge => (
+            {this.props.query.me.charges.edges.map(edge => (
               <div
                 key={edge.node.id}
                 className="settingssubscription-charge clearfix"
@@ -195,7 +195,7 @@ class SettingsSubscriptionPage extends React.Component {
             </i>&nbsp;
             {this.renderCurrentPeriod()}
             <br />
-            <i>Cancel Subscription when current period ends:</i> {(this.props.viewer.me.subscription.cancel_at_period_end) ? <b>Yes</b> : <b>No</b>}
+            <i>Cancel Subscription when current period ends:</i> {(this.props.query.me.subscription.cancel_at_period_end) ? <b>Yes</b> : <b>No</b>}
           </div>
           <div className="settingsroot-divider" />
           {this.renderSubscriptionBtn()}
@@ -206,12 +206,12 @@ class SettingsSubscriptionPage extends React.Component {
 }
 
 SettingsSubscriptionPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(SettingsSubscriptionPage, {
-  viewer: graphql`
-    fragment SettingsSubscriptionPage_viewer on Viewer {
+  query: graphql`
+    fragment SettingsSubscriptionPage_query on Query {
       me {
         id
         username
@@ -243,7 +243,7 @@ export default createFragmentContainer(SettingsSubscriptionPage, {
           cancel_at_period_end
         }
       }
-      ...CardForm_viewer
+      ...CardForm_query
     }
   `,
 });

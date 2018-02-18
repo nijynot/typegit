@@ -15,7 +15,7 @@ class App extends React.Component {
     return (
       <div className="app">
         <Header
-          user={this.props.viewer.me}
+          user={this.props.query.me}
         />
         <div className="content">
           {this.props.children}
@@ -26,12 +26,12 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(App, {
-  viewer: graphql`
-    frzagment App_viewer on Viewer {
+  query: graphql`
+    fragment App_query on Query {
       me {
         id
         username

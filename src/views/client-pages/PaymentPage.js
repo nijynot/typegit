@@ -18,17 +18,16 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query PaymentPageQuery {
-        viewer {
-          ...App_viztPage_viewer
-        }
+        ...App_query
+        ...PaymentPage_query
       }
     `}
     variables={{}}
     render={({ err, props }) => {
       if (props) {
         return (
-          <App viewer={props.viewer}>
-            <PaymentPage viewer={props.viewer} />
+          <App query={props}>
+            <PaymentPage query={props} />
           </App>
         );
       } else if (err) {

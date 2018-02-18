@@ -19,10 +19,8 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query MemoryPageQuery($id: String!) {
-        viewer {
-          ...App_viewer
-          ...MemoryPage_viewer
-        }
+        ...App_query
+        ...MemoryPage_query
       }
     `}
     variables={{ id: memory_id }}
@@ -30,9 +28,9 @@ ReactDOM.render(
       if (props) {
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
-            <MemoryPage viewer={props.viewer} />
+            <MemoryPage query={props} />
           </App>
         );
       }

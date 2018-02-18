@@ -20,11 +20,9 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query SettingsPasswordPageQuery {
-        viewer {
-          ...App_viewer
-          ...SettingsRootPage_viewer
-          ...SettingsPasswordPage_viewer
-        }
+        ...App_query
+        ...SettingsRootPage_query
+        ...SettingsPasswordPage_query
       }
     `}
     variables={{}}
@@ -32,13 +30,13 @@ ReactDOM.render(
       if (props) {
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
             <SettingsRootPage
-              viewer={props.viewer}
+              query={props}
               active="password"
             >
-              <SettingsPasswordPage viewer={props.viewer} />
+              <SettingsPasswordPage query={props} />
             </SettingsRootPage>
           </App>
         );

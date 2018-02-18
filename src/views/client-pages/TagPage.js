@@ -19,10 +19,8 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query TagPageQuery($tag: String, $query: String) {
-        viewer {
-          ...App_viewer
-          ...TagPage_viewer
-        }
+        ...App_query
+        ...TagPage_query
       }
     `}
     variables={{ tag, query: '' }}
@@ -30,9 +28,9 @@ ReactDOM.render(
       if (props) {
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
-            <TagPage viewer={props.viewer} />
+            <TagPage query={props} />
           </App>
         );
       } else if (err) {

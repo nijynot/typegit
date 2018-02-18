@@ -40,8 +40,8 @@ class DraftingPage extends React.Component {
   }
   componentDidMount() {
     mixpanel.register({
-      id: fromGlobalId(this.props.viewer.me.id).id,
-      email: this.props.viewer.me.email,
+      id: fromGlobalId(this.props.query.me.id).id,
+      email: this.props.query.me.email,
     });
     window.onbeforeunload = () => {
       if (this.state.body || this.state.title) {
@@ -234,14 +234,14 @@ class DraftingPage extends React.Component {
 }
 
 DraftingPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 // module.exports = DraftingPage;
 
 export default createFragmentContainer(DraftingPage, {
-  viewer: graphql`
-    fragment DraftingPage_z on Viewer {
+  query: graphql`
+    fragment DraftingPage_query on Query {
       id
       me {
         id

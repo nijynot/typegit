@@ -22,7 +22,7 @@ class SettingsAccountPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      heading: this.props.viewer.me.heading || '',
+      heading: this.props.query.me.heading || '',
       imageUploaded: false,
       accountUpdated: false,
     };
@@ -46,8 +46,8 @@ class SettingsAccountPage extends React.Component {
   }
   updateUserMutation() {
     if (
-      (this.props.viewer.emailIsValid !== false ||
-        this.props.viewer.me.email === this.email.value) &&
+      (this.props.query.emailIsValid !== false ||
+        this.props.query.me.email === this.email.value) &&
       this.email.value.length > 0
     ) {
       UpdateUserMutation({
@@ -97,7 +97,7 @@ class SettingsAccountPage extends React.Component {
           <img
             ref={(node) => { this.image = node; }}
             className="settingsaccount-avatar"
-            src={`/assets/u/${fromGlobalId(this.props.viewer.me.id).id}`}
+            src={`/assets/u/${fromGlobalId(this.props.query.me.id).id}`}
             alt="avatar"
           />
           {(this.state.imageUploaded) ?
@@ -139,19 +139,19 @@ class SettingsAccountPage extends React.Component {
         </div>
         <div className="settingsroot-form">
           <span className={cx('settingsroot-label', {
-            success: this.props.viewer.emailIsValid,
-            error: (this.props.viewer.emailIsValid === false) &&
-              (this.props.viewer.me.email !== this.email.value),
+            success: this.props.query.emailIsValid,
+            error: (this.props.query.emailIsValid === false) &&
+              (this.props.query.me.email !== this.email.value),
           })}
           >
             Email address&nbsp;
-            {(this.props.viewer.emailIsValid) ? '✓' : null}
+            {(this.props.query.emailIsValid) ? '✓' : null}
           </span>
           <input
             ref={(node) => { this.email = node; }}
             className="settingsaccount-ctrl"
             placeholder="some@email.com"
-            defaultValue={this.props.viewer.me.email}
+            defaultValue={this.props.query.me.email}
             onChange={partial(this.onChange, placeholder, 'email')}
             type="email"
             required
@@ -163,7 +163,7 @@ class SettingsAccountPage extends React.Component {
             onChange={partial(this.onChange, placeholder, 'email')}
             required
           /> */}
-          {(this.props.viewer.emailIsValid === false) && (this.props.viewer.me.email !== this.email.value) ?
+          {(this.props.query.emailIsValid === false) && (this.props.query.me.email !== this.email.value) ?
             <span className="settingsroot-hint error">
               Email is invalid or already taken.
             </span> :
@@ -192,12 +192,12 @@ class SettingsAccountPage extends React.Component {
 }
 
 SettingsAccountPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 // export default createFragmentContainer(SettingsAccountPage, {
-//   viewer: graphql`
-//     fragment SettingsAccountPage_viewer on Viewer {
+//   query: graphql`
+//     fragment SettingsAccountPage_query on Viewer {
 //       me {
 //         id
 //         username
@@ -211,8 +211,8 @@ SettingsAccountPage.propTypes = {
 export default createRefetchContainer(
   SettingsAccountPage,
   {
-    viewer: graphql`
-      fragment SettingsAccountPage_viewer on Viewer @argumentDefinitions(
+    query: graphql`
+      fragment SettingsAccountPage_query on Query @argumentDefinitions(
         email: { type: "String", defaultValue: "" }
       ) {
         me {
@@ -227,9 +227,7 @@ export default createRefetchContainer(
   },
   graphql`
     query SettingsAccountPageRefetchQuery($email: String) {
-      viewer {
-        ...SettingsAccountPage_viewer @arguments(email: $email)
-      }
+      ...SettingsAccountPage_query @arguments(email: $email)
     }
   `,
 );

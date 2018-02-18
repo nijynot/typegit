@@ -36,12 +36,12 @@ class LoginPage extends React.PureComponent {
 }
 
 LoginPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(LoginPage, {
-  viewer: graphql`
-    fragment LoginPage_viewer on Viewer {
+  query: graphql`
+    fragment LoginPage_query on Query {
       id
     }
   `,

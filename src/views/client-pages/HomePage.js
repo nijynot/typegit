@@ -18,10 +18,8 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query HomePageQuery($query: String) {
-        viewer {
-          ...App_viewer
-          ...HomePage_viewer
-        }
+        ...App_query
+        ...HomePage_query
       }
     `}
     variables={{ search: '' }}
@@ -30,9 +28,9 @@ ReactDOM.render(
         console.log(props);
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
-            <HomePage viewer={props.viewer} />
+            <HomePage query={props} />
           </App>
         );
       } else if (err) {

@@ -287,8 +287,8 @@ CardForm.propTypes = {
 };
 
 export default createFragmentContainer(injectStripe(CardForm), {
-  viewer: graphql`
-    fragment CardForm_viewer on Viewer {
+  query: graphql`
+    fragment CardForm_query on Query {
       me {
         id
         username

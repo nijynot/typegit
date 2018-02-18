@@ -18,10 +18,8 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query LoginPageQuery {
-        viewer {
-          ...App_viewer
-          ...LoginPage_viewer
-        }
+        ...App_query
+        ...LoginPage_query
       }
     `}
     variables={{}}
@@ -30,8 +28,8 @@ ReactDOM.render(
       if (props) {
         console.log('render');
         return (
-          <App viewer={props.viewer}>
-            <LoginPage viewer={props.viewer} />
+          <App query={props}>
+            <LoginPage query={props} />
           </App>
         );
       } else if (err) {

@@ -18,20 +18,16 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query RegisterPageQuery {
-        viewer {
-          ...App_viewer
-          ...RegisterPage_viewer
-        }
+        ...App_query
+        ...RegisterPage_query
       }
     `}
     variables={{}}
     render={({ err, props }) => {
-      console.log(props);
       if (props) {
-        console.log('render');
         return (
-          <App viewer={props.viewer}>
-            <RegisterPage viewer={props.viewer} />
+          <App query={props}>
+            <RegisterPage query={props} />
           </App>
         );
       } else if (err) {

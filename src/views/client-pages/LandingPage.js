@@ -18,9 +18,7 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query LandingPageQuery {
-        viewer {
-          ...App_viewer
-        }
+        ...App_query
       }
     `}
     variables={{}}
@@ -29,7 +27,7 @@ ReactDOM.render(
         console.log(props);
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
             <LandingPage />
           </App>

@@ -24,7 +24,7 @@ class HomeMemories extends React.Component {
       first: -1,
       after: '',
       last: 10,
-      before: this.props.viewer.memories.pageInfo.startCursor,
+      before: this.props.query.memories.pageInfo.startCursor,
     });
     this.props.relay.refetch(refetchVariables, null, () => {
       window.scrollTo(0, 0);
@@ -34,7 +34,7 @@ class HomeMemories extends React.Component {
     // Increments the number of stories being rendered by 20.
     const refetchVariables = () => ({
       first: 10,
-      after: this.props.viewer.memories.pageInfo.endCursor,
+      after: this.props.query.memories.pageInfo.endCursor,
       last: 0,
       before: '',
     });
@@ -46,14 +46,14 @@ class HomeMemories extends React.Component {
     return (
       <div className="homememories clearfix">
         <div className="clearfix">
-          {(this.props.viewer.memories.pageInfo.hasPreviousPage) ?
+          {(this.props.query.memories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
               onClick={this.previousPage}
             >
               Previous Page
             </button> : null}
-          {(this.props.viewer.memories.pageInfo.hasNextPage) ?
+          {(this.props.query.memories.pageInfo.hasNextPage) ?
             <button
               className="homememories-load-btn right"
               onClick={this.nextPage}
@@ -61,7 +61,7 @@ class HomeMemories extends React.Component {
               Next Page
             </button> : null}
         </div>
-        {this.props.viewer.memories.edges.map((edge) => {
+        {this.props.query.memories.edges.map((edge) => {
           return (
             // <CompactMemoryItem
             //   key={memory.id}
@@ -73,7 +73,7 @@ class HomeMemories extends React.Component {
             />
           );
         })}
-        {(isEmpty(this.props.viewer.memories.edges)) ?
+        {(isEmpty(this.props.query.memories.edges)) ?
           <div className="homememories-empty-msg">
             No memories yet.&nbsp;
             <a href="/new">
@@ -81,14 +81,14 @@ class HomeMemories extends React.Component {
             </a>
           </div> : null}
         <div className="homememories-page-btn-container clearfix">
-          {(this.props.viewer.memories.pageInfo.hasPreviousPage) ?
+          {(this.props.query.memories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
               onClick={this.previousPage}
             >
               Previous Page
             </button> : null}
-          {(this.props.viewer.memories.pageInfo.hasNextPage) ?
+          {(this.props.query.memories.pageInfo.hasNextPage) ?
             <button
               className="homememories-load-btn right"
               onClick={this.nextPage}
@@ -102,14 +102,14 @@ class HomeMemories extends React.Component {
 }
 
 HomeMemories.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createRefetchContainer(
   HomeMemories,
   {
-    viewer: graphql`
-      fragment HomeMemories_viewer on Viewer @argumentDefinitions(
+    query: graphql`
+      fragment HomeMemories_query on Query @argumentDefinitions(
         first: { type: "Int!", defaultValue: 10 }
         after: { type: "String", defaultValue: "" }
         last: { type: "Int", defaultValue: 0 }
@@ -135,9 +135,7 @@ export default createRefetchContainer(
   },
   graphql`
     query HomeMemoriesRefetchQuery($first: Int!, $after: String, $last: Int, $before: String) {
-      viewer {
-        ...HomeMemories_viewer @arguments(first: $first, after: $after, last: $last, before: $before)
-      }
+      ...HomeMemories_query @arguments(first: $first, after: $after, last: $last, before: $before)
     }
   `,
 );

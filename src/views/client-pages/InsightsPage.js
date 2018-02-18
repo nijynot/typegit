@@ -18,10 +18,8 @@ ReactDOM.render(
     environment={modernEnvironment}
     query={graphql`
       query InsightsPageQuery {
-        viewer {
-          ...App_viewer
-          ...InsightsPage_viewer
-        }
+        ...App_query
+        ...InsightsPage_query
       }
     `}
     variables={{}}
@@ -30,9 +28,9 @@ ReactDOM.render(
         console.log(props);
         return (
           <App
-            viewer={props.viewer}
+            query={props}
           >
-            <InsightsPage viewer={props.viewer} />
+            <InsightsPage query={props} />
           </App>
         );
       } else if (err) {

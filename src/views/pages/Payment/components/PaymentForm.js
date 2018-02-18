@@ -301,8 +301,8 @@ PaymentForm.propTypes = {
 };
 
 export default createFragmentContainer(injectStripe(PaymentForm), {
-  viewer: graphql`
-    fragment PaymentForm_viewer on Viewer {
+  query: graphql`
+    fragment PaymentForm_query on Query {
       me {
         id
         username

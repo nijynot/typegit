@@ -13,7 +13,7 @@ class TagPage extends React.Component {
   render() {
     return (
       <div className="homepage">
-        {this.props.viewer.tag.memories.edges.map((edge) => {
+        {this.props.query.tag.memories.edges.map((edge) => {
           return (
             <CompactMemoryItem
               key={edge.node.id}
@@ -28,7 +28,7 @@ class TagPage extends React.Component {
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </a>
-          <Search viewer={this.props.viewer} />
+          <Search query={this.props.query} />
           {/* <span className="meta-search right">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="-2 -3 28 28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-search">
               <circle cx="10.5" cy="10.5" r="7.5" />
@@ -42,13 +42,13 @@ class TagPage extends React.Component {
 }
 
 TagPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(TagPage, {
-  viewer: graphql`
-    fragment TagPage_viewer on Viewer {
-      ...Search_viewer @arguments(query: $query)
+  query: graphql`
+    fragment TagPage_query on Query {
+      ...Search_query @arguments(query: $query)
       tag(tag: $tag) {
         memories(first: 10) {
           edges {

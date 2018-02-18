@@ -15,7 +15,7 @@ class InsightsPage extends React.Component {
               Average Characters per Memory
             </h2>
             <span className="insights-number">
-              {this.props.viewer.me.averageCharactersPerMemory}
+              {this.props.query.me.averageCharactersPerMemory}
             </span>
           </div>
           <div className="insights-panel left">
@@ -23,7 +23,7 @@ class InsightsPage extends React.Component {
               Total number of Characters
             </h2>
             <span className="insights-number">
-              {this.props.viewer.me.totalCharacters}
+              {this.props.query.me.totalCharacters}
             </span>
           </div>
         </div>
@@ -32,7 +32,7 @@ class InsightsPage extends React.Component {
             <h2>
               Most used Tags
             </h2>
-            {this.props.viewer.me.mostUsedTags.map(tag => (
+            {this.props.query.me.mostUsedTags.map(tag => (
               <div className="insights-tag">
                 <a className="tweet-url hashtag" href={`/tag/${tag.tag}`}>
                   #{tag.tag}
@@ -48,7 +48,7 @@ class InsightsPage extends React.Component {
               Total number of Tags
             </h2>
             <span className="insights-number">
-              {this.props.viewer.me.totalTags}
+              {this.props.query.me.totalTags}
             </span>
           </div>
         </div>
@@ -58,12 +58,12 @@ class InsightsPage extends React.Component {
 }
 
 InsightsPage.propTypes = {
-  viewer: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(InsightsPage, {
-  viewer: graphql`
-    fragment InsightsPage_viewer on Viewer {
+  query: graphql`
+    fragment InsightsPage_query on Query {
       id
       me {
         averageCharactersPerMemory
