@@ -1,0 +1,60 @@
+@import "src/scss/btn";
+@import "src/scss/spacing";
+
+@media (max-width: 767px) {
+  .search-content {
+    width: 100% !important;
+    padding: 0 $small !important;
+  }
+}
+#search-modal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+}
+.search-header {
+  display: flex;
+  height: 65px;
+  margin: 0 auto;
+  text-align: center;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  height: 65px;
+}
+.search-heading {
+  height: 65px;
+}
+.search-heading-sentence {
+  // font-family: "Roboto";
+  font-size: 18px;
+  margin-right: 4px;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  white-space: nowrap;
+  // width: 0;
+  // opacity: 0;
+}
+.search-heading-sentence.show {
+  // width: 80px;
+  // opacity: 1;
+}
+.search-content {
+  width: 700px;
+  margin: 0 auto;
+  position: relative;
+}
+#search-ctrl {
+  font-family: "Open Sans";
+  font-size: 46px;
+  width: 100%;
+  outline: 0;
+  border: 0;
+}
+.search-close-btn {
+  @include btn;
+  background-color: transparent;
+  border: 0;
+  position: absolute;
+  right: 0;
+}

@@ -8,8 +8,8 @@ const multer = require('multer');
 const _ = require('lodash');
 const uuidV4 = require('uuid/v4');
 const redis = require('redis');
-const mysql = require('./config/mysql.js');
-const constants = require('./config/constants.js');
+const mysql = require('./src/config/mysql.js');
+const constants = require('./src/config/constants.js');
 
 // Redis Client
 const client = redis.createClient();
@@ -17,16 +17,16 @@ client.select(4);
 
 // Authentication
 const passport = require('passport');
-require('./config/authentication/passport.js');
+require('./src/config/authentication/passport.js');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 // GraphQL
-const schema = require('./schema-es5/schema.js');
-const getLoaders = require('./schema-es5/loaders/getLoaders.js');
-const template = require('./views/template.js');
+const schema = require('./lib/schema/schema.js');
+const getLoaders = require('./lib/schema/loaders/getLoaders.js');
+const template = require('./src/views/template.js');
 
 /* ===== Constants and Helpers ===== */
 
@@ -78,7 +78,6 @@ const diskStorage = multer.diskStorage({
   destination: `${__dirname}/public/tmp`,
   filename: (req, file, cb) => {
     const uuid = uuidV4();
-    // app.locals.uuid = uuid;
     cb(null, `${uuid}`);
   },
 });

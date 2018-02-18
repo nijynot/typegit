@@ -1,0 +1,26 @@
+@import "src/scss/border-radius";
+@import "src/scss/spacing";
+@import "src/scss/colors";
+
+@mixin button() {
+  @include border-radius(3px);
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  outline: 0;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  user-select: none;
+}
+@mixin control() {
+  @include border-radius(3px);
+  border: none;
+  // color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  outline: 0;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  user-select: none;
+}

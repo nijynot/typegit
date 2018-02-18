@@ -1,0 +1,53 @@
+@import "src/scss/border-radius";
+@import "src/scss/colors";
+@import "src/scss/spacing";
+
+@media (max-width: 767px) {
+  .homepage {
+    width: 100% !important;
+  }
+}
+.homepage {
+  width: 700px;
+  margin: $small auto $small auto;
+}
+.home-new-link {
+  // z-index: 1000;
+  // margin-right: 12px;
+  // font-size: 16px;
+  // font-weight: 700;
+}
+.home-tags {
+  @include border-radius(4px);
+  background-color: $lightbluewhite;
+  padding: $tiny $small;
+  margin-bottom: $small;
+}
+.home-empty-tag-msg {
+  color: $deep-grey;
+  font-family: monospace;
+}
+.home-tag {
+  font-family: "Georgia";
+  font-weight: 400;
+  margin-right: $tiny;
+}
+.home-tag-count {
+  // font-family: "Roboto";
+  // font-family: "Open Sans";
+  // padding: 3px 3px 0 3px;
+}
+.home-msg-container {
+  color: $deep-grey;
+  font-family: monospace;
+  text-align: center;
+  margin-bottom: $small;
+}
+.home-read-only-msg {
+  @include border-radius(4px);
+  padding: 2px 6px;
+  background-color: $light-nude;
+}
+.home-sub-link {
+  text-decoration: underline;
+}

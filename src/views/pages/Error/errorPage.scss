@@ -1,0 +1,11 @@
+@import "src/scss/colors";
+@import "src/scss/spacing";
+
+.errorpage h1 {
+  color: $deep-grey;
+  font-family: "EB Garamond";
+  font-size: 46px;
+  margin-top: 64px;
+  font-weight: 700;
+  text-align: center;
+}

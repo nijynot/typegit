@@ -1,0 +1,52 @@
+@import "src/scss/btn";
+@import "src/scss/border-radius";
+@import "src/scss/colors";
+@import "src/scss/spacing";
+
+.registerpage {
+  width: 650px;
+  margin: 0 auto;
+  // display: flex;
+  // justify-content: center;
+  // flex-direction: column;
+  // text-align: center;
+}
+.registerpage h1 {
+  // display: block;
+  color: $deep-grey;
+  font-family: "EB Garamond";
+  font-size: 46px;
+  font-weight: 700;
+  margin: 0 auto;
+}
+.register-ctrl {
+  @include border-radius(3px);
+  border: 1px solid $lightgrey;
+  display: block;
+  font-family: "Source Sans Pro";
+  font-size: 15px;
+  padding: 6px $tiny;
+  outline: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 300px;
+  &:focus {
+    box-shadow: 0 0 0 2px $nude;
+    border-color: $nude;
+  }
+}
+.register-btn {
+  @include btn;
+  @include border-radius(20px);
+  background-color: $nude;
+  border: 0;
+  color: black;
+  font-family: "Open Sans";
+  font-weight: 700;
+  // font-size: 14px;
+  padding: $tiny $small;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}

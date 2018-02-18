@@ -1,0 +1,109 @@
+// @import "src/scss/border-radius";
+// @import "src/scss/spacing";
+// @import "src/scss/colors";
+//
+// .editor {
+//   @include border-radius(3px);
+//   border: 1px solid #ccc;
+//   transition: all .2s cubic-bezier(.20, 1, .23, 1);
+// }
+// .editor-textarea {
+//   border: none;
+//   font-size: 21px;
+//   padding: $tiny;
+//   width: 100%;
+//   outline: none;
+//   // transition: all .2s cubic-bezier(.20, 1, .23, 1);
+//   resize: vertical;
+// }
+// .editor-actions {
+//   border-top: 1px dashed #eee;
+//   margin-top: -34px;
+//   opacity: 0;
+//   padding: $tiny;
+//   transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+//   visibility: hidden;
+// }
+// .editor-actions.show {
+//   opacity: 1;
+//   margin-top: 0;
+//   visibility: visible;
+// }
+// // .editor-textarea:focus ~ .editor-actions {
+// //   // border-color: red;
+// //   opacity: 1;
+// //   margin-top: 0;
+// //   visibility: visible;
+// // }
+// // .editor-textarea:not([body='']) ~ .editor-actions {
+// //   opacity: 1;
+// //   margin-top: 0;
+// //   visibility: visible;
+// // }
+// .editor-action {
+//   border: none;
+//   background-color: transparent;
+//   cursor: pointer;
+//   font-weight: 700;
+//   outline: none;
+//   transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+//   &:hover {
+//     color: $stripe-blue;
+//   }
+// }
+// .editor-action.active {
+//   color: $stripe-blue;
+// }
+// .editor-preview {
+//   font-size: 21px;
+// }
+// .editor-preview-render {
+//   padding: $tiny;
+// }
+// .editor-preview-flash {
+//   color: black;
+//   // opacity: .8;
+//   font-weight: 700;
+//   font-family: 'Arial', sans-serif;
+//   font-size: 13px;
+//   background-color: #f5f5f5;
+//   padding: $tiny 10px;
+// }
+//
+// .editor-help {
+//   width: 400px;
+//   background-color: white;
+//   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+//   position: absolute;
+//   padding: $tiny;
+//   z-index: 999;
+// }
+// .editor-help-close-button {
+//   background-color: transparent;
+//   border: none;
+//   color: $stripe-red;
+//   cursor: pointer;
+//   font-size: 15px;
+//   font-weight: 700;
+//   outline: none;
+//   padding: 0;
+//   position: absolute;
+//   right: 10px;
+//   transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+//   &:hover {
+//     color: #ad1f21;
+//   }
+// }
+// .editor-help-inline {
+//   display: inline-block;
+// }
+// .editor-help-row {
+//   border-bottom: 1px solid #e5e5e5;
+//   margin-bottom: 8px;
+//   padding-bottom: 8px;
+// }
+// // .editor-inline-blockquote blockquote {
+// //   display: inline-block;
+// //   margin-bottom: 0;
+// //   margin-left: $tiny;
+// // }

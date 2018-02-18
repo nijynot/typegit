@@ -1,0 +1,35 @@
+@import "src/scss/border-radius";
+@import "src/scss/btn";
+@import "src/scss/colors";
+@import "src/scss/spacing";
+
+.homememories {
+  margin-bottom: $base;
+}
+.homememories-load-btn {
+  @include btn;
+  @include border-radius(4px);
+  // display: block;
+  // width: 100%;
+  background-color: $lightbluewhite;
+  border: 0;
+  color: $deep-grey;
+  padding: $tiny $small;
+  // margin-top: $small;
+  font-family: "Open Sans";
+  font-weight: 600;
+  &:hover {
+    color: $lightbluewhite;
+    background-color: $deep-grey;
+  }
+}
+.homememories-empty-msg {
+  font-family: "Open Sans";
+  text-align: center;
+  font-size: 18px;
+  color: $lightgrey;
+  font-weight: 700;
+}
+.homememories-page-btn-container {
+  margin-top: $small;
+}
