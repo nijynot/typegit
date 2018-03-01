@@ -36,10 +36,10 @@ class InsightsPage extends React.Component {
               <div className="insights-tag">
                 <a className="tweet-url hashtag" href={`/tag/${tag.tag}`}>
                   #{tag.tag}
+                  <span className="insights-tag-count">
+                    {' '}[{tag.count}]
+                  </span>
                 </a>
-                <span className="insights-tag-count">
-                  {tag.count}
-                </span>
               </div>
             ))}
           </div>

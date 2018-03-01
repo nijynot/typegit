@@ -6,20 +6,29 @@
 .homememories {
   margin-bottom: $base;
 }
+.homememories .pagination {
+  position: relative;
+  margin-top: $small;
+}
+.homememories .pagenumber {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-family: monospace;
+  margin-top: 10px;
+}
 .homememories-load-btn {
   @include btn;
   @include border-radius(4px);
-  // display: block;
-  // width: 100%;
-  background-color: $lightbluewhite;
+  width: 130px;
+  background-color: $lightnude;
   border: 0;
   color: $deep-grey;
   padding: $tiny $small;
-  // margin-top: $small;
   font-family: "Open Sans";
   font-weight: 600;
   &:hover {
-    color: $lightbluewhite;
+    color: $lightnude;
     background-color: $deep-grey;
   }
 }

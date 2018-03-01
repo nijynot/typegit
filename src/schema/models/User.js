@@ -1,5 +1,8 @@
 import get from 'lodash/get';
+import { getOffsetWithDefault } from 'graphql-relay';
+
 import mysql from '../../config/mysql.js';
+import { Image } from './Image.js';
 
 const viewerCanSee = (context, data) => {
   if (get(context, 'user.user_id') === get(data, 'id')) {
@@ -24,10 +27,23 @@ export class User {
     } catch (err) {
       return null;
     }
-    return viewerCanSee(context, data) ? new User(data) : this.null(context, id);
+    return viewerCanSee(context, data) ? new User(data) : this.null();
   }
 
-  static async null(context, id) {
+  static async images(context, args, id) {
+    if (context.user.user_id === id) {
+      const images = await mysql.getImageIdsByUserId({
+        user_id: context.user.user_id,
+        limit: args.first + 1,
+        offset: getOffsetWithDefault(args.after, -1) + 1,
+      })
+      .then(rows => rows.map(row => Image.gen(context, row.id)));
+      return images;
+    }
+    return [];
+  }
+
+  static async null() {
     return new User({ id: null });
   }
 

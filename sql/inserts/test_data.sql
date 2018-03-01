@@ -91,3 +91,29 @@ insert into customers (
 ) values (
   3, 'cus_CLaTVtRrtLwr4s'
 );
+
+insert into images (
+  uuid, user_id, created
+) values (
+  '8a84a76b-d895-45d1-82f2-614d7e1325cd', 1, '2018-02-19 12:00:00'
+);
+insert into images (
+  uuid, user_id, created
+) values (
+  '3b5f28ea-cf80-4fd1-a111-80cce62dd814', 1, '2018-02-19 13:00:00'
+);
+insert into images (
+  uuid, user_id, created
+) values (
+  '265c4d99-d287-4dd4-b5a8-cf1f9848498f', 1, '2018-02-19 14:00:00'
+);
+insert into images (
+  uuid, user_id
+) values (
+  'dc617c3d-707d-45fe-9cc6-e1829eee2eed', 2
+);
+insert into images (
+  uuid, user_id
+) values (
+  'a20011a4-cea5-4c5b-8cb6-32ace68e9648', 3
+);

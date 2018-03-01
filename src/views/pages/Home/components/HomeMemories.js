@@ -7,7 +7,7 @@ import {
   graphql,
 } from 'react-relay';
 import isEmpty from 'lodash/isEmpty';
-// import { cursorToafter } from 'graphql-relay';
+import { cursorToOffset } from 'graphql-relay';
 
 // import CompactMemoryItem from 'global-components/CompactMemoryItem.js';
 import CozyMemoryItem from 'global-components/CozyMemoryItem.js';
@@ -45,7 +45,7 @@ class HomeMemories extends React.Component {
   render() {
     return (
       <div className="homememories clearfix">
-        <div className="clearfix">
+        <div className="pagination clearfix">
           {(this.props.query.memories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
@@ -53,6 +53,10 @@ class HomeMemories extends React.Component {
             >
               Previous Page
             </button> : null}
+          <span className="pagenumber">
+            {Math.ceil(cursorToOffset(this.props.query.memories.pageInfo.endCursor) / 10)}{' / '}
+            {Math.ceil(this.props.query.memories.totalCount / 10)}
+          </span>
           {(this.props.query.memories.pageInfo.hasNextPage) ?
             <button
               className="homememories-load-btn right"
@@ -129,6 +133,7 @@ export default createRefetchContainer(
             startCursor
             endCursor
           }
+          totalCount
         }
       }
     `,

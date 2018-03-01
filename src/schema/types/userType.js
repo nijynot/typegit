@@ -11,7 +11,6 @@ import {
 import {
   globalIdField,
   connectionArgs,
-  connectionDefinitions,
   getOffsetWithDefault,
   fromGlobalId,
 } from 'graphql-relay';
@@ -24,13 +23,16 @@ import { transformToForward } from '../definitions/transformToForward.js';
 
 import mysql from '../../config/mysql.js';
 import { STRIPE_SK } from '../../config/constants.js';
-import { tagType, tagConnection } from './tagType.js';
+import { tagType } from './tagType.js';
 import { cardType } from './cardType.js';
 import { chargeConnection } from './chargeType.js';
 import { upcomingInvoiceType } from './upcomingInvoiceType.js';
 import { subscriptionType } from './subscriptionType.js';
+import { imageConnection } from './imageType.js';
 
-import { Tag } from '../models/Tag.js';
+// import { Tag } from '../models/Tag.js';
+import { User } from '../models/User.js';
+import { Image } from '../models/Image.js';
 
 const stripe = require('stripe')(STRIPE_SK);
 
@@ -244,6 +246,17 @@ export const userType = registerType(new GraphQLObjectType({
           date: null,
           currency: null,
         };
+      },
+    },
+    images: {
+      type: imageConnection,
+      args: {
+        ...connectionArgs,
+      },
+      resolve: async (rootValue, args, context) => {
+        const { first, after } = transformToForward(args);
+        const images = await User.images(context, { first, after }, rootValue.id);
+        return connectionFromArray(images, { first, after });
       },
     },
   }),

@@ -4,6 +4,7 @@ import {
   createFragmentContainer,
   graphql,
 } from 'react-relay';
+import { fromGlobalId } from 'graphql-base64';
 // import format from 'date-fns/format';
 // import moment from 'moment';
 import autosize from 'autosize';
@@ -18,7 +19,9 @@ import MetaPortal from 'global-components/MetaPortal.js';
 // import Dropdown from 'global-components/Dropdown.js';
 import DropdownProp from 'global-components/DropdownProp.js';
 import Markdown from 'global-components/Markdown.js';
-import { fromGlobalId } from 'graphql-base64';
+import MenuContextImage from 'global-components/MenuContextImage.js';
+
+import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
 import { NewMemoryMutation } from './mutations/NewMemoryMutation.js';
 
@@ -35,8 +38,9 @@ class DraftingPage extends React.Component {
       error: false,
     };
     this.onChange = this.onChange.bind(this);
+    this.onClickImage = this.onClickImage.bind(this);
     this.newMemoryMutation = this.newMemoryMutation.bind(this);
-    this.getState = this.getState.bind(this);
+    this.newImageMutation = this.newImageMutation.bind(this);
   }
   componentDidMount() {
     mixpanel.register({
@@ -49,7 +53,6 @@ class DraftingPage extends React.Component {
       }
       return;
     };
-    autosize(document.querySelector('.dummyclass'));
     Mousetrap.bind(['command+p', 'ctrl+p'], () => {
       this.setState({ preview: !this.state.preview });
       return false;
@@ -62,8 +65,12 @@ class DraftingPage extends React.Component {
       this.setState({ [key]: e.target.value });
     }
   }
-  getState() {
-    console.log(this.state);
+  onClickImage(uuid) {
+    this.setState({
+      body: `${this.state.body}![](/assets/img/${uuid})\n`,
+    }, () => {
+      autosize.update(document.querySelector('.editor-ctrl'));
+    });
   }
   newMemoryMutation() {
     const { title, body, created } = this.state;
@@ -84,6 +91,18 @@ class DraftingPage extends React.Component {
       }
     });
   }
+  newImageMutation() {
+    NewImageMutation({
+      environment: this.props.relay.environment,
+      uploadables: {
+        file: this.upload.files.item(0),
+      },
+      me: this.props.query.me,
+    })
+    .then((res) => {
+      console.log(res);
+    });
+  }
   render() {
     return (
       <div className="draftingpage">
@@ -101,6 +120,7 @@ class DraftingPage extends React.Component {
           </div> : null}
         <div className="drafting-hint">
           /* new */
+          {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
         <div>
           <input
@@ -113,14 +133,6 @@ class DraftingPage extends React.Component {
           />
         </div>
         <div className="drafting-editor clearfix">
-          {/* {(this.state.preview) ?
-            <Markdown source={this.state.body} /> :
-            <textarea
-              className="dummyclass"
-              value={this.state.body}
-              onChange={partial(this.onChange, partial.placeholder, 'body')}
-              placeholder="What's on your mind?"
-            />} */}
           {(this.state.preview) ?
             <Markdown source={this.state.body} /> :
             <Editor
@@ -158,11 +170,11 @@ class DraftingPage extends React.Component {
                   Preview {(this.state.preview) ? '(Active)' : null}
                 </button>
               </li>
-              <li className="ddrow">
+              {/* <li className="ddrow">
                 <button className="ddrow-btn">
                   Change creation date
                 </button>
-              </li>
+              </li> */}
               <li className="ddrow">
                 <button className="ddrow-btn">
                   Keyboard shortcuts
@@ -197,7 +209,7 @@ class DraftingPage extends React.Component {
             </DropdownProp>
             <DropdownProp
               containerClassName="drafting-action right clearfix"
-              className="ddmenu pull-left"
+              className="ddmenu pull-left image-menu"
               toggle={open => (
                 <button
                   onClick={open}
@@ -212,18 +224,37 @@ class DraftingPage extends React.Component {
               )}
             >
               <li className="ddrow">
-                <button className="ddrow-btn">
-                  Change creation date
-                </button>
+                <label htmlFor="image-upload">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-upload">
+                    <path shapeRendering="optimizeQuality" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline shapeRendering="optimizeQuality" points="17 8 12 3 7 8" />
+                    <line shapeRendering="optimizeQuality" x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <input
+                    ref={(n) => { this.upload = n; }}
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={this.newImageMutation}
+                  />
+                  Upload image
+                </label>
               </li>
               <div className="dddivider" />
               <li className="ddrow">
-                <button
-                  className="ddrow-btn"
-                  onClick={this.newMemoryMutation}
-                >
-                  Save as Memory
-                </button>
+                {this.props.query.me.images.edges.map(edge => (
+                  <MenuContextImage
+                    image={edge.node}
+                    onClick={() => { this.onClickImage(fromGlobalId(edge.node.id).id); }}
+                  />
+                ))}
+              </li>
+              <li className="ddrow">
+                <a href="/images">
+                  <button className="ddrow-btn">
+                    To all images
+                  </button>
+                </a>
               </li>
             </DropdownProp>
           </MetaPortal>
@@ -246,6 +277,16 @@ export default createFragmentContainer(DraftingPage, {
       me {
         id
         email
+        images(first: 10) @connection(
+          key: "DraftingPage_images"
+        ) {
+          edges {
+            node {
+              id
+              ...MenuContextImage_image
+            }
+          }
+        }
       }
     }
   `,

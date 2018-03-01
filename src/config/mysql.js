@@ -7,6 +7,7 @@ const insights = require('./mysql/insights.js');
 const count = require('./mysql/count.js');
 const search = require('./mysql/search.js');
 const customers = require('./mysql/customers.js');
+const images = require('./mysql/images.js');
 
 module.exports = assign({},
   memories,
@@ -15,5 +16,6 @@ module.exports = assign({},
   insights,
   count,
   search,
-  customers
+  customers,
+  images
 );

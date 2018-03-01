@@ -33,3 +33,18 @@
   border-top-left-radius: $radius;
   background-clip: padding-box;
 }
+@mixin border-radius-top-left($radius) {
+  -webkit-border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin border-radius-top-right($radius) {
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+  background-clip: padding-box;
+}
+@mixin border-radius-bottom-right($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+  background-clip: padding-box;
+}

@@ -54,4 +54,9 @@ export const memoryType = registerType(new GraphQLObjectType({
 
 export const { connectionType: memoryConnection } = registerType(connectionDefinitions({
   nodeType: memoryType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+    },
+  }),
 }));

@@ -76,15 +76,18 @@ export const queryType = registerType(new GraphQLObjectType({
       },
       resolve: async (rootValue, args, context) => {
         const { first, after } = transformToForward(args);
-        console.log(args);
-        console.log('first:', first, '; afterOffset:', getOffsetWithDefault(after, -1) + 1);
         const array = await mysql.getMemoryIdsByUserId({
           user_id: context.user.user_id,
           limit: first + 1,
           offset: getOffsetWithDefault(after, -1) + 1,
         })
         .then(rows => rows.map(row => Memory.gen(context, row.id)));
-        return connectionFromArray(array, { first, after });
+        const totalCount = await mysql.getMemoryCount({
+          user_id: context.user.user_id,
+        })
+        .then(value => value[0].count);
+
+        return connectionFromArray(array, { first, after }, { totalCount });
       },
     },
     // memoryCount: {

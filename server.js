@@ -14,6 +14,8 @@ const constants = require('./src/config/constants.js');
 // Redis Client
 const client = redis.createClient();
 client.select(4);
+const imageClient = redis.createClient();
+imageClient.select(4);
 
 // Authentication
 const passport = require('passport');
@@ -110,6 +112,21 @@ app.use('/assets/u', express.static('./public/img/u', {
     return res.setHeader('Content-Type', 'image/jpeg');
   },
 }));
+app.use('/assets/img/:uuid', (req, res, next) => {
+  const { uuid } = req.params;
+  const first = uuid.substring(0, 2);
+  const second = uuid.substring(2, 4);
+  const third = uuid.substring(4, 6);
+
+  imageClient.get(uuid, (err, reply) => {
+    if (err) console.error(err);
+    res.set('Content-Type', reply);
+    res.sendFile(`./public/img/img/${first}/${second}/${third}/${uuid}`, {
+      root: __dirname,
+    });
+  });
+});
+// app.use('/assets/img', express.static('./public/img/img'));
 
 // Authentication, session, cookies. (Passport)
 app.use(cookieParser(constants.SESSION_SK));
@@ -185,6 +202,13 @@ app.get('/new', async (req, res, next) => {
 app.get('/insights', (req, res, next) => {
   if (req.user) {
     res.send(template({ title: 'Insights', script: 'InsightsPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
+});
+app.get('/images', (req, res, next) => {
+  if (req.user) {
+    // res.send(template({ title: 'Insights', script: 'InsightsPage.js' }));
   } else {
     next('Not logged in.');
   }

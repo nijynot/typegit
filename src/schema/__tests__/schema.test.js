@@ -79,3 +79,77 @@ test('get all memories', async () => {
     },
   });
 });
+
+test('paginate forward with after', async () => {
+  const query = `
+    query {
+      memories(first: 2, after: "YXJyYXljb25uZWN0aW9uOjA=") {
+        edges {
+          node {
+            id
+            user {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const rootValue = {};
+  const context = {
+    loaders: getLoaders(),
+    user: { user_id: 1 },
+  };
+  const result = await graphql(schema, query, rootValue, context);
+  expect(result).toEqual({
+    data: {
+      memories: {
+        edges: [
+          {
+            node: {
+              id: 'TWVtb3J5OkFsaWNlMDAwMDAwMQ==', user: { id: 'VXNlcjox' },
+            },
+          },
+        ],
+      },
+    },
+  });
+});
+
+test('paginate backward with before', async () => {
+  const query = `
+    query {
+      memories(last: 2, before: "TWVtb3J5OkFsaWNlMDAwMDAwMQ==") {
+        edges {
+          node {
+            id
+            user {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const rootValue = {};
+  const context = {
+    loaders: getLoaders(),
+    user: { user_id: 1 },
+  };
+  const result = await graphql(schema, query, rootValue, context);
+  expect(result).toEqual({
+    data: {
+      memories: {
+        edges: [
+          {
+            node: {
+              id: 'TWVtb3J5OkFsaWNlMDAwMDAwMg==', user: { id: 'VXNlcjox' },
+            },
+          },
+        ],
+      },
+    },
+  });
+});

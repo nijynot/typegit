@@ -9,7 +9,7 @@
 }
 .homepage {
   width: 700px;
-  margin: $small auto $small auto;
+  margin: 4px auto $small auto;
 }
 .home-new-link {
   // z-index: 1000;
@@ -19,16 +19,17 @@
 }
 .home-tags {
   @include border-radius(4px);
-  background-color: $lightbluewhite;
+  background-color: $lightnude;
   padding: $tiny $small;
-  margin-bottom: $small;
+  // margin-bottom: $small;
 }
 .home-empty-tag-msg {
   color: $deep-grey;
   font-family: monospace;
 }
 .home-tag {
-  font-family: "Georgia";
+  // font-family: "Georgia";
+  font-family: monospace;
   font-weight: 400;
   margin-right: $tiny;
 }

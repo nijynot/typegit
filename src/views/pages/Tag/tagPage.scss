@@ -1,0 +1,17 @@
+@import "src/scss/border-radius";
+@import "src/scss/colors";
+@import "src/scss/spacing";
+
+.tagpage h2 {
+  @include border-radius(4px);
+  display: inline-block;
+  font-family: monospace;
+  font-size: 18px;
+  color: blue;
+  padding: $tiny $small;
+  background-color: $lightnude;
+  margin-bottom: $tiny;
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,79 @@
+@import "src/scss/border-radius";
+@import "src/scss/colors";
+@import "src/scss/spacing";
+
+.image-menu::-webkit-scrollbar {
+  position: absolute;
+  width: 10px;
+  height: 18px;
+  // background-color: #e7e7e1;
+  background-color: transparent;
+  // background: transparent; /* make scrollbar transparent */
+}
+.image-menu::-webkit-scrollbar-track {
+  display: block;
+  background-color: transparent;
+}
+.image-menu::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 10px;
+  padding-top: 3px;
+  background-clip: padding-box;
+  background-color: rgba(32, 32, 32, 0.65);
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    background-color: $deep-grey;
+  }
+}
+.image-menu {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+.image-menu .ddrow button {
+  &:first-child {
+    @include border-radius-top-right(0px);
+  }
+  &:last-child {
+    @include border-radius-bottom-right(0px);
+  }
+}
+.image-menu input[type="file"] {
+  display: none;
+}
+.image-menu label {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  font-family: "Open Sans";
+  padding: $tiny $small;
+  outline: 0;
+  cursor: pointer;
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}
+.image-menu .ddrow-btn {
+  font-family: monospace;
+}
+
+.menucontextimage {
+  width: 200px;
+  padding: $tiny;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    background-color: $deep-grey;
+    color: white;
+  }
+}
+.menucontextimage .overflow {
+  max-height: 200px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+}
+.menucontextimage img {
+  width: 100%;
+  vertical-align: top;
+  cursor: pointer;
+}

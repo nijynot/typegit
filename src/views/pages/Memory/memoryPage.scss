@@ -20,11 +20,12 @@
 }
 .memory-timestamp {
   color: $lightgrey;
-  font-size: 13px;
-  font-family: "Open Sans";
+  font-size: 14px;
+  // font-family: "Open Sans";
+  font-family: monospace;
 }
 .memory-body {
-  padding-top: $small;
+  padding-top: $base;
   padding-bottom: $large;
   // font-size: px;
   line-height: 1.35;
@@ -34,9 +35,14 @@
   // font-weight: 700;
 }
 .memory-edit-btn {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   margin-right: $small;
   margin-top: 21px;
   line-height: 24px;
+  color: #888;
+  transition: all .2s cubic-bezier(.20, 1, .23, 1);
+  &:hover {
+    color: black;
+  }
 }

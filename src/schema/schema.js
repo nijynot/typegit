@@ -23,6 +23,7 @@ import { updateCustomerMutation } from './mutations/updateCustomerMutation.js';
 import { updateSubscriptionMutation } from './mutations/updateSubscriptionMutation.js';
 import { updateAvatarMutation } from './mutations/updateAvatarMutation.js';
 import { registerMutation } from './mutations/registerMutation.js';
+import { newImageMutation } from './mutations/newImageMutation.js';
 
 // const queryType = new GraphQLObjectType({
 //   name: 'Query',
@@ -40,6 +41,7 @@ const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     newMemory: newMemoryMutation,
+    newImage: newImageMutation,
     deleteMemory: deleteMemoryMutation,
     updateMemory: updateMemoryMutation,
     updateUser: updateUserMutation,

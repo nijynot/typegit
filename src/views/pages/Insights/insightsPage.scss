@@ -17,23 +17,18 @@
   font-size: 42px;
 }
 .insights-tag {
-  font-size: 28px;
+  font-size: 26px;
 }
 .insights-tag a {
-  &:hover ~ span {
-    background-color: blue;
-    color: white;
-  }
+  font-family: monospace;
 }
 .insights-tag-count {
   color: white;
   font-family: 'Overpass Mono', monospace;
   font-weight: 400;
-  font-size: 28px;
-  margin-left: $tiny;
+  // margin-left: $tiny;
   // background-color: $deep-grey;
   color: blue;
   background-color: white;
-  padding: 3px 3px 0 3px;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);
 }

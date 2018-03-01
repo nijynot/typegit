@@ -17,6 +17,9 @@ import Editor from 'global-components/Editor.js';
 import MetaPortal from 'global-components/MetaPortal.js';
 import DropdownProp from 'global-components/DropdownProp.js';
 import Markdown from 'global-components/Markdown.js';
+import MenuContextImage from 'global-components/MenuContextImage.js';
+
+import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
 import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
 import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
@@ -33,9 +36,10 @@ class MemoryEditPage extends React.Component {
       error: false,
     };
     this.onChange = this.onChange.bind(this);
+    this.onClickImage = this.onClickImage.bind(this);
     this.deleteMemoryMutation = this.deleteMemoryMutation.bind(this);
     this.updateMemoryMutation = this.updateMemoryMutation.bind(this);
-    this.getState = this.getState.bind(this);
+    this.newImageMutation = this.newImageMutation.bind(this);
   }
   componentDidMount() {
     window.onbeforeunload = () => {
@@ -63,8 +67,12 @@ class MemoryEditPage extends React.Component {
       this.setState({ [key]: e.target.value });
     }
   }
-  getState() {
-    console.log(this.state);
+  onClickImage(uuid) {
+    this.setState({
+      body: `${this.state.body}![](/assets/img/${uuid})\n`,
+    }, () => {
+      autosize.update(document.querySelector('.editor-ctrl'));
+    });
   }
   deleteMemoryMutation() {
     if (window.confirm('Are you sure you want to delete this Memory?') === true) {
@@ -99,6 +107,18 @@ class MemoryEditPage extends React.Component {
       }
     });
   }
+  newImageMutation() {
+    NewImageMutation({
+      environment: this.props.relay.environment,
+      uploadables: {
+        file: this.upload.files.item(0),
+      },
+      me: this.props.query.me,
+    })
+    .then((res) => {
+      console.log(res);
+    });
+  }
   render() {
     return (
       <div className="memoryeditpage clearfix">
@@ -115,7 +135,8 @@ class MemoryEditPage extends React.Component {
             </span>
           </div> : null}
         <div className="drafting-hint">
-          /* edit {fromGlobalId(this.props.query.memory.id).id} */
+          /*{' '}edit {fromGlobalId(this.props.query.memory.id).id}{' '}*/
+          {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
         <div>
           <input
@@ -198,7 +219,7 @@ class MemoryEditPage extends React.Component {
                 href={`/${fromGlobalId(this.props.query.memory.id).id}`}
                 style={{ display: 'block' }}
               >
-                Cancel Memory
+                Cancel Editing
               </a>
             </li>
             <div className="dddivider" />
@@ -220,6 +241,56 @@ class MemoryEditPage extends React.Component {
               </button>
             </li>
           </DropdownProp>
+          <DropdownProp
+            containerClassName="drafting-action right clearfix"
+            className="ddmenu pull-left image-menu"
+            toggle={open => (
+              <button
+                onClick={open}
+                className="drafting-actions-btn meta-image"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-image">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+              </button>
+            )}
+          >
+            <li className="ddrow">
+              <label htmlFor="image-upload">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-upload">
+                  <path shapeRendering="optimizeQuality" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline shapeRendering="optimizeQuality" points="17 8 12 3 7 8" />
+                  <line shapeRendering="optimizeQuality" x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <input
+                  ref={(n) => { this.upload = n; }}
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={this.newImageMutation}
+                />
+                Upload image
+              </label>
+            </li>
+            <div className="dddivider" />
+            <li className="ddrow">
+              {this.props.query.me.images.edges.map(edge => (
+                <MenuContextImage
+                  image={edge.node}
+                  onClick={() => { this.onClickImage(fromGlobalId(edge.node.id).id); }}
+                />
+              ))}
+            </li>
+            <li className="ddrow">
+              <a href="/images">
+                <button className="ddrow-btn">
+                  To all images
+                </button>
+              </a>
+            </li>
+          </DropdownProp>
         </MetaPortal>
       </div>
     );
@@ -233,6 +304,19 @@ MemoryEditPage.propTypes = {
 export default createFragmentContainer(MemoryEditPage, {
   query: graphql`
     fragment MemoryEditPage_query on Query {
+      me {
+        id
+        images (first: 10) @connection(
+          key: "DraftingPage_images"
+        ) {
+          edges {
+            node {
+              id
+              ...MenuContextImage_image
+            }
+          }
+        }
+      }
       memory(id: $id) {
         id
         title

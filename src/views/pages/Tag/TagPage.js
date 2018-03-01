@@ -6,16 +6,22 @@ import {
 } from 'react-relay';
 
 import MetaPortal from 'global-components/MetaPortal.js';
-import CompactMemoryItem from 'global-components/CompactMemoryItem.js';
+// import CompactMemoryItem from 'global-components/CompactMemoryItem.js';
+import CozyMemoryItem from 'global-components/CozyMemoryItem.js';
 import Search from 'global-components/Search.js';
 
 class TagPage extends React.Component {
   render() {
     return (
-      <div className="homepage">
+      <div className="homepage tagpage">
+        <a href={`/tag/${this.props.query.tag.tag}`}>
+          <h2>
+            #{this.props.query.tag.tag}
+          </h2>
+        </a>
         {this.props.query.tag.memories.edges.map((edge) => {
           return (
-            <CompactMemoryItem
+            <CozyMemoryItem
               key={edge.node.id}
               memory={edge.node}
             />
@@ -50,10 +56,11 @@ export default createFragmentContainer(TagPage, {
     fragment TagPage_query on Query {
       ...Search_query @arguments(query: $query)
       tag(tag: $tag) {
+        tag
         memories(first: 10) {
           edges {
             node {
-              ...CompactMemoryItem_memory
+              ...CozyMemoryItem_memory
             }
           }
         }
