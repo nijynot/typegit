@@ -16,13 +16,17 @@ class MemoryPage extends React.Component {
     return (
       <div className="memorypage">
         <h1 className="memory-title">
-          {this.props.query.memory.title}
+          {this.props.query.memory.title || 'Untitled memory'}
         </h1>
         <span className="memory-timestamp">{moment.utc(this.props.query.memory.created).local().format('dddd, MMMM Do, YYYY')}</span>
         <div className="markdown-body memory-body">
-          <Markdown
-            source={this.props.query.memory.body || ''}
-          />
+          {(this.props.query.memory.body) ?
+            <Markdown
+              source={this.props.query.memory.body}
+            /> :
+            <span className="empty-body">
+              Empty body
+            </span>}
         </div>
         {/* <p className="memory-body pre-wrap">
           {this.props.query.memory.body}

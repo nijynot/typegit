@@ -40,6 +40,7 @@
   padding: $tiny;
   outline: 0;
   font-family: monospace;
+  font-size: 0.8125rem;
   cursor: pointer;
 }
 .settingsaccount-upload-btn {
@@ -59,7 +60,7 @@
 }
 .settingsaccount-upload-label {
   font-family: "Open Sans";
-  margin-left: 4px;
+  // margin-left: 4px;
 }
 .settingsaccount-ctrl {
   @include border-radius(3px);

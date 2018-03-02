@@ -12,7 +12,7 @@
   width: 700px;
 }
 .memory-title {
-  font-size: 46px;
+  font-size: 42px;
   font-weight: 700;
   font-family: "EB Garamond";
   color: $deep-grey;
@@ -25,7 +25,7 @@
   font-family: monospace;
 }
 .memory-body {
-  padding-top: $base;
+  padding-top: $small;
   padding-bottom: $large;
   // font-size: px;
   line-height: 1.35;
@@ -45,4 +45,8 @@
   &:hover {
     color: black;
   }
+}
+.memorypage .empty-body {
+  font-style: italic;
+  color: #555;
 }

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MarkdownIt from 'markdown-it';
-// import mdiRegex from 'markdown-it-regexp';
+import mdiRegex from 'markdown-it-regexp';
 import mdiSup from 'markdown-it-sup';
 import twitter from 'twitter-text';
 import classNames from 'classnames';
 import linkify from 'linkify-it';
+import moment from 'moment';
 
 // const options = {
 //   html: false,
@@ -24,6 +25,7 @@ class Markdown extends React.Component {
     })
     .enable([
       'code',
+      'fence',
       'emphasis',
       'entity',
       'image',
@@ -40,6 +42,15 @@ class Markdown extends React.Component {
     .disable([
       ...this.props.disable,
     ])
+    .use(mdiRegex(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/, (match, utils) => {
+      console.log(utils);
+      return moment.utc(match[1]).local().format('dddd, MMMM Do, YYYY');
+    }))
+    // .use(mdiRegex(/:(?:Kappa):/, (match, utils) => {
+    //   // https://static-cdn.jtvnw.net/emoticons/v1/25/1.0
+    //   const url = 'https://static-cdn.jtvnw.net/emoticons/v1/25/1.0';
+    //   return `<img class="emoji" draggable="false" src="${url}"/>`;
+    // }))
     .use(mdiSup);
   }
   shouldComponentUpdate(nextProps) {

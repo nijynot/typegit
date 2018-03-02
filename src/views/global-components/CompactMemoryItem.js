@@ -32,7 +32,7 @@ class CompactMemoryItem extends React.Component {
         })}
         >
           <a href={`/${fromGlobalId(this.props.memory.id).id}`}>
-            {this.props.memory.title || '~ no title ~'}
+            {this.props.memory.title || 'Untitled memory'}
           </a>
         </span>
         <span className="compactmemoryitem-created">
@@ -45,7 +45,7 @@ class CompactMemoryItem extends React.Component {
           'no-body': !this.props.memory.body,
         })}
         >
-          {this.props.memory.body || '~ no body ~'}
+          {this.props.memory.body || 'Empty body'}
         </span>
       </div>
     );

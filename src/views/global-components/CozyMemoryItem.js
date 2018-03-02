@@ -30,7 +30,7 @@ class CozyMemoryItem extends React.Component {
         <div className="cozymemory-header">
           <a href={`/${fromGlobalId(this.props.memory.id).id}`}>
             <span className="cozymemory-heading">
-              {this.props.memory.title || '~ no title ~'}
+              {this.props.memory.title || 'Untitled memory'}
             </span>
           </a>
           <span className="cozymemory-timestamp">
@@ -38,13 +38,14 @@ class CozyMemoryItem extends React.Component {
           </span>
         </div>
         <div className="cozymemory-content pre-wrap">
-          {/* {this.props.memory.body || '~ no body ~'} */}
           {(this.props.memory.body) ?
             <Markdown
               source={this.props.memory.body}
               format="inline"
             /> :
-            '~ no body ~'}
+            <span className="empty-body">
+              Empty body
+            </span>}
         </div>
       </div>
     );

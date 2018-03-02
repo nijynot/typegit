@@ -12,8 +12,10 @@
   // font-family: "Merriweather", Georgia;
   font-family: Georgia;
   // font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 19px;
-  line-height: 1.5;
+  // font-size: 19px;
+  font-size: 1.0625rem;
+  line-height: 1.625rem;
+  // line-height: 1.5;
   word-wrap: break-word;
 }
 
@@ -174,10 +176,10 @@
   font-style: italic!important;
 }
 
-.markdown-body h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
+// .markdown-body h1 {
+//   font-size: 2em;
+//   margin: 0.67em 0;
+// }
 
 .markdown-body img {
   border-style: none;
@@ -274,13 +276,15 @@
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
+  font-family: "EB Garamond";
   margin-top: 0;
   margin-bottom: 0;
 }
 
 .markdown-body h1 {
-  font-size: 32px;
-  font-weight: 600;
+  color: #383434;
+  font-size: 42px;
+  font-weight: 700;
 }
 
 .markdown-body h2 {
@@ -427,8 +431,8 @@
 .markdown-body table,
 .markdown-body pre {
   margin-top: 0;
-  // margin-bottom: 16px;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
+  // margin-bottom: 30px;
 }
 
 .markdown-body hr {
@@ -474,7 +478,7 @@
 .markdown-body h5,
 .markdown-body h6 {
   margin-top: 24px;
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   font-weight: 600;
   line-height: 1.25;
 }
@@ -509,9 +513,9 @@
 }
 
 .markdown-body h1 {
-  padding-bottom: 0.3em;
-  font-size: 2em;
-  border-bottom: 1px solid #eaecef;
+  // padding-bottom: 0.3em;
+  // font-size: 2em;
+  // border-bottom: 1px solid #eaecef;
 }
 
 .markdown-body h2 {
@@ -636,7 +640,7 @@
   word-wrap: normal;
 }
 
-.markdown-body pre>code {
+.markdown-body pre > code {
   padding: 0;
   margin: 0;
   font-size: 100%;
