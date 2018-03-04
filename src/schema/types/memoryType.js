@@ -42,16 +42,16 @@ export const memoryType = registerType(new GraphQLObjectType({
       type: GraphQLString,
     },
     custom_title: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: GraphQLInt,
     },
     custom_created: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: GraphQLInt,
     },
     created: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
     },
     user: {
-      type: new GraphQLNonNull(userType),
+      type: userType,
       resolve: (rootValue, args, context) => {
         return User.gen(context, rootValue.user_id);
       },

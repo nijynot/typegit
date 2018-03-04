@@ -66,6 +66,11 @@ test('get all memories', async () => {
         edges: [
           {
             node: {
+              id: 'TWVtb3J5OkFsaWNlMDAwMDAwMw==', user: { id: 'VXNlcjox' },
+            },
+          },
+          {
+            node: {
               id: 'TWVtb3J5OkFsaWNlMDAwMDAwMg==', user: { id: 'VXNlcjox' },
             },
           },
@@ -108,6 +113,11 @@ test('paginate forward with after', async () => {
         edges: [
           {
             node: {
+              id: 'TWVtb3J5OkFsaWNlMDAwMDAwMg==', user: { id: 'VXNlcjox' },
+            },
+          },
+          {
+            node: {
               id: 'TWVtb3J5OkFsaWNlMDAwMDAwMQ==', user: { id: 'VXNlcjox' },
             },
           },
@@ -120,7 +130,7 @@ test('paginate forward with after', async () => {
 test('paginate backward with before', async () => {
   const query = `
     query {
-      memories(last: 2, before: "TWVtb3J5OkFsaWNlMDAwMDAwMQ==") {
+      memories(last: 2, before: "YXJyYXljb25uZWN0aW9uOjE=") {
         edges {
           node {
             id
@@ -145,7 +155,7 @@ test('paginate backward with before', async () => {
         edges: [
           {
             node: {
-              id: 'TWVtb3J5OkFsaWNlMDAwMDAwMg==', user: { id: 'VXNlcjox' },
+              id: 'TWVtb3J5OkFsaWNlMDAwMDAwMw==', user: { id: 'VXNlcjox' },
             },
           },
         ],
