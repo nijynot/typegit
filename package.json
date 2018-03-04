@@ -17,10 +17,10 @@
     "deamon.dev": "pm2 start server.js",
     "deamon.prod": "cross-env NODE_ENV=production pm2 start server.js",
     "deamon.prod.restart": "cross-env NODE_ENV=production pm2 restart server.js",
-    "dump.data": "mysqldump --databases diary > ./sql/diary-$(date +%Y-%m-%d-%H.%M.%S).sql -u root -p",
+    "dump.data": "mysqldump --databases diary > ./backup/backup.sql -u root -p",
     "dump.structure": "mysqldump --databases --no-data diary > ./sql/structure.sql -u root -p",
-    "dump.dummy.database": "mysqldump --databases test_diary > ./sql/test_database.sql -u root -p",
-    "dump.dummy.structure": "mysqldump --databases --no-data test_diary > ./sql/test_structure.sql -u root -p"
+    "dump.test.data": "mysqldump --databases test_diary > ./backup/test_backup.sql -u root -p",
+    "dump.test.structure": "mysqldump --databases --no-data test_diary > ./sql/test_structure.sql -u root -p"
   },
   "dependencies": {
     "autosize": "^4.0.0",

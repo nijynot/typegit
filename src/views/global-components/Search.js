@@ -78,7 +78,7 @@ class Search extends React.Component {
                     <span
                       className="search-heading-sentence"
                     >
-                      Search in&nbsp;
+                      Search —&nbsp;
                     </span>
                     <a href="/">
                       {this.props.query.me.heading || 'PILECROW'}

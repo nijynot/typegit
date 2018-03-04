@@ -7,10 +7,12 @@
   margin-bottom: $base;
 }
 .homememories .pagination {
+  min-height: 34px;
   position: relative;
   margin-top: $small;
 }
 .homememories .pagenumber {
+  font-size: 13px;
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0);

@@ -53,11 +53,12 @@ class MemoryEditPage extends React.Component {
       }
       return;
     };
-    autosize(document.querySelector('.dummyclass'));
+    autosize(document.querySelector('.memoryedit-title'));
     Mousetrap.bind(['command+p', 'ctrl+p'], () => {
       this.setState({ preview: !this.state.preview });
       return false;
     });
+    console.log(this.state.body.match(/(#{1,6})(.*)/));
   }
   onChange(e, key) {
     console.log(key);
@@ -90,13 +91,19 @@ class MemoryEditPage extends React.Component {
     }
   }
   updateMemoryMutation() {
-    const { title, body, created } = this.state;
+    // const { title, body, created } = this.state;
+    const { body } = this.state;
+    const title = this.state.body.match(/(#{1,6})(.*)/)[2];
+    // const created = this.state.body.match(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/);
+    const { created } = this.props.query.memory;
     UpdateMemoryMutation({
       environment: this.props.relay.environment,
       id: this.props.query.memory.id,
-      title,
+      title: (this.state.title !== this.props.query.memory.title) ?
+        this.state.title : title,
       body,
-      created,
+      created: (this.state.created !== this.props.query.memory.created) ?
+        this.state.created : created,
     })
     .then((res) => {
       if (res.updateMemory) {
@@ -138,8 +145,9 @@ class MemoryEditPage extends React.Component {
           /*{' '}edit {fromGlobalId(this.props.query.memory.id).id}{' '}*/
           {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
-        <div>
-          <input
+        {/* <div>
+          <textarea
+            rows="1"
             className="memoryedit-title"
             placeholder="Title"
             type="text"
@@ -155,7 +163,7 @@ class MemoryEditPage extends React.Component {
             value={this.state.created}
             onChange={partial(this.onChange, partial.placeholder, 'created')}
           />
-        </div>
+        </div> */}
         <div className="memoryedit-editor clearfix">
           {(this.state.preview) ?
             <Markdown source={this.state.body || ''} /> :
@@ -213,6 +221,15 @@ class MemoryEditPage extends React.Component {
                 </div>
               </button>
             </li> */}
+            <li className="ddrow">
+              <button
+                className="ddrow-btn"
+                // onClick={this.deleteMemoryMutation}
+              >
+                Custom title and date
+              </button>
+            </li>
+            <div className="dddivider" />
             <li className="ddrow">
               <a
                 className="ddrow-btn"

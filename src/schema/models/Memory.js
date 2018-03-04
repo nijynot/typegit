@@ -18,6 +18,8 @@ export class Memory {
     this.title = data.title;
     this.body = data.body;
     this.created = data.created;
+    this.custom_title = data.custom_title;
+    this.custom_created = data.custom_created;
     this.user_id = data.user_id;
   }
 
@@ -51,6 +53,8 @@ export class Memory {
       title: null,
       body: null,
       created: null,
+      custom_title: null,
+      custom_created: null,
       user_id: null,
     });
   }

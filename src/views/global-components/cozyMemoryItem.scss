@@ -4,11 +4,11 @@
 .cozymemoryitem {
   // margin-bottom: $small;
   // width: 700px;
-  padding: $small 0;
-  border-bottom: 1px solid #e9e9e9;
+  padding: $tiny 0;
+  // border-bottom: 1px solid #e9e9e9;
 }
 .cozymemory-header {
-  margin-bottom: 6px;
+  // margin-bottom: 6px;
   text-decoration: none !important;
 }
 .cozymemory-heading {
@@ -47,4 +47,15 @@
 .cozymemoryitem .empty-body {
   font-style: italic;
   color: #555;
+}
+.cozymemoryitem .title {
+  // letter-spacing: -0.01rem;
+  font-family: "Garamond";
+  font-size: 24px;
+  font-style: italic;
+}
+.cozymemoryitem .timestamp {
+  font-style: italic;
+  font-size: 13px;
+  color: #787878;
 }

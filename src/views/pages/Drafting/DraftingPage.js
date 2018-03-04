@@ -122,7 +122,7 @@ class DraftingPage extends React.Component {
           /* new */
           {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
-        <div>
+        {/* <div>
           <input
             name="title"
             className="drafting-title"
@@ -131,7 +131,7 @@ class DraftingPage extends React.Component {
             value={this.state.title}
             onChange={partial(this.onChange, partial.placeholder, 'title')}
           />
-        </div>
+        </div> */}
         <div className="drafting-editor clearfix">
           {(this.state.preview) ?
             <Markdown source={this.state.body} /> :

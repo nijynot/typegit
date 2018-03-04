@@ -27,15 +27,15 @@
   top: 0;
   left: 0;
   // font-family: 'NeueHaasGroteskDisp';
-  font-family: "Source Sans Pro";
-  font-weight: 700;
-  font-size: 36px;
+  font-family: "Garamond";
+  // font-weight: 700;
+  font-size: 18px;
   margin: 0 auto;
 }
 .header-logo {
   position: relative;
   display: inline-block;
-  padding-top: 10px;
+  padding-top: 23px;
   z-index: 700;
   transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
   &:hover {

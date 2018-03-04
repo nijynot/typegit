@@ -8,6 +8,8 @@ exports.getMemoryByIdAndUserId = ({ id, user_id }) => {
     m.title,
     m.body,
     m.created,
+    m.custom_title,
+    m.custom_created,
     m.user_id
     from memories m
     where memory_id = ? and user_id = ?;`;
@@ -27,6 +29,8 @@ exports.getMemoriesByIds = ({ ids }) => {
     m.title,
     m.body,
     m.created,
+    m.custom_title,
+    m.custom_created,
     m.user_id
     from memories m
     where m.memory_id in (?)

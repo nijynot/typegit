@@ -12,6 +12,7 @@ import {
   globalIdField,
   connectionDefinitions,
 } from 'graphql-relay';
+import _ from 'lodash';
 
 import { registerType } from '../definitions/node.js';
 
@@ -30,15 +31,27 @@ export const memoryType = registerType(new GraphQLObjectType({
     id: globalIdField(),
     title: {
       type: GraphQLString,
+      // resolve: (rootValue) => {
+      //   if (rootValue.custom_title !== 0) {
+      //     return rootValue.title;
+      //   }
+      //   return _.get(rootValue.body.match(/(#{1,6})(.*)/), '[2]', null);
+      // },
     },
     body: {
       type: GraphQLString,
     },
+    custom_title: {
+      type: new GraphQLNonNull(GraphQLInt),
+    },
+    custom_created: {
+      type: new GraphQLNonNull(GraphQLInt),
+    },
     created: {
-      type: GraphQLString,
+      type: new GraphQLNonNull(GraphQLString),
     },
     user: {
-      type: userType,
+      type: new GraphQLNonNull(userType),
       resolve: (rootValue, args, context) => {
         return User.gen(context, rootValue.user_id);
       },

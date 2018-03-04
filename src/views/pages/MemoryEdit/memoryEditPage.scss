@@ -14,7 +14,7 @@
 .memoryeditpage {
   margin: $large auto;
   position: relative;
-  width: 700px
+  width: 650px
 }
 .memoryedit-title-label {
   font-family: "NeueHaasGroteskDisp";
@@ -28,14 +28,18 @@
 }
 .memoryedit-title {
   // letter-spacing: 2px;
+  font-style: italic;
   border: 0;
-  color: $deep-grey;
-  font-family: "EB Garamond";
-  font-weight: 700;
-  font-size: 46px;
+  color: black;
+  font-family: "Garamond";
+  font-size: 42px;
   outline: none;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);
   width: 100%;
+  resize: none;
+  text-align: center;
+  letter-spacing: -0.045rem;
+  line-height: 1.25;
 }
 .memoryedit-created {
   border: 0;

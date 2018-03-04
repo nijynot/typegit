@@ -29,24 +29,24 @@ class CozyMemoryItem extends React.Component {
       <div className="cozymemoryitem">
         <div className="cozymemory-header">
           <a href={`/${fromGlobalId(this.props.memory.id).id}`}>
-            <span className="cozymemory-heading">
+            <span className="title">
               {this.props.memory.title || 'Untitled memory'}
             </span>
+            {/* <div className="cozymemory-content pre-wrap">
+              {(this.props.memory.body) ?
+                <Markdown
+                  source={this.props.memory.body}
+                  format="block"
+                /> :
+                <span className="empty-body">
+                  Empty body
+                </span>}
+            </div> */}
           </a>
-          <span className="cozymemory-timestamp">
-            {this.renderTimestamp()}
-          </span>
         </div>
-        <div className="cozymemory-content pre-wrap">
-          {(this.props.memory.body) ?
-            <Markdown
-              source={this.props.memory.body}
-              format="inline"
-            /> :
-            <span className="empty-body">
-              Empty body
-            </span>}
-        </div>
+        <span className="timestamp">
+          {this.renderTimestamp()}
+        </span>
       </div>
     );
   }

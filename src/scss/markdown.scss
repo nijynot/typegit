@@ -23,6 +23,11 @@
   font-size: 16px!important;
 }
 
+.markdown-body .center {
+  display: block;
+  text-align: center;
+}
+
 .markdown-body .pl-c {
   color: #6a737d;
 }
@@ -276,15 +281,18 @@
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
-  font-family: "EB Garamond";
+  font-family: "Garamond";
   margin-top: 0;
   margin-bottom: 0;
+  font-style: italic;
 }
 
 .markdown-body h1 {
-  color: #383434;
+  color: #000;
   font-size: 42px;
-  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.045rem;
+  // font-weight: 700;
 }
 
 .markdown-body h2 {
@@ -479,7 +487,7 @@
 .markdown-body h6 {
   margin-top: 24px;
   // margin-bottom: 16px;
-  font-weight: 600;
+  // font-weight: 600;
   line-height: 1.25;
 }
 

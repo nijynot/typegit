@@ -21,14 +21,19 @@
   font-weight: 900;
 }
 @font-face {
-  font-family: 'Garamond';
-  src: url('/assets/fonts/garamond_bold.otf') format("opentype");
-  font-weight: 700;
+  font-family: 'Garamond12';
+  src: url('/assets/fonts/EBGaramond12-Regular.otf') format("opentype");
+  font-weight: 400;
 }
 @font-face {
   font-family: 'Garamond';
-  src: url('/assets/fonts/garamond_regular.otf') format("opentype");
+  src: url('/assets/fonts/EBGaramond08-Regular.otf') format("opentype");
   font-weight: 400;
+}
+@font-face {
+  font-family: 'Garamond';
+  src: url('/assets/fonts/EBGaramond08-Italic.otf') format("opentype");
+  font-style: italic;
 }
 @font-face {
   font-family: 'LabGrotesque';

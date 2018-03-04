@@ -68,8 +68,6 @@ CREATE TABLE `memories` (
   `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `body` text COLLATE utf8mb4_unicode_ci,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `custom_title` int(1) NOT NULL DEFAULT '0',
-  `custom_created` int(1) NOT NULL DEFAULT '0',
   `user_id` int(12) unsigned NOT NULL,
   PRIMARY KEY (`memory_id`),
   KEY `user_id` (`user_id`),
@@ -111,7 +109,7 @@ CREATE TABLE `users` (
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -123,4 +121,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-04  2:24:23
+-- Dump completed on 2018-02-18 15:29:52

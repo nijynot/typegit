@@ -8,15 +8,3 @@ create table tags (
     on update cascade
     on delete cascade
 ) engine=innodb;
-
-insert into tags (
-  tag, memory_id
-) values (
-  'slice-of-life', 'PGBnC3HHvmwh'
-);
-
-insert into tags (
-  tag, memory_id
-) values (
-  'tech', 'PGBnC3HHvmwh'
-);

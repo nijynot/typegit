@@ -6,12 +6,12 @@
   // margin: 0 auto 128px auto;
   margin: $large auto;
   position: relative;
-  width: 700px;
+  width: 650px;
 }
 .drafting-hint {
   color: $stripe-blue;
   font-size: 11px;
-  margin-bottom: 2px;
+  margin-bottom: $tiny;
   font-family: monospace;
   font-weight: 700;
 }
