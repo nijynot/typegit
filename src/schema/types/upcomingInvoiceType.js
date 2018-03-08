@@ -8,7 +8,6 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-
 // import {
 //   globalIdField,
 //   connectionArgs,
@@ -16,9 +15,8 @@ import {
 //   connectionDefinitions,
 // } from 'graphql-relay';
 
-import { registerType } from '../definitions/node.js';
-
 import mysql from '../../config/mysql.js';
+import { registerType } from '../definitions/node.js';
 
 export const upcomingInvoiceType = registerType(new GraphQLObjectType({
   name: 'UpcomingInvoice',

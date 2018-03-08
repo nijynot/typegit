@@ -11,5 +11,5 @@ create table memories (
   foreign key (user_id)
   references users(user_id)
     on update cascade
-    on delete cascade,
+    on delete cascade
 ) engine=innodb;

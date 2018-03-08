@@ -1,0 +1,90 @@
+import {
+  GraphQLBoolean,
+  GraphQLFloat,
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
+import {
+  globalIdField,
+  connectionDefinitions,
+} from 'graphql-relay';
+
+import mysql from '../../config/mysql.js';
+import { registerType, nodeInterface } from '../definitions/node.js';
+import * as git from '../git.js';
+
+import { GitObject } from '../models/GitObject.js';
+import { Repository } from '../models/Repository.js';
+import { User } from '../models/User.js';
+// import { Image } from '../models/Image.js';
+import { gitObjectType } from './gitObjectType.js';
+// import { refType } from './refType.js';
+// import { treeEntryType } from './treeEntryType.js';
+import { userType } from './userType.js';
+
+
+export const repositoryType = registerType(new GraphQLObjectType({
+  name: 'Repository',
+  fields: () => ({
+    id: globalIdField(),
+    created: {
+      type: GraphQLString,
+    },
+    // defaultBranchRef: {
+    //   type: refType,
+    //   description: 'The default reference for a repository.',
+    // },
+    // diskUsage: {
+    //   type: GraphQLInt,
+    // },
+    name: {
+      type: GraphQLString,
+      description: 'Name of the folder which the repository resides in.',
+      resolve: (rootValue) => {
+        return rootValue.id;
+      },
+    },
+    object: {
+      description: 'A Git object in a repository.',
+      args: {
+        oid: {
+          type: GraphQLString,
+        },
+        expression: {
+          description: 'Only supports basic expressions that are parsable by rev-parse, e.g. master:index.md.',
+          type: GraphQLString,
+        },
+      },
+      type: gitObjectType,
+      resolve: async (rootValue, args, context) => {
+        const repository = await git.open(rootValue.id);
+        return GitObject.expression(context, {
+          repository,
+          expression: args.expression,
+        });
+      },
+    },
+    user: {
+      type: userType,
+      resolve: async (rootValue, args, context) => {
+        return User.gen(context, rootValue.user_id);
+      },
+    },
+    // ref: {
+    //   description: 'A reference in a repository.',
+    //   type: refType,
+    // },
+    // refs: {
+    //   type: refConnection,
+    // },
+  }),
+  interfaces: [nodeInterface],
+}));
+
+export const { connectionType: repositoryConnection } = connectionDefinitions({
+  nodeType: repositoryType,
+});

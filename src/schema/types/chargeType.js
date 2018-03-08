@@ -13,9 +13,8 @@ import {
   connectionDefinitions,
 } from 'graphql-relay';
 
-import { registerType } from '../definitions/node.js';
-
 import mysql from '../../config/mysql.js';
+import { registerType } from '../definitions/node.js';
 
 export const chargeType = registerType(new GraphQLObjectType({
   name: 'Charge',

@@ -16,18 +16,15 @@ import {
   getOffsetWithDefault,
 } from 'graphql-relay';
 
+import mysql from '../../config/mysql.js';
 import { registerType } from '../definitions/node.js';
 import { connectionFromArray } from '../definitions/connectionFromArray.js';
 import { transformToForward } from '../definitions/transformToForward.js';
-
-import mysql from '../../config/mysql.js';
-
 import { isOwner } from '../helpers.js';
-
-import { memoryType, memoryConnection } from './memoryType.js';
 
 import { Memory } from '../models/Memory.js';
 import { Tag } from '../models/Tag.js';
+import { memoryType, memoryConnection } from './memoryType.js';
 
 export const tagType = registerType(new GraphQLObjectType({
   name: 'Tag',

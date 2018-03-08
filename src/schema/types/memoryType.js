@@ -14,16 +14,16 @@ import {
 } from 'graphql-relay';
 import _ from 'lodash';
 
-import { registerType } from '../definitions/node.js';
-
 import mysql from '../../config/mysql.js';
-
+import { registerType } from '../definitions/node.js';
 import { isOwner } from '../helpers.js';
-import { userType } from './userType.js';
-import { tagType, tagConnection } from './tagType.js';
+
 
 import { Memory } from '../models/Memory.js';
 import { User } from '../models/User.js';
+import { tagType, tagConnection } from './tagType.js';
+import { userType } from './userType.js';
+
 
 export const memoryType = registerType(new GraphQLObjectType({
   name: 'Memory',

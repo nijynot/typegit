@@ -12,9 +12,8 @@ import {
   globalIdField,
 } from 'graphql-relay';
 
-import { registerType } from '../definitions/node.js';
-
 import mysql from '../../config/mysql.js';
+import { registerType } from '../definitions/node.js';
 
 export const subscriptionType = registerType(new GraphQLObjectType({
   name: 'Subscription',

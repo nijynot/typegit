@@ -12,6 +12,11 @@ import {
 
 // import { viewerType } from './types/viewerType.js';
 import { queryType } from './types/queryType.js';
+import { repositoryType } from './types/repositoryType.js';
+import { gitObjectType } from './types/gitObjectType.js';
+import { blobType } from './types/blobType.js';
+import { commitType } from './types/commitType.js';
+import { treeType } from './types/treeType.js';
 
 // Mutations
 import { newMemoryMutation } from './mutations/newMemoryMutation.js';
@@ -56,6 +61,13 @@ const mutationType = new GraphQLObjectType({
 const schema = new GraphQLSchema({
   query: queryType,
   mutation: mutationType,
+  types: [
+    repositoryType,
+    gitObjectType,
+    blobType,
+    commitType,
+    treeType,
+  ],
 });
 
 module.exports = schema;

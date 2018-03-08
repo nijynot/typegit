@@ -16,23 +16,21 @@ import {
 } from 'graphql-relay';
 import _ from 'lodash';
 
-import { registerType } from '../definitions/node.js';
-// import { connectionFromArrayInterval } from '../definitions/connectionFromArrayInterval.js';
-import { connectionFromArray } from '../definitions/connectionFromArray.js';
-import { transformToForward } from '../definitions/transformToForward.js';
-
 import mysql from '../../config/mysql.js';
 import { STRIPE_SK } from '../../config/constants.js';
-import { tagType } from './tagType.js';
+import { connectionFromArray } from '../definitions/connectionFromArray.js';
+import { transformToForward } from '../definitions/transformToForward.js';
+import { registerType } from '../definitions/node.js';
+
+import { Image } from '../models/Image.js';
+import { User } from '../models/User.js';
 import { cardType } from './cardType.js';
 import { chargeConnection } from './chargeType.js';
-import { upcomingInvoiceType } from './upcomingInvoiceType.js';
-import { subscriptionType } from './subscriptionType.js';
 import { imageConnection } from './imageType.js';
-
-// import { Tag } from '../models/Tag.js';
-import { User } from '../models/User.js';
-import { Image } from '../models/Image.js';
+import { repositoryConnection } from './repositoryType.js';
+import { subscriptionType } from './subscriptionType.js';
+import { tagType } from './tagType.js';
+import { upcomingInvoiceType } from './upcomingInvoiceType.js';
 
 const stripe = require('stripe')(STRIPE_SK);
 
@@ -259,5 +257,10 @@ export const userType = registerType(new GraphQLObjectType({
         return connectionFromArray(images, { first, after });
       },
     },
+    // repositories: {
+    //   type: repositoryConnection,
+    //   resolve: async () => {
+    //   },
+    // },
   }),
 }));

@@ -9,13 +9,13 @@ import {
   GraphQLSchema,
   GraphQLString,
 } from 'graphql';
-
 import validator from 'validator';
 
 import mysql from '../../config/mysql.js';
 import { STRIPE_SK } from '../../config/constants.js';
-import { userType } from '../types/userType.js';
 import { isOwner, isLoggedIn } from '../helpers.js';
+
+import { userType } from '../types/userType.js';
 
 const stripe = require('stripe')(STRIPE_SK);
 

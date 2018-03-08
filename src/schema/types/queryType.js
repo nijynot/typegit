@@ -13,27 +13,26 @@ import {
   connectionArgs,
   getOffsetWithDefault,
 } from 'graphql-relay';
-
 import validator from 'validator';
 
-import { registerType } from '../definitions/node.js';
+import mysql from '../../config/mysql.js';
+import { registerType, nodeField } from '../definitions/node.js';
 import { connectionFromArray } from '../definitions/connectionFromArray.js';
 import { transformToForward } from '../definitions/transformToForward.js';
-
-import mysql from '../../config/mysql.js';
-
 import { isLoggedIn } from '../helpers.js';
-import { userType } from './userType.js';
-import { memoryType, memoryConnection } from './memoryType.js';
-import { tagType } from './tagType.js';
 
-import { User } from '../models/User.js';
 import { Memory } from '../models/Memory.js';
+import { User } from '../models/User.js';
+import { memoryType, memoryConnection } from './memoryType.js';
+import { repositoryType } from './repositoryType.js';
+import { tagType } from './tagType.js';
+import { userType } from './userType.js';
 
 export const queryType = registerType(new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     id: globalIdField(),
+    node: nodeField,
     me: {
       type: userType,
       resolve: (rootValue, args, context) => {
@@ -166,6 +165,14 @@ export const queryType = registerType(new GraphQLObjectType({
           return false;
         }
         return true;
+      },
+    },
+    repository: {
+      type: repositoryType,
+      args: {
+        id: {
+          type: GraphQLString,
+        },
       },
     },
   }),

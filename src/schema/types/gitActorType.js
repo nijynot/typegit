@@ -11,24 +11,27 @@ import {
 import {
   globalIdField,
   connectionDefinitions,
+  connectionArgs,
 } from 'graphql-relay';
 
 import mysql from '../../config/mysql.js';
 import { registerType } from '../definitions/node.js';
 
-import { Image } from '../models/Image.js';
+// import { repositoryType } from './repositoryType.js';
 import { User } from '../models/User.js';
 import { userType } from './userType.js';
 
-export const imageType = registerType(new GraphQLObjectType({
-  name: 'Image',
+export const gitActorType = registerType(new GraphQLObjectType({
+  name: 'GitActor',
   fields: () => ({
-    id: globalIdField(),
-    url: {
+    date: {
       type: GraphQLString,
-      resolve: (rootValue, args, context) => {
-        return Image.url(context, rootValue.id);
-      },
+    },
+    email: {
+      type: GraphQLString,
+    },
+    name: {
+      type: GraphQLString,
     },
     user: {
       type: userType,
@@ -36,12 +39,9 @@ export const imageType = registerType(new GraphQLObjectType({
         return User.gen(context, rootValue.user_id);
       },
     },
-    created: {
-      type: GraphQLString,
-    },
   }),
 }));
 
-export const { connectionType: imageConnection, edgeType: imageEdge } = connectionDefinitions({
-  nodeType: imageType,
+export const { connectionType: gitActorConnection } = connectionDefinitions({
+  nodeType: gitActorType,
 });
