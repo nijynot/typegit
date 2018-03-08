@@ -18,14 +18,14 @@ import { registerType, nodeInterface } from '../definitions/node.js';
 import * as git from '../git.js';
 
 import { GitObject } from '../models/GitObject.js';
+import { Ref } from '../models/Ref.js';
 import { Repository } from '../models/Repository.js';
 import { User } from '../models/User.js';
 // import { Image } from '../models/Image.js';
 import { gitObjectType } from './gitObjectType.js';
-// import { refType } from './refType.js';
+import { refType } from './refType.js';
 // import { treeEntryType } from './treeEntryType.js';
 import { userType } from './userType.js';
-
 
 export const repositoryType = registerType(new GraphQLObjectType({
   name: 'Repository',
@@ -34,10 +34,18 @@ export const repositoryType = registerType(new GraphQLObjectType({
     created: {
       type: GraphQLString,
     },
-    // defaultBranchRef: {
-    //   type: refType,
-    //   description: 'The default reference for a repository.',
-    // },
+    defaultBranchRef: {
+      type: refType,
+      description: 'The default reference for a repository.',
+      resolve: async (rootValue, args, context) => {
+        return Ref.defaultBranchRef(context, {
+          repository: rootValue.git,
+        });
+        // return Ref.defaultBranchRef(context, {
+        //   repository: rootValue.git,
+        // });
+      },
+    },
     // diskUsage: {
     //   type: GraphQLInt,
     // },
@@ -61,9 +69,14 @@ export const repositoryType = registerType(new GraphQLObjectType({
       },
       type: gitObjectType,
       resolve: async (rootValue, args, context) => {
-        const repository = await git.open(rootValue.id);
+        if (args.oid) {
+          return GitObject.gen(context, {
+            repository: rootValue.git,
+            id: args.oid,
+          });
+        }
         return GitObject.expression(context, {
-          repository,
+          repository: rootValue.git,
           expression: args.expression,
         });
       },

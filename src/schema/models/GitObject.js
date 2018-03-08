@@ -1,4 +1,3 @@
-// import get from 'lodash/get';
 // import mysql from '../../config/mysql.js';
 import path from 'path';
 import _ from 'lodash';
@@ -6,6 +5,8 @@ import nodegit from 'nodegit';
 import * as git from '../git.js';
 import { Repository } from './Repository.js';
 import { Blob } from './Blob.js';
+import { Commit } from './Commit.js';
+import { Tree } from './Tree.js';
 
 const viewerCanSee = (context, data) => {
   return (context.user.user_id === data.user_id);
@@ -13,42 +14,40 @@ const viewerCanSee = (context, data) => {
 
 export class GitObject {
   constructor(data) {
-    // this.id = data.id;
-    // this.user_id = data.user_id;
-    // this.created = data.created;
+    this.id = data.id;
+    this.partialOid = data.partialOid;
+    this.oid = data.oid;
+    this.git = data.git;
   }
 
-  // static async gen(context, id) {
-  //   let data;
-  //   try {
-  //     if (id) {
-  //       data = await context.loaders.Blob.load(id);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   return viewerCanSee(context, data) ? new Blob(data) : this.null();
-  // }
+  static async gen(context, { repository, id }) {
+    let gitObject;
+    try {
+      if (repository && id) {
+        gitObject = await context.loaders.GitObject.load({ repository, id });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    if (gitObject.isCommit()) {
+      return Commit.gen(context, { repository, id });
+    } else if (gitObject.isBlob()) {
+      return Blob.gen(context, { repository, id });
+    } else if (gitObject.isTree()) {
+      return Tree.gen(context, { repository, id });
+    }
+    return this.null();
+  }
 
   static async expression(context, { repository, expression }) {
-    const repositoryId = _(path.join(repository.path(), '..').split(path.sep)).last();
-    const repo = await Repository.gen(context, repositoryId);
-    let gitObject;
-    if (repo.user_id === context.user.user_id) {
-      gitObject = await git.parseExp(repository, expression);
+    const gitObject = await nodegit.Revparse.single(repository, expression);
+    if (gitObject.isBlob()) {
+      return Blob.gen(context, { repository, id: gitObject.id() });
+    } else if (gitObject.isCommit()) {
+      return Commit.gen(context, { repository, id: gitObject.id() });
     }
 
-    if (gitObject instanceof nodegit.Blob) {
-      return new Blob({
-        id: gitObject.id().toString(),
-        partialOid: gitObject.id().toString().substr(0, 6),
-        byteSize: gitObject.rawsize(),
-        isBinary: gitObject.isBinary(),
-        oid: gitObject.id().toString(),
-        text: gitObject.content(),
-      });
-    }
-    return (viewerCanSee(context, repo)) ? gitObject : this.null();
+    return this.null();
   }
 
   static async null() {

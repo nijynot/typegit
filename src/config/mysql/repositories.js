@@ -18,3 +18,19 @@ exports.getRepositoriesByIds = ({ ids }) => {
     });
   });
 };
+
+exports.getRepositoriesByUserId = ({ user_id }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `select
+    r.repository_id as id
+    from repositories r
+    where r.user_id = ?
+    order by created desc;`;
+    sql = mysql.format(sql, [user_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};

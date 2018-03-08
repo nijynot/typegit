@@ -22,6 +22,7 @@ import { transformToForward } from '../definitions/transformToForward.js';
 import { isLoggedIn } from '../helpers.js';
 
 import { Memory } from '../models/Memory.js';
+import { Repository } from '../models/Repository.js';
 import { User } from '../models/User.js';
 import { memoryType, memoryConnection } from './memoryType.js';
 import { repositoryType } from './repositoryType.js';
@@ -173,6 +174,9 @@ export const queryType = registerType(new GraphQLObjectType({
         id: {
           type: GraphQLString,
         },
+      },
+      resolve: async (rootValue, args, context) => {
+        return Repository.gen(context, args.id);
       },
     },
   }),

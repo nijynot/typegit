@@ -1,12 +1,11 @@
 import DataLoader from 'dataloader';
 import mysql from '../../config/mysql.js';
-import { Repository } from '../models/Repository.js';
-import nodegit from 'nodegit';
+import * as git from '../git.js';
 
 module.exports = () => {
   return new DataLoader(async (keys) => {
     const promises = keys.map(({ repository, id }) => {
-      return nodegit.Object.lookup(repository, id, -2);
+      return repository.getTree(id);
     });
     return Promise.all(promises);
   }, {

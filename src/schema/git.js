@@ -58,18 +58,18 @@ export const show = async (repository) => {
 export const history = async (
   repository,
   {
-    sort = git.Revwalk.SORT.Time,
+    sort = git.Revwalk.SORT.TIME,
     count = 10,
-    sha,
-  }
+    sha, // Optional ´after´ argument
+  } = {}
 ) => {
   // const repo = await git.Repository.open(`./public/repo/${repository}`);
   const revwalk = repository.createRevWalk();
   let headCommit;
   if (sha) {
-    headCommit = await repository.getMasterCommit();
-  } else {
     headCommit = await repository.getCommit(sha);
+  } else {
+    headCommit = await repository.getMasterCommit();
   }
   revwalk.sorting(sort);
   revwalk.push(headCommit.id());

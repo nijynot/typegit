@@ -1,12 +1,13 @@
 // const stripe = require('stripe')('sk_test_ZYOq3ukyy4vckadi7twhdL9f');
 const mysql = require('./src/config/mysql.js');
 
-mysql.getRepositoriesByIds({
-  ids: ['Alice0000001'],
-})
-.then((value) => {
-  console.log(value);
-});
+
+// mysql.getRepositoriesByIds({
+//   ids: ['Alice0000001'],
+// })
+// .then((value) => {
+//   console.log(value);
+// });
 
 // stripe.invoices.retrieveUpcoming('cus_C4jZnuoBo5VHnY')
 // .then((value) => {

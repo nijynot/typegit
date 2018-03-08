@@ -48,7 +48,7 @@ export const gitObjectType = registerType(new GraphQLInterfaceType({
     } else if (value instanceof Tree) {
       return treeType;
     }
-    return null;
+    return commitType;
   },
   interfaces: [nodeInterface],
 }));

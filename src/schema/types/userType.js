@@ -23,6 +23,7 @@ import { transformToForward } from '../definitions/transformToForward.js';
 import { registerType } from '../definitions/node.js';
 
 import { Image } from '../models/Image.js';
+import { Repository } from '../models/Repository.js';
 import { User } from '../models/User.js';
 import { cardType } from './cardType.js';
 import { chargeConnection } from './chargeType.js';
@@ -257,10 +258,19 @@ export const userType = registerType(new GraphQLObjectType({
         return connectionFromArray(images, { first, after });
       },
     },
-    // repositories: {
-    //   type: repositoryConnection,
-    //   resolve: async () => {
-    //   },
-    // },
+    repositories: {
+      type: repositoryConnection,
+      args: {
+        ...connectionArgs,
+      },
+      resolve: async (rootValue, args, context) => {
+        const { first, after } = transformToForward(args);
+        const array = await mysql.getRepositoriesByUserId({
+          user_id: rootValue.id,
+        })
+        .then(rows => rows.map(row => Repository.gen(context, row.id)));
+        return connectionFromArray(array, { first, after });
+      },
+    },
   }),
 }));

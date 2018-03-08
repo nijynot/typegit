@@ -13,33 +13,45 @@ import {
   globalIdField,
   connectionDefinitions,
 } from 'graphql-relay';
+import path from 'path';
+import _ from 'lodash';
 
 import mysql from '../../config/mysql.js';
 import { registerType } from '../definitions/node.js';
 
-// import { User } from '../models/User.js';
-// import { Image } from '../models/Image.js';
+import { GitObject } from '../models/GitObject.js';
+import { Repository } from '../models/Repository.js';
 import { repositoryType } from './repositoryType.js';
 import { gitObjectType } from './gitObjectType.js';
 
-export const refType = registerType(new GraphQLInterfaceType({
+export const refType = registerType(new GraphQLObjectType({
   name: 'Ref',
   fields: () => ({
     id: globalIdField(),
-    partialOid: {
-      type: GraphQLString,
-    },
+    // partialOid: {
+    //   type: GraphQLString,
+    // },
     name: {
       type: GraphQLString,
     },
-    prefix: {
+    shorthand: {
       type: GraphQLString,
     },
     repository: {
       type: repositoryType,
+      resolve: async (rootValue, args, context) => {
+        const repositoryId = _(path.join(rootValue.git.owner().path(), '..').split(path.sep)).last();
+        return Repository.gen(context, repositoryId);
+      },
     },
     target: {
       type: gitObjectType,
+      resolve: async (rootValue, args, context) => {
+        return GitObject.gen(context, {
+          repository: rootValue.git.owner(),
+          id: rootValue.git.target(),
+        });
+      },
     },
   }),
 }));
