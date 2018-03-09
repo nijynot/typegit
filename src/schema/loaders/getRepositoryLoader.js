@@ -10,6 +10,6 @@ module.exports = () => {
       return git.open(item.id);
     });
     const gitRepos = await Promise.all(gitPromises);
-    return items.map((item, i) => ({ ...item, git: gitRepos[i] }));
+    return items.map((item, i) => new Repository({ ...item, git: gitRepos[i] }));
   });
 };

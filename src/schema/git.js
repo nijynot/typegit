@@ -3,24 +3,30 @@ const fs = require('fs-extra');
 const moment = require('moment');
 const path = require('path');
 
+export function padDir(dir) {
+  const first = dir.substr(0, 2);
+  const second = dir.substr(2, 2);
+  return path.join(first, second, dir);
+}
+
 export const init = async (dir) => {
-  await git.Repository.init(path.join('./public/repo/', dir), 0);
+  const repoDir = path.join('./public/repo', padDir(dir));
+  await fs.ensureDir(repoDir);
+  const repository = await git.Repository.init(repoDir, 0);
+  return repository;
 };
 
 export const open = async (dir) => {
-  const first = dir.substr(0, 2);
-  const second = dir.substr(2, 2);
-  const dirPath = path.join('./public/repo/', first, second, dir);
-  const repository = await git.Repository.open(dirPath);
+  const repository = await git.Repository.open(path.join('./public/repo', padDir(dir)));
   return repository;
 };
 
 export const add = async (repository, { fileNames }) => {
-  // const repo = await git.Repository.open(`./public/repo/${repository}`);
   const index = await repository.refreshIndex();
-  fileNames.forEach(async (fileName) => {
-    await index.addByPath(fileName);
+  const promises = fileNames.map(async (fileName) => {
+    return index.addByPath(fileName);
   });
+  await Promise.all(promises);
   await index.write();
   const oid = await index.writeTree();
   return oid;
@@ -43,7 +49,8 @@ export const commit = async (repository, { author, commiter, message = 'Update f
   const oid = await index.writeTree();
   const head = await git.Reference.nameToId(repository, 'HEAD');
   const parent = await repository.getCommit(head);
-  await repository.createCommit('HEAD', author, commiter, message, oid, [parent]);
+  const commitOid = await repository.createCommit('HEAD', author, commiter, message, oid, [parent]);
+  return commitOid;
 };
 
 export const show = async (repository) => {

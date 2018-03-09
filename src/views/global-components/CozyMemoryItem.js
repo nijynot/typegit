@@ -17,8 +17,8 @@ class CozyMemoryItem extends React.Component {
     this.renderTimestamp = this.renderTimestamp.bind(this);
   }
   renderTimestamp() {
-    const diff = differenceInMinutes(new Date(), new Date(`${this.props.memory.created}Z`));
-    return moment.utc(this.props.memory.created).local().format('dddd, MMMM Do, YYYY');
+    const diff = differenceInMinutes(new Date(), new Date(`${this.props.repository.created}Z`));
+    return moment.utc(this.props.repository.created).local().format('dddd, MMMM Do, YYYY');
     // if (diff > 4320) {
     //   return moment(this.props.memory.created).format('dddd, MMMM Do, YYYY');
     // }
@@ -28,9 +28,9 @@ class CozyMemoryItem extends React.Component {
     return (
       <div className="cozymemoryitem">
         <div className="cozymemory-header">
-          <a href={`/${fromGlobalId(this.props.memory.id).id}`}>
+          <a href={`/${fromGlobalId(this.props.repository.id).id}`}>
             <span className="title">
-              {this.props.memory.title || 'Untitled memory'}
+              {this.props.repository.title || 'Untitled post'}
             </span>
             {/* <div className="cozymemory-content pre-wrap">
               {(this.props.memory.body) ?
@@ -53,15 +53,15 @@ class CozyMemoryItem extends React.Component {
 }
 
 CozyMemoryItem.propTypes = {
-  memory: PropTypes.object.isRequired,
+  repository: PropTypes.object.isRequired,
 };
 
 export default createFragmentContainer(CozyMemoryItem, {
-  memory: graphql`
-    fragment CozyMemoryItem_memory on Memory {
+  repository: graphql`
+    fragment CozyMemoryItem_repository on Repository {
       id
       title
-      body
+      description
       created
     }
   `,

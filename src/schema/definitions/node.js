@@ -1,4 +1,5 @@
 import { fromGlobalId, nodeDefinitions } from 'graphql-relay';
+import Models from '../models/Models.js';
 
 const types = {};
 

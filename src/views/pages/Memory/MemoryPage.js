@@ -20,9 +20,9 @@ class MemoryPage extends React.Component {
         </h1>
         <span className="memory-timestamp">{moment.utc(this.props.query.memory.created).local().format('dddd, MMMM Do, YYYY')}</span> */}
         <div className="markdown-body memory-body">
-          {(this.props.query.memory.body) ?
+          {(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text) ?
             <Markdown
-              source={this.props.query.memory.body}
+              source={this.props.query.repository.defaultBranchRef.target.tree.entry.object.text}
             /> :
             <span className="empty-body">
               Empty body
@@ -34,15 +34,20 @@ class MemoryPage extends React.Component {
         <MetaPortal>
           <span className="meta-count left">
             <b>
-              {stringLength(this.props.query.memory.body || '') +
-                stringLength(this.props.query.memory.title || '')}
+              {stringLength(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text || '')}
             </b>{' '}characters
           </span>
           <a
-            href={`/${fromGlobalId(this.props.query.memory.id).id}/edit`}
+            href={`/${this.props.query.repository.name}/edit`}
             className="memory-edit-btn right"
           >
             Edit
+          </a>
+          <a
+            href={`/${this.props.query.repository.name}/history`}
+            className="memory-edit-btn right"
+          >
+            History
           </a>
         </MetaPortal>
       </div>
@@ -57,15 +62,38 @@ MemoryPage.propTypes = {
 export default createFragmentContainer(MemoryPage, {
   query: graphql`
     fragment MemoryPage_query on Query {
-      memory(id: $id) {
+      repository(id: $id) {
         id
+        name
         title
-        body
+        description
         created
-        user {
-          id
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              tree {
+                entry(name: "index.md") {
+                  object {
+                    ... on Blob {
+                      text
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
   `,
 });
+
+// memory(id: $id) {
+//   id
+//   title
+//   body
+//   created
+//   user {
+//     id
+//   }
+// }

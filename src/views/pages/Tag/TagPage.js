@@ -60,7 +60,8 @@ export default createFragmentContainer(TagPage, {
         memories(first: 10) {
           edges {
             node {
-              ...CozyMemoryItem_memory
+              id
+              # ...CozyMemoryItem_memory
             }
           }
         }

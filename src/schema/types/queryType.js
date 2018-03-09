@@ -25,7 +25,7 @@ import { Memory } from '../models/Memory.js';
 import { Repository } from '../models/Repository.js';
 import { User } from '../models/User.js';
 import { memoryType, memoryConnection } from './memoryType.js';
-import { repositoryType } from './repositoryType.js';
+import { repositoryType, repositoryConnection } from './repositoryType.js';
 import { tagType } from './tagType.js';
 import { userType } from './userType.js';
 
@@ -33,7 +33,7 @@ export const queryType = registerType(new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     id: globalIdField(),
-    node: nodeField,
+    // node: nodeField,
     me: {
       type: userType,
       resolve: (rootValue, args, context) => {
@@ -177,6 +177,20 @@ export const queryType = registerType(new GraphQLObjectType({
       },
       resolve: async (rootValue, args, context) => {
         return Repository.gen(context, args.id);
+      },
+    },
+    repositories: {
+      type: repositoryConnection,
+      args: {
+        ...connectionArgs,
+      },
+      resolve: async (rootValue, args, context) => {
+        const { first, after } = transformToForward(args);
+        const array = await mysql.getRepositoriesByUserId({
+          user_id: context.user.user_id,
+        })
+        .then(rows => rows.map(row => Repository.gen(context, row.id)));
+        return connectionFromArray(array, { first, after });
       },
     },
   }),

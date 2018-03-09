@@ -11,32 +11,33 @@ import _ from 'lodash';
 import { randexp } from 'randexp';
 import fs from 'fs-extra';
 import moment from 'moment';
+import path from 'path';
 
+import twitter from '../../../vendor/twitter-text.js';
 import mysql from '../../config/mysql.js';
 import { STRIPE_SK } from '../../config/constants.js';
+import { isLoggedIn } from '../helpers.js';
+import * as git from '../git.js';
 
 import { User } from '../models/User.js';
-
-import { memoryType } from '../types/memoryType.js';
+import { Repository } from '../models/Repository.js';
 import { repositoryType } from '../types/repositoryType.js';
-import { isLoggedIn } from '../helpers.js';
-import twitter from '../../../vendor/twitter-text.js';
 
 const stripe = require('stripe')(STRIPE_SK);
 
 export const newRepositoryInput = new GraphQLInputObjectType({
   name: 'NewRepositoryInput',
   fields: () => ({
-    commitMessage: {
+    commitHeadline: {
       type: GraphQLString,
     },
-    commitDescription: {
+    commitBody: {
       type: GraphQLString,
     },
     title: {
       type: GraphQLString,
     },
-    body: {
+    text: {
       type: GraphQLString,
     },
     created: {
@@ -67,33 +68,44 @@ export const newRepositoryMutation = {
       !_.isEmpty(_.get(subscription, 'data'))
     ) {
       const randid = randexp(/[a-zA-Z0-9]{12}/);
-
+      const paddedDir = git.padDir(randid);
       // Create Repository
-      const first = randid.substr(0, 2);
-      const second = randid.substr(2, 2);
-      const third = randid.substr(4, 2);
-      const repo = await git.Repository.init(`./public/repo/${first}/${second}/${third}/${randid}`, 0);
+      const repo = await git.init(randid);
 
       // Create file and add to index
-      await fs.writeFile(`./public/repo/${randid}/body.txt`, input.body)
-      .then((res) => {
-        console.log(res);
+      console.log(path.join('./public/repo', paddedDir, 'index.md'));
+      await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'))
+      .catch(err => console.error(err));
+      fs.writeFileSync(path.join('./public/repo', paddedDir, 'index.md'), input.text);
+      await git.add(repo, {
+        fileNames: ['index.md'],
       });
-      const index = await repo.refreshIndex();
-      await index.addByPath('body.txt')
-      .then((res) => {
-        console.log(res);
-      });
-      await index.write();
-      const oid = await index.writeTree();
+
+      // Create author and commiter
+      const user = await User.gen(context, context.user.user_id);
+      const gitActor = git.createGitActor(user.username, user.email);
 
       // Commit initial commit
+      const headline = input.commitHeadline || 'Initial commit';
+      const message = (input.commitBody && `${headline}\n\n${input.commitBody}`) || headline;
+      await git.initialCommit(repo, {
+        author: gitActor,
+        commiter: gitActor,
+        message,
+      });
+
+      // Insert into MySQL DB
+      await mysql.insertRepository({
+        repository_id: randid,
+        title: input.title,
+        description: input.description,
+        created: input.created,
+        user_id: context.user.user_id,
+      });
+      return Repository.gen(context, randid);
+      // await repo.createCommit('HEAD', author, commiter, 'Initial commit', oid, []);
       // const head = await git.Reference.nameToId(repo, 'HEAD');
       // const parent = await repo.getCommit(head);
-      const user = User.gen(context, context.user.user_id);
-      const author = git.Signature.create(user.username, user.email, moment().unix(), 0);
-      const commiter = git.Signature.create(user.username, user.email, moment().unix(), 0);
-      await repo.createCommit('HEAD', author, commiter, 'Initial commit', oid, []);
 
       // (async () => {
       //   // Commit
@@ -104,13 +116,6 @@ export const newRepositoryMutation = {
       //   await repo.createCommit('HEAD', author, commiter, 'Second commit', oid, [parent]);
       // })();
 
-      // await mysql.insertMemory({
-      //   memory_id: randid,
-      //   title: input.title,
-      //   body: input.body,
-      //   created: input.created,
-      //   user_id: context.user.user_id,
-      // });
       // const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(input.body)));
       // await Promise.all([
       //   hashtags.map(hashtag => mysql.insertTag({

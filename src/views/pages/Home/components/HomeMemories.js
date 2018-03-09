@@ -24,7 +24,7 @@ class HomeMemories extends React.Component {
       first: -1,
       after: '',
       last: 10,
-      before: this.props.query.memories.pageInfo.startCursor,
+      before: this.props.query.repositories.pageInfo.startCursor,
     });
     this.props.relay.refetch(refetchVariables, null, () => {
       window.scrollTo(0, 0);
@@ -34,7 +34,7 @@ class HomeMemories extends React.Component {
     // Increments the number of stories being rendered by 20.
     const refetchVariables = () => ({
       first: 10,
-      after: this.props.query.memories.pageInfo.endCursor,
+      after: this.props.query.repositories.pageInfo.endCursor,
       last: 0,
       before: '',
     });
@@ -46,7 +46,7 @@ class HomeMemories extends React.Component {
     return (
       <div className="homememories clearfix">
         <div className="pagination clearfix">
-          {(this.props.query.memories.pageInfo.hasPreviousPage) ?
+          {(this.props.query.repositories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
               onClick={this.previousPage}
@@ -54,10 +54,10 @@ class HomeMemories extends React.Component {
               Previous Page
             </button> : null}
           <span className="pagenumber">
-            {Math.ceil(cursorToOffset(this.props.query.memories.pageInfo.endCursor) / 10)}{' / '}
-            {Math.ceil(this.props.query.memories.totalCount / 10)}
+            {Math.ceil(cursorToOffset(this.props.query.repositories.pageInfo.endCursor) / 10)}{' / '}
+            {Math.ceil(this.props.query.repositories.totalCount / 10)}
           </span>
-          {(this.props.query.memories.pageInfo.hasNextPage) ?
+          {(this.props.query.repositories.pageInfo.hasNextPage) ?
             <button
               className="homememories-load-btn right"
               onClick={this.nextPage}
@@ -65,7 +65,7 @@ class HomeMemories extends React.Component {
               Next Page
             </button> : null}
         </div>
-        {this.props.query.memories.edges.map((edge) => {
+        {this.props.query.repositories.edges.map((edge) => {
           return (
             // <CompactMemoryItem
             //   key={memory.id}
@@ -73,11 +73,11 @@ class HomeMemories extends React.Component {
             // />
             <CozyMemoryItem
               key={edge.node.id}
-              memory={edge.node}
+              repository={edge.node}
             />
           );
         })}
-        {(isEmpty(this.props.query.memories.edges)) ?
+        {(isEmpty(this.props.query.repositories.edges)) ?
           <div className="homememories-empty-msg">
             No memories yet.&nbsp;
             <a href="/new">
@@ -85,14 +85,14 @@ class HomeMemories extends React.Component {
             </a>
           </div> : null}
         <div className="homememories-page-btn-container clearfix">
-          {(this.props.query.memories.pageInfo.hasPreviousPage) ?
+          {(this.props.query.repositories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
               onClick={this.previousPage}
             >
               Previous Page
             </button> : null}
-          {(this.props.query.memories.pageInfo.hasNextPage) ?
+          {(this.props.query.repositories.pageInfo.hasNextPage) ?
             <button
               className="homememories-load-btn right"
               onClick={this.nextPage}
@@ -119,11 +119,11 @@ export default createRefetchContainer(
         last: { type: "Int", defaultValue: 0 }
         before: { type: "String", defaultValue: "" }
       ) {
-        memories(first: $first, after: $after, last: $last, before: $before) {
+        repositories(first: $first, after: $after, last: $last, before: $before) {
           edges {
             node {
-              ...CompactMemoryItem_memory
-              ...CozyMemoryItem_memory
+              id
+              ...CozyMemoryItem_repository
             }
             cursor
           }
@@ -133,7 +133,6 @@ export default createRefetchContainer(
             startCursor
             endCursor
           }
-          totalCount
         }
       }
     `,
@@ -144,3 +143,20 @@ export default createRefetchContainer(
     }
   `,
 );
+
+// memories(first: $first, after: $after, last: $last, before: $before) {
+//   edges {
+//     node {
+//       ...CompactMemoryItem_memory
+//       ...CozyMemoryItem_memory
+//     }
+//     cursor
+//   }
+//   pageInfo {
+//     hasPreviousPage
+//     hasNextPage
+//     startCursor
+//     endCursor
+//   }
+//   totalCount
+// }

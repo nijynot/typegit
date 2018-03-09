@@ -133,7 +133,7 @@ export default createRefetchContainer(
       search(query: $query, first: 10) {
         edges {
           node {
-            ...CozyMemoryItem_memory
+            id
           }
         }
       }
@@ -145,3 +145,6 @@ export default createRefetchContainer(
     }
   `
 );
+
+
+// ...CozyMemoryItem_memory

@@ -11,8 +11,10 @@ const viewerCanSee = (context, data) => {
 export class Repository {
   constructor(data) {
     this.id = data.id;
-    this.user_id = data.user_id;
+    this.title = data.title;
+    this.description = data.description;
     this.created = data.created;
+    this.user_id = data.user_id;
     this.git = data.git;
   }
 

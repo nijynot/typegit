@@ -31,6 +31,12 @@ export const repositoryType = registerType(new GraphQLObjectType({
   name: 'Repository',
   fields: () => ({
     id: globalIdField(),
+    title: {
+      type: GraphQLString,
+    },
+    description: {
+      type: GraphQLString,
+    },
     created: {
       type: GraphQLString,
     },
@@ -100,4 +106,9 @@ export const repositoryType = registerType(new GraphQLObjectType({
 
 export const { connectionType: repositoryConnection } = connectionDefinitions({
   nodeType: repositoryType,
+  connectionFields: () => ({
+    totalCount: {
+      type: GraphQLInt,
+    },
+  }),
 });
