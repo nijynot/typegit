@@ -39,16 +39,32 @@ exports.getRepositoriesByUserId = ({ user_id }) => {
   });
 };
 
-exports.insertRepository = ({ repository_id, title, description, created, user_id }) => {
+exports.insertRepository = ({
+  repository_id,
+  title,
+  description,
+  created,
+  user_id,
+  auto_title,
+  auto_created,
+}) => {
   return new Promise((resolve, reject) => {
     const UTC_TIMESTAMP = mysql.raw('UTC_TIMESTAMP()');
     const datetime = created || UTC_TIMESTAMP;
     let sql = `insert into repositories (
-      repository_id, title, description, created, user_id
+      repository_id, title, description, created, user_id, auto_title, auto_created
     ) values (
-      ?, ?, ?, ?, ?
+      ?, ?, ?, ?, ?, ?, ?
     );`;
-    sql = mysql.format(sql, [repository_id, title, description, datetime, user_id]);
+    sql = mysql.format(sql, [
+      repository_id,
+      title,
+      description,
+      datetime,
+      user_id,
+      auto_title,
+      auto_created,
+    ]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);
@@ -82,6 +98,21 @@ exports.updateRepository = ({
       auto_created,
       repository_id,
     ]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.getRepositoryCount = ({ user_id }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `select
+    count(*) as count
+    from repositories r
+    where r.user_id = ?;`;
+    sql = mysql.format(sql, [user_id]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

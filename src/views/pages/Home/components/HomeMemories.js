@@ -120,6 +120,7 @@ export default createRefetchContainer(
         before: { type: "String", defaultValue: "" }
       ) {
         repositories(first: $first, after: $after, last: $last, before: $before) {
+          totalCount
           edges {
             node {
               id

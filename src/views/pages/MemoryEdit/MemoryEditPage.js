@@ -176,8 +176,26 @@ class MemoryEditPage extends React.Component {
       if (res.newCommit) {
         // console.log(res);
         // this.editor.click();
-        window.onbeforeunload = null;
-        document.location.href = `/${this.props.query.repository.name}`;
+        if (this.props.query.repository.auto_title) {
+          const { title, created } = this.autodetect();
+          UpdateRepositoryMutation({
+            environment: this.props.relay.environment,
+            id: this.props.query.repository.id,
+            title,
+            auto_title: this.props.query.repository.auto_title,
+            description: '',
+            created,
+            auto_created: this.props.query.repository.auto_created,
+          })
+          .then((_res) => {
+            if (_res.updateRepository) {
+              window.onbeforeunload = null;
+              document.location.href = `/${this.props.query.repository.name}`;
+            } else {
+              this.setState({ error: true });
+            }
+          });
+        }
       } else {
         this.setState({ error: true });
       }
@@ -212,25 +230,6 @@ class MemoryEditPage extends React.Component {
           {/* * @now ${moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss')} */}
           {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
-        {/* <div>
-          <textarea
-            rows="1"
-            className="memoryedit-title"
-            placeholder="Title"
-            type="text"
-            value={this.state.title}
-            onChange={partial(this.onChange, partial.placeholder, 'title')}
-          />
-        </div>
-        <div>
-          <input
-            className="memoryedit-created"
-            placeholder="date"
-            type="text"
-            value={this.state.created}
-            onChange={partial(this.onChange, partial.placeholder, 'created')}
-          />
-        </div> */}
         <div className="memoryedit-editor clearfix">
           {(this.state.preview) ?
             <Markdown source={this.state.body || ''} /> :
@@ -270,24 +269,11 @@ class MemoryEditPage extends React.Component {
                 Preview {(this.state.preview) ? '(Active)' : null}
               </button>
             </li>
-            {/* <li className="ddrow">
-              <button className="ddrow-btn">
-                Change creation date
-              </button>
-            </li> */}
             <li className="ddrow">
               <button className="ddrow-btn">
                 Keyboard shortcuts
               </button>
             </li>
-            {/* <li className="ddrow">
-              <button className="ddrow-btn">
-                Toggle top-bar
-                <div className="ddrow-hint">
-                  ({stringLength(this.state.body || '') + stringLength(this.state.title || '')} characters)
-                </div>
-              </button>
-            </li> */}
             <div className="dddivider" />
             <li className="ddrow">
               <span className="ddrow-hint">Title</span>
@@ -326,16 +312,6 @@ class MemoryEditPage extends React.Component {
                 </label>
               </div>
             </li>
-            {/* <div className="dddivider" />
-            <li className="ddrow">
-              <a
-                className="ddrow-btn"
-                href={`/${this.props.query.repository.name}`}
-                style={{ display: 'block' }}
-              >
-                Cancel Editing
-              </a>
-            </li> */}
             <div className="dddivider" />
             <li className="ddrow">
               <button
@@ -352,7 +328,6 @@ class MemoryEditPage extends React.Component {
                 className="ddrow-input"
                 placeholder="Update index.md"
                 value={this.state.commitHeadline}
-                // disabled={this.state.automatic}
                 onChange={partial(this.onChange, partial.placeholder, 'commitHeadline')}
               />
               <div className="ddcontainer clearfix">
@@ -363,12 +338,6 @@ class MemoryEditPage extends React.Component {
                   Commit changes
                 </button>
               </div>
-              {/* <button
-                className="ddrow-btn"
-                // onClick={this.updateMemoryMutation}
-              >
-                Commit changes
-              </button> */}
             </li>
           </DropdownProp>
           <DropdownProp

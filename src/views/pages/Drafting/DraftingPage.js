@@ -6,10 +6,12 @@ import {
 } from 'react-relay';
 import { fromGlobalId } from 'graphql-base64';
 // import format from 'date-fns/format';
-// import moment from 'moment';
+import moment from 'moment';
 import autosize from 'autosize';
 import stringLength from 'string-length';
 import partial from 'lodash/partial';
+import trimStart from 'lodash/trimStart';
+import get from 'lodash/get';
 import classNames from 'classnames';
 import Mousetrap from 'mousetrap';
 import mixpanel from 'mixpanel-browser';
@@ -23,7 +25,8 @@ import MenuContextImage from 'global-components/MenuContextImage.js';
 
 import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
-import { NewMemoryMutation } from './mutations/NewMemoryMutation.js';
+// import { NewMemoryMutation } from './mutations/NewMemoryMutation.js';
+import { NewRepositoryMutation } from './mutations/NewRepositoryMutation.js';
 
 mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
@@ -31,18 +34,27 @@ class DraftingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
-      body: '',
-      created: new Date(),
+      title: 'Untitled',
+      body: `# Untitled\n%[${moment.utc(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss')}]\n\nWhat's on your mind? Type here!`,
+      created: moment.utc(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss'),
       preview: false,
       error: false,
+      automatic: true,
+      commitHeadline: '',
     };
     this.onChange = this.onChange.bind(this);
     this.onClickImage = this.onClickImage.bind(this);
+    this.mutationNewRepository = this.mutationNewRepository.bind(this);
     this.newMemoryMutation = this.newMemoryMutation.bind(this);
     this.newImageMutation = this.newImageMutation.bind(this);
+    this.autodetect = this.autodetect.bind(this);
+    // this.tick = this.tick.bind(this);
   }
   componentDidMount() {
+    // this.timerID = setInterval(
+    //   () => this.tick(),
+    //   1000
+    // );
     mixpanel.register({
       id: fromGlobalId(this.props.query.me.id).id,
       email: this.props.query.me.email,
@@ -58,9 +70,30 @@ class DraftingPage extends React.Component {
       return false;
     });
   }
+  componentWillUnmount() {
+    // clearInterval(this.timerID);
+  }
   onChange(e, key) {
     if (key === 'preview') {
       this.setState({ preview: !this.state.preview });
+    } else if (key === 'body' && this.state.automatic) {
+      const { title, created } = this.autodetect();
+      this.setState({
+        title,
+        created,
+        body: e.target.value,
+      });
+    } else if (key === 'automatic') {
+      if (e.target.checked) {
+        const { title, created } = this.autodetect();
+        this.setState({
+          title,
+          created,
+          automatic: e.target.checked,
+        });
+      } else {
+        this.setState({ automatic: e.target.checked });
+      }
     } else {
       this.setState({ [key]: e.target.value });
     }
@@ -70,6 +103,28 @@ class DraftingPage extends React.Component {
       body: `${this.state.body}![](/assets/img/${uuid})\n`,
     }, () => {
       autosize.update(document.querySelector('.editor-ctrl'));
+    });
+  }
+  mutationNewRepository() {
+    NewRepositoryMutation({
+      environment: this.props.relay.environment,
+      commitHeadline: this.state.commitHeadline,
+      commitBody: '',
+      title: this.state.title,
+      text: this.state.body,
+      created: this.state.created,
+      auto_title: this.state.automatic,
+      auto_created: this.state.automatic,
+    })
+    .then((res) => {
+      console.log(res);
+      if (res.newRepository) {
+        mixpanel.track('Create memory');
+        window.onbeforeunload = null;
+        window.location.href = `/${res.newRepository.name}`;
+      } else {
+        this.setState({ error: true });
+      }
     });
   }
   newMemoryMutation() {
@@ -103,6 +158,14 @@ class DraftingPage extends React.Component {
       console.log(res);
     });
   }
+  autodetect() {
+    const title = trimStart(get(this.editor.value.match(/(#{1,6})(.*)/), '[2]', 'Untitled post'));
+    const created = get(this.editor.value.match(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/), '[1]');
+    return { title, created };
+  }
+  // tick() {
+  //   this.setState({ created: new Date() });
+  // }
   render() {
     return (
       <div className="draftingpage">
@@ -118,24 +181,20 @@ class DraftingPage extends React.Component {
               </a>
             </span>
           </div> : null}
-        <div className="drafting-hint">
-          /* new */
+        <div className="drafting-hint pre-wrap">
+          {`/**
+ * @new
+ * @title ${this.state.title}
+ * @date ${this.state.created} (UTC)
+ */`}
+          {/* * @now ${moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss')} */}
           {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
-        {/* <div>
-          <input
-            name="title"
-            className="drafting-title"
-            placeholder="Title"
-            type="text"
-            value={this.state.title}
-            onChange={partial(this.onChange, partial.placeholder, 'title')}
-          />
-        </div> */}
         <div className="drafting-editor clearfix">
           {(this.state.preview) ?
             <Markdown source={this.state.body} /> :
             <Editor
+              inputRef={(el) => { this.editor = el; }}
               value={this.state.body}
               onChange={partial(this.onChange, partial.placeholder, 'body')}
             />}
@@ -170,17 +229,77 @@ class DraftingPage extends React.Component {
                   Preview {(this.state.preview) ? '(Active)' : null}
                 </button>
               </li>
-              {/* <li className="ddrow">
-                <button className="ddrow-btn">
-                  Change creation date
-                </button>
-              </li> */}
               <li className="ddrow">
                 <button className="ddrow-btn">
                   Keyboard shortcuts
                 </button>
               </li>
+              <div className="dddivider" />
               <li className="ddrow">
+                <span className="ddrow-hint">Title</span>
+                <input
+                  className="ddrow-input"
+                  placeholder="Untitled post"
+                  value={this.state.title}
+                  disabled={this.state.automatic}
+                  onChange={partial(this.onChange, partial.placeholder, 'title')}
+                />
+                <span className="ddrow-hint">Date</span>
+                <input
+                  className="ddrow-input"
+                  placeholder="datetime"
+                  value={this.state.created}
+                  disabled={this.state.automatic}
+                  onChange={partial(this.onChange, partial.placeholder, 'created')}
+                />
+                <div className="ddcheckbox-container ddcontainer clearfix">
+                  {/* <button
+                    className="ddrow-save-btn left"
+                    onClick={this.mutationUpdateRepository}
+                  >
+                    Save
+                  </button> */}
+                  <label htmlFor="auto_created">
+                    <input
+                      id="auto_created"
+                      type="checkbox"
+                      checked={this.state.automatic}
+                      onChange={partial(this.onChange, partial.placeholder, 'automatic')}
+                    />
+                    <span>
+                      Automatic
+                    </span>
+                  </label>
+                </div>
+              </li>
+              {/* <div className="dddivider" />
+              <li className="ddrow">
+                <button
+                  className="ddrow-btn"
+                  onClick={this.deleteMemoryMutation}
+                >
+                  Delete post
+                </button>
+              </li> */}
+              <div className="dddivider" />
+              <li className="ddrow">
+                <span className="ddrow-hint">Commit</span>
+                <input
+                  className="ddrow-input"
+                  placeholder="Initial commit"
+                  value={this.state.commitHeadline}
+                  // disabled={this.state.automatic}
+                  onChange={partial(this.onChange, partial.placeholder, 'commitHeadline')}
+                />
+                <div className="ddcontainer clearfix">
+                  <button
+                    className="left ddrow-save-btn"
+                    onClick={this.mutationNewRepository}
+                  >
+                    Create initial commit
+                  </button>
+                </div>
+              {/* <li className="ddrow">
                 <a
                   className="ddrow-btn"
                   href="/"
@@ -189,14 +308,6 @@ class DraftingPage extends React.Component {
                   Cancel Memory
                 </a>
               </li>
-              {/* <li className="ddrow">
-                <button className="ddrow-btn">
-                  Toggle character count
-                  <div className="ddrow-hint">
-                    ({stringLength(this.state.body) + stringLength(this.state.title)} characters)
-                  </div>
-                </button>
-              </li> */}
               <div className="dddivider" />
               <li className="ddrow">
                 <button
@@ -204,7 +315,7 @@ class DraftingPage extends React.Component {
                   onClick={this.newMemoryMutation}
                 >
                   Save as Memory
-                </button>
+                </button> */}
               </li>
             </DropdownProp>
             <DropdownProp
@@ -267,8 +378,6 @@ class DraftingPage extends React.Component {
 DraftingPage.propTypes = {
   query: PropTypes.object.isRequired,
 };
-
-// module.exports = DraftingPage;
 
 export default createFragmentContainer(DraftingPage, {
   query: graphql`

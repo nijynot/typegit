@@ -43,6 +43,12 @@ export const newRepositoryInput = new GraphQLInputObjectType({
     created: {
       type: GraphQLString,
     },
+    auto_title: {
+      type: GraphQLInt,
+    },
+    auto_created: {
+      type: GraphQLInt,
+    },
   }),
 });
 
@@ -101,6 +107,8 @@ export const newRepositoryMutation = {
         description: input.description,
         created: input.created,
         user_id: context.user.user_id,
+        auto_title: input.auto_title,
+        auto_created: input.auto_created,
       });
       return Repository.gen(context, randid);
       // await repo.createCommit('HEAD', author, committer, 'Initial commit', oid, []);
