@@ -25,7 +25,7 @@ class CommitItem extends React.Component {
           </span>
           by{' '}
           <span className="commititem-author">
-            {(this.props.commit.author.user && this.props.commit.author.user) || this.props.commit.author.name}
+            {(this.props.commit.author.user && this.props.commit.author.user.username) || this.props.commit.author.name}
           </span>{' '}
           <span className="commititem-">
             ({this.props.commit.commitedDate})

@@ -235,6 +235,13 @@ app.get('/:memory_id/history', (req, res, next) => {
     next('Not logged in.');
   }
 });
+app.get('/:memory_id/commit/:oid', (req, res, next) => {
+  if (req.user) {
+    res.send(template({ title: `Commit - ${req.params.oid}`, script: 'CommitPage.js' }));
+  } else {
+    next('Not logged in.');
+  }
+});
 
 app.get('/tag/:tag', (req, res, next) => {
   if (req.user) {
