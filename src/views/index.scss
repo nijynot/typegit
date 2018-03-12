@@ -51,10 +51,14 @@ html, body, #root, .app {
 }
 
 ::selection {
-  background-color: #fae7dd; /* WebKit/Blink Browsers */
+  // background-color: #fae7dd; /* WebKit/Blink Browsers */
+  background-color: black; /* WebKit/Blink Browsers */
+  color: white;
 }
 ::-moz-selection {
-  background-color: #fae7dd; /* Gecko Browsers */
+  // background-color: #fae7dd; /* Gecko Browsers */
+  background-color: black; /* Gecko Browsers */
+  color: white;
 }
 * {
   box-sizing: border-box;
@@ -179,15 +183,18 @@ canvas {
   white-space: nowrap;
   &:first-child button {
     @include border-radius-top(3px);
-    padding-top: 9px!important;
+    // padding-top: 9px!important;
   }
   &:last-child button {
     @include border-radius-bottom(3px);
-    padding-bottom: 9px!important;
+    // padding-bottom: 9px!important;
   }
 }
 .ddrow-hint {
   // padding: 0px $small 4px $small;
+  font-family: monospace;
+  padding: 4px $small;
+  display: block;
   font-size: 11px;
   color: #586069;
   text-align: left;
@@ -223,4 +230,52 @@ canvas {
   margin: 6px 1px;
   // background-color: #e1e4e8;
   background-color: #e1e4e8;
+}
+.ddrow-input {
+  @include border-radius(3px);
+  border: 1px solid $lightgrey;
+  font-family: "Source Sans Pro";
+  font-size: 15px;
+  padding: 6px $tiny;
+  outline: 0;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  width: 200px;
+  margin: 0 $small 4px $small;
+  &:focus {
+    box-shadow: 0 0 0 2px #333;
+    border-color: #333;
+  }
+}
+.ddcheckbox-container {
+  align-items: center;
+  display: flex;
+  font-size: 13px;
+  margin-top: 4px !important;
+}
+.ddcheckbox-container label {
+  font-family: "Open Sans";
+  float: left;
+  margin-left: $small;
+}
+.ddcheckbox-container input {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.ddcontainer {
+  margin: 4px $small $tiny $small;
+}
+.ddrow-save-btn {
+  @include border-radius(3px);
+  font-family: "Open Sans";
+  font-size: 12px;
+  border: 0;
+  padding: 6px 12px;
+  background-color: #efefef;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  outline: 0;
+  cursor: pointer;
+  &:hover {
+    background-color: #333;
+    color: white;
+  }
 }

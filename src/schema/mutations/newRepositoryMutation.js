@@ -81,7 +81,7 @@ export const newRepositoryMutation = {
         fileNames: ['index.md'],
       });
 
-      // Create author and commiter
+      // Create author and committer
       const user = await User.gen(context, context.user.user_id);
       const gitActor = git.createGitActor(user.username, user.email);
 
@@ -90,7 +90,7 @@ export const newRepositoryMutation = {
       const message = (input.commitBody && `${headline}\n\n${input.commitBody}`) || headline;
       await git.initialCommit(repo, {
         author: gitActor,
-        commiter: gitActor,
+        committer: gitActor,
         message,
       });
 
@@ -103,7 +103,7 @@ export const newRepositoryMutation = {
         user_id: context.user.user_id,
       });
       return Repository.gen(context, randid);
-      // await repo.createCommit('HEAD', author, commiter, 'Initial commit', oid, []);
+      // await repo.createCommit('HEAD', author, committer, 'Initial commit', oid, []);
       // const head = await git.Reference.nameToId(repo, 'HEAD');
       // const parent = await repo.getCommit(head);
 
@@ -112,8 +112,8 @@ export const newRepositoryMutation = {
       //   const head = await git.Reference.nameToId(repo, 'HEAD');
       //   const parent = await repo.getCommit(head);
       //   const author = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
-      //   const commiter = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
-      //   await repo.createCommit('HEAD', author, commiter, 'Second commit', oid, [parent]);
+      //   const committer = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
+      //   await repo.createCommit('HEAD', author, committer, 'Second commit', oid, [parent]);
       // })();
 
       // const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(input.body)));

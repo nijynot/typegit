@@ -13,19 +13,26 @@ import {
   connectionDefinitions,
   connectionArgs,
 } from 'graphql-relay';
+import _ from 'lodash';
+import path from 'path';
 
 import mysql from '../../config/mysql.js';
 import * as git from '../git.js';
 import { connectionFromArray } from '../definitions/connectionFromArray.js';
-import {
-  connectionFromHistory,
-  historyCursorToOid,
-} from '../definitions/connectionFromHistory.js';
 import { registerType } from '../definitions/node.js';
 import { transformToForward } from '../definitions/transformToForward.js';
+import {
+  oidFromCursor,
+  toCursor,
+  toForwardCommitArgs,
+  connectionFromCommits,
+  isBackward,
+} from '../definitions/connectionFromCommits.js';
 
 import { Commit } from '../models/Commit.js';
+import { Repository } from '../models/Repository.js';
 import { Tree } from '../models/Tree.js';
+import { User } from '../models/User.js';
 import { gitActorType } from './gitActorType.js';
 import { gitObjectType } from './gitObjectType.js';
 import { repositoryType } from './repositoryType.js';
@@ -43,6 +50,16 @@ export const commitType = registerType(new GraphQLObjectType({
     },
     author: {
       type: gitActorType,
+      resolve: async (rootValue, args, context) => {
+        const author = rootValue.git.author();
+        const userId = await User.idByUsername(context, author.name());
+        return {
+          date: author.when(),
+          name: author.name(),
+          email: author.email(),
+          user_id: userId,
+        };
+      },
     },
     additions: {
       type: GraphQLInt,
@@ -53,8 +70,18 @@ export const commitType = registerType(new GraphQLObjectType({
     commitedDate: {
       type: GraphQLString,
     },
-    commiter: {
+    committer: {
       type: gitActorType,
+      resolve: async (rootValue, args, context) => {
+        const committer = rootValue.git.committer();
+        const userId = await User.idByUsername(context, committer.name());
+        return {
+          date: committer.when(),
+          name: committer.name(),
+          email: committer.email(),
+          user_id: userId,
+        };
+      },
     },
     deletions: {
       type: GraphQLInt,
@@ -66,16 +93,19 @@ export const commitType = registerType(new GraphQLObjectType({
       },
       type: commitConnection,
       resolve: async (rootValue, args, context) => {
-        const { first, after } = transformToForward(args);
-        const oid = historyCursorToOid(after);
+        const repo = rootValue.git.owner();
+        const { first, after } = await toForwardCommitArgs(repo, args);
+        const oid = oidFromCursor(after);
         const commits = await git.history(rootValue.git.owner(), {
           count: first + 2,
-          sha: oid || rootValue.sha,
+          sha: oid || rootValue.oid,
         });
         const array = await Promise.all(commits.map((commit) => {
           return Commit.wrap(context, { repository: rootValue.git.owner(), commit });
         }));
-        return connectionFromHistory(array, { first, after });
+        return connectionFromCommits(array, { first, after }, {
+          backward: isBackward(args),
+        });
       },
     },
     message: {
@@ -89,6 +119,10 @@ export const commitType = registerType(new GraphQLObjectType({
     },
     repository: {
       type: repositoryType,
+      resolve: async (rootValue, args, context) => {
+        const repositoryId = path.parse(rootValue.git.owner().workdir()).name;
+        return Repository.gen(context, repositoryId);
+      },
     },
     tree: {
       type: treeType,

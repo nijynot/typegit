@@ -48,17 +48,17 @@ const commitInit = async () => {
 };
 
 // git commit -m <msg>
-const commit = async () => {
-  const repo = await git.Repository.open('./public/repo/Alice0000001');
-  const index = await repo.refreshIndex();
-  const oid = await index.writeTree();
-  console.log(oid);
-  const head = await git.Reference.nameToId(repo, 'HEAD');
-  const parent = await repo.getCommit(head);
-  const author = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
-  const commiter = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
-  await repo.createCommit('HEAD', author, commiter, 'Third commit', oid, [parent]);
-};
+// const commit = async () => {
+//   const repo = await git.Repository.open('./public/repo/Alice0000001');
+//   const index = await repo.refreshIndex();
+//   const oid = await index.writeTree();
+//   console.log(oid);
+//   const head = await git.Reference.nameToId(repo, 'HEAD');
+//   const parent = await repo.getCommit(head);
+//   const author = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
+//   const commiter = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
+//   await repo.createCommit('HEAD', author, commiter, 'Third commit', oid, [parent]);
+// };
 
 // git show
 const latestDiff = async () => {
@@ -128,6 +128,7 @@ const history = async (
   repository,
   {
     sort = git.Revwalk.SORT.TIME,
+    reverse = git.Revwalk.SORT.NONE,
     count = 10,
     sha, // Optional ´after´ argument
   } = {}
@@ -140,9 +141,9 @@ const history = async (
   } else {
     headCommit = await repository.getMasterCommit();
   }
-  revwalk.sorting(sort);
-  revwalk.push(headCommit.id());
-  const commits = await revwalk.getCommits(count);
+  revwalk.sorting(sort, reverse);
+  // revwalk.push(headCommit.id());
+  // let commits = await revwalk.getCommits(count);
   return commits;
 };
 
@@ -155,15 +156,20 @@ const history = async (
 // parse();
 
 (async () => {
-  const repo = await git.Repository.open('./public/repo/Al/ic/Alice0000001');
+  const repo = await git.Repository.open('./public/repo/tP/Wx/tPWxb2RnWlEN');
   // const masterCommit = await repo.getMasterCommit();
-  const headCommit = await repo.getCommit('3af67e44548ad06a0ab7c99be4e3f5e9e980971e');
-  const tree = await headCommit.getTree();
+  const headCommit = await repo.getCommit('fba94df5a2ca5a395e24ba481e33dd506d871376');
+  const someparent = await git.Revparse.single(repo, 'fba94df5a2ca5a395e24ba481e33dd506d871376');
+  console.log(someparent.id());
+  // const tree = await headCommit.getTree();
   // const lders = loaders();
-  const blob = await tree.entryByName('index.md').getBlob();
-  console.log(blob.toString());
-  // const commits = await history(repo);
-  // console.log(commits);
+  // const blob = await tree.entryByName('index.md').getBlob();
+  // const commits = await history(repo, {
+  //   reverse: 4,
+  //   count: 3,
+  //   sha: 'ae5bb4b8a9783450b7db18d306843277a091b841'
+  // });
+  // console.log(commits.map(com => com.id()));
   // const obj = await lders.Commit.load({ repository: repo, id: '44a441ca4f8c7ec528f0ebdd18b68110aa090e84' });
   // const obj = await lders.GitObject.load({ repository: repo, id: 'e8b2f91da1f031223f0b679a0d2a9668419663a9' });
   // console.log(obj);
@@ -172,6 +178,7 @@ const history = async (
   // const split = path.join(repo.path(), '..').split(path.sep);
   // const dir = _(path.join(repo.path(), '..').split(path.sep)).last();
   // console.log(dir);
+
 })();
 
 // (async () => {

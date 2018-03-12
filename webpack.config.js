@@ -22,6 +22,7 @@ const config = {
     PaymentPage: './src/views/client-pages/PaymentPage.js',
     ErrorPage: './src/views/client-pages/ErrorPage.js',
     FaqPage: './src/views/client-pages/FaqPage.js',
+    HistoryPage: './src/views/client-pages/HistoryPage.js',
   },
   output: {
     path: path.resolve(__dirname, './public/js'),

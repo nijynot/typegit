@@ -34,11 +34,17 @@ export const repositoryType = registerType(new GraphQLObjectType({
     title: {
       type: GraphQLString,
     },
+    auto_title: {
+      type: GraphQLInt,
+    },
     description: {
       type: GraphQLString,
     },
     created: {
       type: GraphQLString,
+    },
+    auto_created: {
+      type: GraphQLInt,
     },
     defaultBranchRef: {
       type: refType,

@@ -6,6 +6,9 @@ import {
   GraphQLString,
   GraphQLInputObjectType,
 } from 'graphql';
+import {
+  fromGlobalId,
+} from 'graphql-relay';
 import nodegit from 'nodegit';
 import _ from 'lodash';
 import fs from 'fs-extra';
@@ -52,6 +55,7 @@ export const newCommitMutation = {
     },
   },
   resolve: async (request, { input }, context) => {
+    const { id } = fromGlobalId(input.repositoryId);
     const customer_id = await mysql.getCustomerIdByUserId({
       user_id: _.get(context, 'user.user_id'),
     })
@@ -65,10 +69,10 @@ export const newCommitMutation = {
       isLoggedIn(context) &&
       !_.isEmpty(_.get(subscription, 'data'))
     ) {
-      const paddedDir = git.padDir(input.repositoryId);
+      const paddedDir = git.padDir(id);
 
       // Open repository
-      const repo = await git.open(input.repositoryId);
+      const repo = await git.open(id);
 
       // Create file and add to index
       await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'));
@@ -77,7 +81,7 @@ export const newCommitMutation = {
         fileNames: ['index.md'],
       });
 
-      // Create author and commiter
+      // Create author and committer
       const user = await User.gen(context, context.user.user_id);
       const gitActor = git.createGitActor(user.username, user.email);
 
@@ -86,7 +90,7 @@ export const newCommitMutation = {
       const message = (input.commitBody && `${headline}\n\n${input.commitBody}`) || headline;
       const oid = await git.commit(repo, {
         author: gitActor,
-        commiter: gitActor,
+        committer: gitActor,
         message,
       });
 

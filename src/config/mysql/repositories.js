@@ -6,9 +6,11 @@ exports.getRepositoriesByIds = ({ ids }) => {
     let sql = `select
     r.repository_id as id,
     r.title,
+    r.auto_title,
     r.description,
-    r.user_id,
-    r.created
+    r.created,
+    r.auto_created,
+    r.user_id
     from repositories r
     where r.repository_id in (?)
     order by field(r.repository_id, ?)`;
@@ -47,6 +49,39 @@ exports.insertRepository = ({ repository_id, title, description, created, user_i
       ?, ?, ?, ?, ?
     );`;
     sql = mysql.format(sql, [repository_id, title, description, datetime, user_id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.updateRepository = ({
+  repository_id,
+  title,
+  auto_title,
+  description,
+  created,
+  auto_created,
+}) => {
+  return new Promise((resolve, reject) => {
+    let sql = `update repositories
+    set title = ?,
+    auto_title = ?,
+    description = ?,
+    created = ?,
+    auto_created = ?
+    where repository_id = ?
+    limit 1;`;
+    sql = mysql.format(sql, [
+      title,
+      auto_title,
+      description,
+      created,
+      auto_created,
+      repository_id,
+    ]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

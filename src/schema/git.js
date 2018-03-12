@@ -36,20 +36,20 @@ export const createGitActor = (name, email) => {
   return git.Signature.create(name, email, moment().unix(), 0);
 };
 
-export const initialCommit = async (repository, { author, commiter, message = 'Initial commit' }) => {
+export const initialCommit = async (repository, { author, committer, message = 'Initial commit' }) => {
   // const repo = await git.Repository.open(`./public/repo/${repository}`);
   const index = await repository.refreshIndex();
   const oid = await index.writeTree();
-  await repository.createCommit('HEAD', author, commiter, message, oid, []);
+  await repository.createCommit('HEAD', author, committer, message, oid, []);
 };
 
-export const commit = async (repository, { author, commiter, message = 'Update file(s)' }) => {
+export const commit = async (repository, { author, committer, message = 'Update file(s)' }) => {
   // const repo = await git.Repository.open(`./public/repo/${repository}`);
   const index = await repository.refreshIndex();
   const oid = await index.writeTree();
   const head = await git.Reference.nameToId(repository, 'HEAD');
   const parent = await repository.getCommit(head);
-  const commitOid = await repository.createCommit('HEAD', author, commiter, message, oid, [parent]);
+  const commitOid = await repository.createCommit('HEAD', author, committer, message, oid, [parent]);
   return commitOid;
 };
 
@@ -66,6 +66,7 @@ export const history = async (
   repository,
   {
     sort = git.Revwalk.SORT.TIME,
+    reverse = git.Revwalk.SORT.NONE,
     count = 10,
     sha, // Optional ´after´ argument
   } = {}
@@ -78,7 +79,7 @@ export const history = async (
   } else {
     headCommit = await repository.getMasterCommit();
   }
-  revwalk.sorting(sort);
+  revwalk.sorting(sort, reverse);
   revwalk.push(headCommit.id());
   const commits = await revwalk.getCommits(count);
   return commits;

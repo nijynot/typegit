@@ -12,6 +12,8 @@ import stringLength from 'string-length';
 import autosize from 'autosize';
 import classNames from 'classnames';
 import Mousetrap from 'mousetrap';
+import trimStart from 'lodash/trimStart';
+import get from 'lodash/get';
 
 import Editor from 'global-components/Editor.js';
 import MetaPortal from 'global-components/MetaPortal.js';
@@ -23,31 +25,35 @@ import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
 import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
 import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
+import { UpdateRepositoryMutation } from './mutations/UpdateRepositoryMutation.js';
+import { NewCommitMutation } from './mutations/NewCommitMutation.js';
 
 class MemoryEditPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       preview: false,
-      title: this.props.query.memory.title,
-      body: this.props.query.memory.body,
-      created: this.props.query.memory.created,
-      save: false,
+      title: this.props.query.repository.title,
+      body: this.props.query.repository.defaultBranchRef.target.tree.entry.object.text,
+      created: this.props.query.repository.created,
+      // save: false,
       error: false,
+      automatic: this.props.query.repository.auto_title,
+      commitHeadline: '',
     };
     this.onChange = this.onChange.bind(this);
     this.onClickImage = this.onClickImage.bind(this);
     this.deleteMemoryMutation = this.deleteMemoryMutation.bind(this);
-    this.updateMemoryMutation = this.updateMemoryMutation.bind(this);
-    this.newImageMutation = this.newImageMutation.bind(this);
+    this.mutationNewImage = this.mutationNewImage.bind(this);
+    this.mutationUpdateRepository = this.mutationUpdateRepository.bind(this);
+    this.mutationNewCommit = this.mutationNewCommit.bind(this);
+    this.autodetect = this.autodetect.bind(this);
   }
   componentDidMount() {
     window.onbeforeunload = () => {
       if (
-        (
-          this.state.body !== this.props.query.memory.body ||
-          this.state.title !== this.props.query.memory.title
-        )
+        this.state.body !==
+        this.props.query.repository.defaultBranchRef.target.tree.entry.object.text
       ) {
         return 'Unsaved changes.';
       }
@@ -61,9 +67,27 @@ class MemoryEditPage extends React.Component {
     console.log(this.state.body.match(/(#{1,6})(.*)/));
   }
   onChange(e, key) {
-    console.log(key);
     if (key === 'preview') {
       this.setState({ preview: !this.state.preview });
+    } else if (key === 'body' && this.state.automatic) {
+      const { title, created } = this.autodetect();
+      // const title = trimStart(get(e.target.value.match(/(#{1,6})(.*)/), '[2]', 'Untitled post'));
+      this.setState({
+        title,
+        created,
+        body: e.target.value,
+      });
+    } else if (key === 'automatic') {
+      if (e.target.checked) {
+        const { title, created } = this.autodetect();
+        this.setState({
+          title,
+          created,
+          automatic: e.target.checked,
+        });
+      } else {
+        this.setState({ automatic: e.target.checked });
+      }
     } else {
       this.setState({ [key]: e.target.value });
     }
@@ -90,31 +114,24 @@ class MemoryEditPage extends React.Component {
       });
     }
   }
-  updateMemoryMutation() {
-    // const { title, body, created } = this.state;
-    const { body } = this.state;
-    const title = this.state.body.match(/(#{1,6})(.*)/)[2];
-    // const created = this.state.body.match(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/);
-    const { created } = this.props.query.memory;
-    UpdateMemoryMutation({
-      environment: this.props.relay.environment,
-      id: this.props.query.memory.id,
-      title: (this.state.title !== this.props.query.memory.title) ?
-        this.state.title : title,
-      body,
-      created: (this.state.created !== this.props.query.memory.created) ?
-        this.state.created : created,
-    })
-    .then((res) => {
-      if (res.updateMemory) {
-        window.onbeforeunload = null;
-        document.location.href = `/${fromGlobalId(this.props.query.memory.id).id}`;
-      } else {
-        this.setState({ error: true });
-      }
-    });
-  }
-  newImageMutation() {
+  // updateMemoryMutation() {
+  //   UpdateMemoryMutation({
+  //     environment: this.props.relay.environment,
+  //     id: this.props.query.memory.id,
+  //     title: this.state.title,
+  //     body: this.state.body,
+  //     created: this.state.created,
+  //   })
+  //   .then((res) => {
+  //     if (res.updateMemory) {
+  //       window.onbeforeunload = null;
+  //       document.location.href = `/${fromGlobalId(this.props.query.memory.id).id}`;
+  //     } else {
+  //       this.setState({ error: true });
+  //     }
+  //   });
+  // }
+  mutationNewImage() {
     NewImageMutation({
       environment: this.props.relay.environment,
       uploadables: {
@@ -125,6 +142,51 @@ class MemoryEditPage extends React.Component {
     .then((res) => {
       console.log(res);
     });
+  }
+  mutationUpdateRepository() {
+    UpdateRepositoryMutation({
+      environment: this.props.relay.environment,
+      id: this.props.query.repository.id,
+      title: this.state.title,
+      auto_title: this.state.automatic,
+      description: '',
+      created: this.state.created,
+      auto_created: this.state.automatic,
+    })
+    .then((res) => {
+      if (res.updateRepository) {
+        console.log(res);
+        this.editor.click();
+        // window.onbeforeunload = null;
+        // document.location.href = `/${this.props.query.repository.name}`;
+      } else {
+        this.setState({ error: true });
+      }
+    });
+  }
+  mutationNewCommit() {
+    NewCommitMutation({
+      environment: this.props.relay.environment,
+      repositoryId: this.props.query.repository.id,
+      commitHeadline: this.state.commitHeadline,
+      commitBody: '',
+      text: this.state.body,
+    })
+    .then((res) => {
+      if (res.newCommit) {
+        // console.log(res);
+        // this.editor.click();
+        window.onbeforeunload = null;
+        document.location.href = `/${this.props.query.repository.name}`;
+      } else {
+        this.setState({ error: true });
+      }
+    });
+  }
+  autodetect() {
+    const title = trimStart(get(this.editor.value.match(/(#{1,6})(.*)/), '[2]', 'Untitled post'));
+    const created = get(this.editor.value.match(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/), '[1]');
+    return { title, created };
   }
   render() {
     return (
@@ -141,8 +203,13 @@ class MemoryEditPage extends React.Component {
               </a>
             </span>
           </div> : null}
-        <div className="drafting-hint">
-          /*{' '}edit {fromGlobalId(this.props.query.memory.id).id}{' '}*/
+        <div className="drafting-hint pre-wrap">
+          {`/**
+ * @edit ${this.props.query.repository.name}
+ * @title ${this.state.title}
+ * @date ${this.state.created} (UTC)
+ */`}
+          {/* * @now ${moment.utc(new Date()).format('YYYY-MM-DD HH:mm:ss')} */}
           {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
         {/* <div>
@@ -168,6 +235,7 @@ class MemoryEditPage extends React.Component {
           {(this.state.preview) ?
             <Markdown source={this.state.body || ''} /> :
             <Editor
+              inputRef={(el) => { this.editor = el; }}
               value={this.state.body}
               onChange={partial(this.onChange, partial.placeholder, 'body')}
             />}
@@ -175,8 +243,7 @@ class MemoryEditPage extends React.Component {
         <MetaPortal>
           <span className="meta-count left">
             <b>
-              {stringLength(this.props.query.memory.body || '') +
-                stringLength(this.props.query.memory.title || '')}
+              {stringLength(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text || '')}
             </b>{' '}characters
           </span>
           <DropdownProp
@@ -221,41 +288,87 @@ class MemoryEditPage extends React.Component {
                 </div>
               </button>
             </li> */}
-            <li className="ddrow">
-              <button
-                className="ddrow-btn"
-                // onClick={this.deleteMemoryMutation}
-              >
-                Custom title and date
-              </button>
-            </li>
             <div className="dddivider" />
+            <li className="ddrow">
+              <span className="ddrow-hint">Title</span>
+              <input
+                className="ddrow-input"
+                placeholder="Untitled post"
+                value={this.state.title}
+                disabled={this.state.automatic}
+                onChange={partial(this.onChange, partial.placeholder, 'title')}
+              />
+              <span className="ddrow-hint">Date</span>
+              <input
+                className="ddrow-input"
+                placeholder="datetime"
+                value={this.state.created}
+                disabled={this.state.automatic}
+                onChange={partial(this.onChange, partial.placeholder, 'created')}
+              />
+              <div className="ddcheckbox-container ddcontainer clearfix">
+                <button
+                  className="ddrow-save-btn left"
+                  onClick={this.mutationUpdateRepository}
+                >
+                  Save
+                </button>
+                <label htmlFor="auto_created">
+                  <input
+                    id="auto_created"
+                    type="checkbox"
+                    checked={this.state.automatic}
+                    onChange={partial(this.onChange, partial.placeholder, 'automatic')}
+                  />
+                  <span>
+                    Automatic
+                  </span>
+                </label>
+              </div>
+            </li>
+            {/* <div className="dddivider" />
             <li className="ddrow">
               <a
                 className="ddrow-btn"
-                href={`/${fromGlobalId(this.props.query.memory.id).id}`}
+                href={`/${this.props.query.repository.name}`}
                 style={{ display: 'block' }}
               >
                 Cancel Editing
               </a>
-            </li>
+            </li> */}
             <div className="dddivider" />
             <li className="ddrow">
               <button
                 className="ddrow-btn"
                 onClick={this.deleteMemoryMutation}
               >
-                Delete Memory
+                Delete post
               </button>
             </li>
             <div className="dddivider" />
             <li className="ddrow">
-              <button
+              <span className="ddrow-hint">Commit</span>
+              <input
+                className="ddrow-input"
+                placeholder="Update index.md"
+                value={this.state.commitHeadline}
+                // disabled={this.state.automatic}
+                onChange={partial(this.onChange, partial.placeholder, 'commitHeadline')}
+              />
+              <div className="ddcontainer clearfix">
+                <button
+                  className="left ddrow-save-btn"
+                  onClick={this.mutationNewCommit}
+                >
+                  Commit changes
+                </button>
+              </div>
+              {/* <button
                 className="ddrow-btn"
-                onClick={this.updateMemoryMutation}
+                // onClick={this.updateMemoryMutation}
               >
-                Update Memory
-              </button>
+                Commit changes
+              </button> */}
             </li>
           </DropdownProp>
           <DropdownProp
@@ -286,7 +399,7 @@ class MemoryEditPage extends React.Component {
                   id="image-upload"
                   type="file"
                   accept="image/*"
-                  onChange={this.newImageMutation}
+                  onChange={this.mutationNewImage}
                 />
                 Upload image
               </label>
@@ -334,16 +447,40 @@ export default createFragmentContainer(MemoryEditPage, {
           }
         }
       }
-      memory(id: $id) {
+      repository(id: $id) {
         id
+        name
         title
-        body
+        auto_title
+        description
         created
-        user {
-          id
-          username
+        auto_created
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              tree {
+                entry(name: "index.md") {
+                  object {
+                    ... on Blob {
+                      text
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
+      # memory(id: $id) {
+      #   id
+      #   title
+      #   body
+      #   created
+      #   user {
+      #     id
+      #     username
+      #   }
+      # }
     }
   `,
 });

@@ -9,27 +9,32 @@ import {
 import { modernEnvironment } from '../helpers.js';
 
 import App from '../App.js';
-import HomePage from '../pages/Home/HomePage.js';
+import HistoryPage from '../pages/History/HistoryPage.js';
 
 const mountNode = document.getElementById('root');
+const params = document.location.pathname.split('/', 3);
+const repositoryId = params[1];
+const commitOid = params[2];
 
 ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query HomePageQuery($query: String) {
+      query HistoryPageQuery($repositoryId: String) {
         ...App_query
-        ...HomePage_query
+        ...HistoryPage_query
       }
     `}
-    variables={{ search: '' }}
+    variables={{ repositoryId, commitOid }}
     render={({ err, props }) => {
       if (props) {
         return (
           <App
             query={props}
           >
-            <HomePage query={props} />
+            <HistoryPage
+              query={props}
+            />
           </App>
         );
       } else if (err) {

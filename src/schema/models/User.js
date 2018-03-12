@@ -30,6 +30,13 @@ export class User {
     return viewerCanSee(context, data) ? new User(data) : this.null();
   }
 
+  static async idByUsername(context, username) {
+    const user = await mysql.getUserByUsername({
+      username,
+    });
+    return get(user, '[0].id');
+  }
+
   static async images(context, args, id) {
     if (context.user.user_id === id) {
       const images = await mysql.getImageIdsByUserId({

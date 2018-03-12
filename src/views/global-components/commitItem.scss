@@ -1,0 +1,32 @@
+@import "src/scss/border-radius";
+@import "src/scss/spacing";
+
+.commititem {
+  padding: $small 4px;
+  border-bottom: 1px dotted #333;
+  &:first-child {
+    border-top: 1px dotted #333;
+  }
+}
+.commititem-container {
+  font-size: 13px;
+  font-family: monospace;
+}
+.commititem-oid {
+  color: blue;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.commititem-author {
+  font-weight: bold;
+}
+.commititem .msg {
+  margin-top: $tiny;
+  font-size: 13px;
+  font-family: "Open Sans";
+}
+.commititem-fromnow {
+  font-style: italic;
+  // font-weight: 700;
+}

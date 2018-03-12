@@ -29,9 +29,13 @@
   padding: $tiny $small;
   font-family: "Open Sans";
   font-weight: 600;
-  &:hover {
+  &:hover:enabled {
     color: $lightnude;
     background-color: $deep-grey;
+  }
+  &:disabled {
+    color: #aaa;
+    background-color: #f9f7f6;
   }
 }
 .homememories-empty-msg {

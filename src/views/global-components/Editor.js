@@ -12,6 +12,7 @@ class Editor extends React.Component {
     return (
       <div className="editor">
         <textarea
+          ref={this.props.inputRef}
           className="editor-ctrl mousetrap"
           value={this.props.value}
           onChange={this.props.onChange}
@@ -23,6 +24,7 @@ class Editor extends React.Component {
 }
 
 Editor.propTypes = {
+  inputRef: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string,
 };

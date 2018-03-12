@@ -1,8 +1,10 @@
 create table repositories (
   repository_id char(12) collate utf8mb4_bin not null,
   title varchar(255),
+  auto_title int(1) not null default 1,
   description text,
   created datetime not null default now(),
+  auto_created int(1) not null default 1,
   user_id int(12) unsigned not null,
   -- FULLTEXT KEY `FULLTEXT_IND` (`title`,`body`),
   primary key (repository_id),

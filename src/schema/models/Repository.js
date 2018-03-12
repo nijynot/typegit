@@ -12,8 +12,10 @@ export class Repository {
   constructor(data) {
     this.id = data.id;
     this.title = data.title;
+    this.auto_title = data.auto_title;
     this.description = data.description;
     this.created = data.created;
+    this.auto_created = data.auto_created;
     this.user_id = data.user_id;
     this.git = data.git;
   }

@@ -2,6 +2,7 @@
 // import mysql from '../../config/mysql.js';
 import nodegit from 'nodegit';
 import path from 'path';
+import moment from 'moment';
 import * as git from '../git.js';
 import { Repository } from './Repository.js';
 
@@ -40,7 +41,7 @@ export class Commit {
         id,
         partialOid: data.id().toString().substr(0, 6),
         oid: data.id().toString(),
-        commitedDate: data.date(),
+        commitedDate: data.date().toISOString(),
         message: data.message(),
         git: data,
       });
@@ -56,7 +57,7 @@ export class Commit {
         id: commit.sha(),
         partialOid: commit.sha().substr(0, 6),
         oid: commit.sha(),
-        commitedDate: commit.date(),
+        commitedDate: commit.date().toISOString(),
         message: commit.message(),
         git: commit,
       });

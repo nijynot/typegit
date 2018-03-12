@@ -93,10 +93,7 @@ exports.getUserByUsername = ({ username }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
     u.user_id as id,
-    u.username,
-    u.heading,
-    u.email,
-    u.created
+    u.username
     from users u
     where u.username = ?;`;
     sql = mysql.format(sql, [username]);

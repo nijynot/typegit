@@ -5,6 +5,7 @@
     width: 100% !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+    padding-bottom: 0 !important;
     position: inherit !important;
   }
 }
@@ -25,6 +26,7 @@
   // outline: 2px dotted #fff;
   padding-left: 100px;
   padding-right: 100px;
+  padding-bottom: 100px;
   // padding-bottom: 100px;
   outline: 0;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);
