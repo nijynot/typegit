@@ -30,6 +30,11 @@ const schema = require('./lib/schema/schema.js');
 const getLoaders = require('./lib/schema/loaders/getLoaders.js');
 const template = require('./src/views/template.js');
 
+// Routes
+const repository = require('./routes/repository.js');
+const settings = require('./routes/settings.js');
+const gitHttp = require('./routes/git-http.js');
+
 /* ===== Constants and Helpers ===== */
 
 let PORT;
@@ -162,6 +167,9 @@ app.get('/assets/u/:userId', (req, res) => {
     },
   });
 });
+app.get('/favicon.ico', (req, res) => {
+  res.status(204);
+});
 
 app.get('/', async (req, res) => {
   if (_.get(req.user, 'user_id')) {
@@ -214,34 +222,13 @@ app.get('/images', (req, res, next) => {
   }
 });
 
-app.get('/:memory_id', async (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: req.params.memory_id, script: 'MemoryPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
-app.get('/:memory_id/edit', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: `Edit - ${req.params.memory_id}`, script: 'MemoryEditPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
-app.get('/:memory_id/history', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: `History - ${req.params.memory_id}`, script: 'HistoryPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
-app.get('/:memory_id/commit/:oid', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: `Commit - ${req.params.oid}`, script: 'CommitPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
+// app.use('/:repo.git', (req, res) => {
+//   console.log(req.params);
+//   res.send('end');
+// });
+
+app.use('/', gitHttp);
+app.use('/', repository);
 
 app.get('/tag/:tag', (req, res, next) => {
   if (req.user) {
@@ -251,31 +238,7 @@ app.get('/tag/:tag', (req, res, next) => {
   }
 });
 
-app.get('/settings/account', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: 'Account', script: 'SettingsAccountPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
-app.get('/settings/password', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: 'Password', script: 'SettingsPasswordPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
-app.get('/settings/subscription', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: 'Subscription', script: 'SettingsSubscriptionPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
-app.use((err, req, res, next) => {
-  res.status(404);
-  res.send(template({ title: '404 - Page not found', script: 'ErrorPage.js' }));
-});
+app.use('/settings', settings);
 
 /* ===== Post Routes ===== */
 app.post('/login', passport.authenticate(
@@ -285,6 +248,18 @@ app.post('/login', passport.authenticate(
     failureRedirect: '/login',
   }
 ));
+
+app.use('*', (req, res) => {
+  console.log('GET WILDCARD', req.originalUrl);
+  console.log('X', req.method);
+  res.send('asdf');
+});
+
+app.use((err, req, res) => {
+  console.log('ERROR');
+  res.status(404);
+  res.send(template({ title: '404 - Page not found', script: 'ErrorPage.js' }));
+});
 
 if (process.env.NODE_ENV === 'production') {
   https.createServer({
