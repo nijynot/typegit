@@ -133,6 +133,13 @@ export const newRepositoryMutation = {
         auto_title: input.auto_title || 1,
         auto_created: input.auto_created || 1,
       });
+      const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(input.text)));
+      await Promise.all([
+        hashtags.map(hashtag => mysql.insertHashtag({
+          hashtag,
+          repository_id: randid,
+        })),
+      ]);
       return Repository.gen(context, randid);
     }
     return null;

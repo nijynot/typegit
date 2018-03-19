@@ -130,13 +130,13 @@ export default createRefetchContainer(
       me {
         heading
       }
-      search(query: $query, first: 10) {
-        edges {
-          node {
-            id
-          }
-        }
-      }
+      # search(query: $query, first: 10) {
+      #   edges {
+      #     node {
+      #       id
+      #     }
+      #   }
+      # }
     }
   `,
   graphql`

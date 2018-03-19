@@ -1,6 +1,23 @@
 const mysql = require('mysql');
 const connection = require('../connection.js');
 
+exports.repository = (id) => {
+  return new Promise((resolve, reject) => {
+    let sql = `select
+    r.repository_id,
+    r.user_id
+    from repositories r
+    where r.repository_id = ?
+    limit 1;`;
+    sql = mysql.format(sql, [id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
 exports.getRepositoriesByIds = ({ ids }) => {
   return new Promise((resolve, reject) => {
     let sql = `select
@@ -32,6 +49,24 @@ exports.getRepositoriesByUserId = ({ user_id, limit, offset }) => {
     order by created desc
     limit ? offset ?;`;
     sql = mysql.format(sql, [user_id, limit, offset]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
+exports.getRepositoryIdsByHashtagAndUserId = ({ hashtag, user_id, limit, offset }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `select
+    r.repository_id as id
+    from hashtags h
+    join repositories r on r.repository_id = h.repository_id
+    where h.hashtag = ? and r.user_id = ?
+    order by r.created desc
+    limit ? offset ?;`;
+    sql = mysql.format(sql, [hashtag, user_id, limit, offset]);
 
     connection.query(sql, (err, results) => {
       if (err) reject(err);

@@ -18,7 +18,7 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query TagPageQuery($tag: String, $query: String) {
+      query TagPageQuery($tag: String) {
         ...App_query
         ...TagPage_query
       }

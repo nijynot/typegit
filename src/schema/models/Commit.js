@@ -37,7 +37,6 @@ export class Commit {
       console.log(err);
     }
     if (viewerCanSee(context, wrappedRepo)) {
-      console.log(data.message());
       return new Commit({
         id,
         partialOid: data.id().toString().substr(0, 6),

@@ -21,12 +21,10 @@ import { connectionFromArray } from '../definitions/connectionFromArray.js';
 import { transformToForward } from '../definitions/transformToForward.js';
 import { isLoggedIn } from '../helpers.js';
 
-import { Memory } from '../models/Memory.js';
 import { Repository } from '../models/Repository.js';
 import { User } from '../models/User.js';
-import { memoryType, memoryConnection } from './memoryType.js';
 import { repositoryType, repositoryConnection } from './repositoryType.js';
-import { tagType } from './tagType.js';
+import { hashtagType } from './hashtagType.js';
 import { userType } from './userType.js';
 
 export const queryType = registerType(new GraphQLObjectType({
@@ -43,83 +41,80 @@ export const queryType = registerType(new GraphQLObjectType({
         return null;
       },
     },
-    memory: {
-      type: memoryType,
+    repository: {
+      type: repositoryType,
       args: {
         id: {
-          type: new GraphQLNonNull(GraphQLString),
-        },
-      },
-      resolve: (rootValue, args, context) => {
-        return Memory.gen(context, args.id);
-      },
-    },
-    tag: {
-      type: tagType,
-      args: {
-        tag: {
           type: GraphQLString,
         },
       },
       resolve: async (rootValue, args, context) => {
-        return mysql.getTagByUserIdAndTag({
-          user_id: context.user.user_id,
-          tag: args.tag,
-        })
-        .then(value => value[0]);
+        return Repository.gen(context, args.id);
       },
     },
-    memories: {
-      type: memoryConnection,
+    repositories: {
+      type: repositoryConnection,
       args: {
         ...connectionArgs,
       },
       resolve: async (rootValue, args, context) => {
         const { first, after } = transformToForward(args);
-        const array = await mysql.getMemoryIdsByUserId({
+        const totalCount = await mysql.getRepositoryCount({
+          user_id: context.user.user_id,
+        })
+        .then(value => value[0].count);
+        const array = await mysql.getRepositoriesByUserId({
           user_id: context.user.user_id,
           limit: first + 1,
           offset: getOffsetWithDefault(after, -1) + 1,
         })
-        .then(rows => rows.map(row => Memory.gen(context, row.id)));
-        const totalCount = await mysql.getMemoryCount({
-          user_id: context.user.user_id,
-        })
-        .then(value => value[0].count);
-
-        return connectionFromArray(array, { first, after }, { totalCount });
+        .then(rows => rows.map(row => Repository.gen(context, row.id)));
+        return connectionFromArray(array, { first, after }, {
+          totalCount,
+        });
       },
     },
-    // memoryCount: {
-    //   type: GraphQLInt,
-    //   resolve: (rootValue, args, context) => {
-    //
-    //   },
-    // },
-    // tagCount: {
-    //   type: GraphQLInt,
-    //   resolve: (rootValue, args, context) => {
-    //
-    //   },
-    // },
-    search: {
-      type: memoryConnection,
+    hashtag: {
+      type: hashtagType,
       args: {
-        query: {
+        hashtag: {
           type: GraphQLString,
         },
-        ...connectionArgs,
       },
       resolve: async (rootValue, args, context) => {
-        const array = await mysql.searchMemories({
+        return mysql.getHashtagByUserIdAndHashtag({
           user_id: context.user.user_id,
-          query: args.query,
-          limit: args.first + 1,
+          hashtag: args.hashtag,
         })
-        .then(rows => rows.map(row => Memory.gen(context, row.id)));
-        return connectionFromArray(array, args);
+        .then(value => value[0]);
       },
     },
+    hashtags: {
+      type: new GraphQLList(hashtagType),
+      resolve: async (rootValue, args, context) => {
+        return mysql.getHashtagsByUserId({
+          user_id: context.user.user_id,
+        });
+      },
+    },
+    // search: {
+    //   type: repositoryConnection,
+    //   args: {
+    //     query: {
+    //       type: GraphQLString,
+    //     },
+    //     ...connectionArgs,
+    //   },
+    //   resolve: async (rootValue, args, context) => {
+    //     const array = await mysql.searchMemories({
+    //       user_id: context.user.user_id,
+    //       query: args.query,
+    //       limit: args.first + 1,
+    //     })
+    //     .then(rows => rows.map(row => Memory.gen(context, row.id)));
+    //     return connectionFromArray(array, args);
+    //   },
+    // },
     usernameIsValid: {
       type: GraphQLBoolean,
       args: {
@@ -166,39 +161,6 @@ export const queryType = registerType(new GraphQLObjectType({
           return false;
         }
         return true;
-      },
-    },
-    repository: {
-      type: repositoryType,
-      args: {
-        id: {
-          type: GraphQLString,
-        },
-      },
-      resolve: async (rootValue, args, context) => {
-        return Repository.gen(context, args.id);
-      },
-    },
-    repositories: {
-      type: repositoryConnection,
-      args: {
-        ...connectionArgs,
-      },
-      resolve: async (rootValue, args, context) => {
-        const { first, after } = transformToForward(args);
-        const totalCount = await mysql.getRepositoryCount({
-          user_id: context.user.user_id,
-        })
-        .then(value => value[0].count);
-        const array = await mysql.getRepositoriesByUserId({
-          user_id: context.user.user_id,
-          limit: first + 1,
-          offset: getOffsetWithDefault(after, -1) + 1,
-        })
-        .then(rows => rows.map(row => Repository.gen(context, row.id)));
-        return connectionFromArray(array, { first, after }, {
-          totalCount,
-        });
       },
     },
   }),

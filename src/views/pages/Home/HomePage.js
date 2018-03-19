@@ -72,10 +72,10 @@ class HomePage extends React.Component {
             </span>
           </div>}
         <div className="home-tags clearfix">
-          {this.props.query.me.tags.map(tag => (
+          {this.props.query.hashtags.map(hashtag => (
             <a
-              key={tag.id}
-              href={`/tag/${tag.tag}`}
+              key={hashtag.id}
+              href={`/tag/${hashtag.hashtag}`}
               className="tweet-url hashtag home-tag left"
               style={{
                 // color: Color('blue').darken(indicator(cdf(this.getData()), tag.count)),
@@ -84,7 +84,7 @@ class HomePage extends React.Component {
                 // backgroundColor: Color('blue').darken(this.assignQuantile(tag.count)),
               }}
             >
-              #{tag.tag}
+              #{hashtag.hashtag}
               {/* <span
                 className="home-tag-count"
                 style={{
@@ -96,7 +96,7 @@ class HomePage extends React.Component {
               </span> */}
             </a>
           ))}
-          {(isEmpty(this.props.query.me.tags)) ?
+          {(isEmpty(this.props.query.hashtags)) ?
             <span className="home-empty-tag-msg">
               No hashtags yet.
             </span> : null}
@@ -109,7 +109,7 @@ class HomePage extends React.Component {
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </a>
-          <Search query={this.props.query} />
+          {/* <Search query={this.props.query} /> */}
         </MetaPortal>
       </div>
     );
@@ -124,16 +124,16 @@ export default createFragmentContainer(HomePage, {
   query: graphql`
     fragment HomePage_query on Query {
       me {
-        tags {
-          id
-          tag
-          count
-        }
         subscription {
           current_period_end
         }
       }
-      ...Search_query @arguments(query: $query)
+      hashtags {
+        id
+        hashtag
+        count
+      }
+      # ...Search_query @arguments(query: $query)
       ...HomeMemories_query
     }
   `,

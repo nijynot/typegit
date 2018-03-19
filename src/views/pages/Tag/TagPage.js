@@ -14,16 +14,16 @@ class TagPage extends React.Component {
   render() {
     return (
       <div className="homepage tagpage">
-        <a href={`/tag/${this.props.query.tag.tag}`}>
+        <a href={`/tag/${this.props.query.hashtag.hashtag}`}>
           <h2>
-            #{this.props.query.tag.tag}
+            #{this.props.query.hashtag.hashtag}
           </h2>
         </a>
-        {this.props.query.tag.memories.edges.map((edge) => {
+        {this.props.query.hashtag.repositories.edges.map((edge) => {
           return (
             <CozyMemoryItem
               key={edge.node.id}
-              memory={edge.node}
+              repository={edge.node}
             />
           );
         })}
@@ -34,7 +34,7 @@ class TagPage extends React.Component {
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </a>
-          <Search query={this.props.query} />
+          {/* <Search query={this.props.query} /> */}
           {/* <span className="meta-search right">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="-2 -3 28 28" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-search">
               <circle cx="10.5" cy="10.5" r="7.5" />
@@ -54,14 +54,14 @@ TagPage.propTypes = {
 export default createFragmentContainer(TagPage, {
   query: graphql`
     fragment TagPage_query on Query {
-      ...Search_query @arguments(query: $query)
-      tag(tag: $tag) {
-        tag
-        memories(first: 10) {
+      # ...Search_query @arguments(query: $query)
+      hashtag(hashtag: $tag) {
+        hashtag
+        repositories(first: 10) {
           edges {
             node {
               id
-              # ...CozyMemoryItem_memory
+              ...CozyMemoryItem_repository
             }
           }
         }

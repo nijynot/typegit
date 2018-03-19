@@ -10,7 +10,7 @@ import { fromGlobalId } from 'graphql-base64';
 import partial from 'lodash/partial';
 import stringLength from 'string-length';
 import autosize from 'autosize';
-import classNames from 'classnames';
+import cx from 'classnames';
 import Mousetrap from 'mousetrap';
 import trimStart from 'lodash/trimStart';
 import get from 'lodash/get';
@@ -23,8 +23,8 @@ import MenuContextImage from 'global-components/MenuContextImage.js';
 
 import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
-import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
-import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
+// import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
+// import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
 import { UpdateRepositoryMutation } from './mutations/UpdateRepositoryMutation.js';
 import { NewCommitMutation } from './mutations/NewCommitMutation.js';
 
@@ -165,6 +165,7 @@ class MemoryEditPage extends React.Component {
     });
   }
   mutationNewCommit() {
+    console.log(this.props.query.repository.auto_title);
     NewCommitMutation({
       environment: this.props.relay.environment,
       repositoryId: this.props.query.repository.id,
@@ -174,6 +175,7 @@ class MemoryEditPage extends React.Component {
     })
     .then((res) => {
       if (res.newCommit) {
+        console.log('Commited!');
         // console.log(res);
         // this.editor.click();
         if (this.props.query.repository.auto_title) {
@@ -189,8 +191,9 @@ class MemoryEditPage extends React.Component {
           })
           .then((_res) => {
             if (_res.updateRepository) {
-              window.onbeforeunload = null;
-              document.location.href = `/${this.props.query.repository.name}`;
+              console.log('Updated title and created!');
+              // window.onbeforeunload = null;
+              // document.location.href = `/${this.props.query.repository.name}`;
             } else {
               this.setState({ error: true });
             }
@@ -231,13 +234,16 @@ class MemoryEditPage extends React.Component {
           {(this.state.preview) ? ' (preview mode)' : ''}
         </div>
         <div className="memoryedit-editor clearfix">
-          {(this.state.preview) ?
-            <Markdown source={this.state.body || ''} /> :
+          <div className={cx({ none: !this.state.preview })}>
+            <Markdown source={this.state.body || ''} />
+          </div>
+          <div className={cx({ none: this.state.preview })}>
             <Editor
               inputRef={(el) => { this.editor = el; }}
               value={this.state.body}
               onChange={partial(this.onChange, partial.placeholder, 'body')}
-            />}
+            />
+          </div>
         </div>
         <MetaPortal>
           <span className="meta-count left">
@@ -261,7 +267,7 @@ class MemoryEditPage extends React.Component {
           >
             <li className="ddrow">
               <button
-                className={classNames('ddrow-btn', {
+                className={cx('ddrow-btn', {
                   preview: this.state.preview,
                 })}
                 onClick={partial(this.onChange, partial.placeholder, 'preview')}

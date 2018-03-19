@@ -1,5 +1,6 @@
 const express = require('express');
 const { spawn } = require('child_process');
+const passport = require('passport');
 
 const router = express.Router();
 const git = require('../lib/schema/git.js');
@@ -12,6 +13,13 @@ function pktline(line) {
 }
 const ZERO_PKT_LINE = Buffer.from('0000\n');
 // const PACK = Buffer.from('PACK');
+
+function authorize() {
+  return (req, res, next) => {
+    console.log('someone pulled');
+    next();
+  };
+}
 
 router.get('/:repositoryId.git', (req, res) => {
   console.log(req.params);
@@ -67,7 +75,7 @@ router.post('/:repositoryId.git/git-upload-pack', (req, res) => {
   });
 });
 
-router.get('/:repositoryId.git/info/refs', (req, res, next) => {
+router.get('/:repositoryId.git/info/refs', passport.authenticate('basic', { session: false }), (req, res, next) => {
   const { service } = req.query;
   const serviceArg = service.replace('git-', '');
   const { repositoryId } = req.params;

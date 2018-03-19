@@ -25,7 +25,6 @@ import MenuContextImage from 'global-components/MenuContextImage.js';
 
 import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
-// import { NewMemoryMutation } from './mutations/NewMemoryMutation.js';
 import { NewRepositoryMutation } from './mutations/NewRepositoryMutation.js';
 
 mixpanel.init('ad1901a86703fb84525c156756e15e07');

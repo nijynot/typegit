@@ -84,7 +84,7 @@ class HomeMemories extends React.Component {
               Create a new memory.
             </a>
           </div> : null}
-        <div className="pagination clearfix">
+        {/* <div className="pagination clearfix">
           {(this.props.query.repositories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
@@ -103,6 +103,26 @@ class HomeMemories extends React.Component {
             >
               Next Page
             </button> : null}
+        </div> */}
+        <div className="homememories-page-btn-container clearfix">
+          <button
+            className="homememories-load-btn left"
+            onClick={this.previousPage}
+            disabled={!this.props.query.repositories.pageInfo.hasPreviousPage}
+          >
+            Previous Page
+          </button>
+          <span className="pagenumber">
+            {Math.ceil((getOffsetWithDefault(this.props.query.repositories.pageInfo.endCursor, -1) + 1) / 10)}{' / '}
+            {Math.ceil(this.props.query.repositories.totalCount / 10)}
+          </span>
+          <button
+            className="homememories-load-btn right"
+            onClick={this.nextPage}
+            disabled={!this.props.query.repositories.pageInfo.hasNextPage}
+          >
+            Next Page
+          </button>
         </div>
         {/* <div className="homememories-page-btn-container clearfix">
           {(this.props.query.repositories.pageInfo.hasPreviousPage) ?

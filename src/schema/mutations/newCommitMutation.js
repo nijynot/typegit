@@ -113,6 +113,14 @@ export const newCommitMutation = {
         tree: treeId,
         parents: [headCommit],
       });
+      await mysql.clearHashtags({ repository_id: fromGlobalId(input.repositoryId).id });
+      const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(input.text)));
+      await Promise.all([
+        hashtags.map(hashtag => mysql.insertHashtag({
+          hashtag,
+          repository_id: fromGlobalId(input.repositoryId).id,
+        })),
+      ]);
       return Commit.gen(context, { repo, id: oid });
     }
     return null;

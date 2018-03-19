@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const { BasicStrategy } = require('passport-http');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
@@ -40,3 +41,28 @@ passport.use(new LocalStrategy((username, password, done) => {
     return done(null, user[0]);
   });
 }));
+
+passport.use(new BasicStrategy(
+  { passReqToCallback: true },
+  (req, username, password, done) => {
+    Promise.all([
+      mysql.user(username),
+      mysql.repository(req.params.repositoryId),
+    ])
+    .then((promises) => {
+      const user = promises[0];
+      const repo = promises[1];
+      // if (err) { return done(err); }
+      if (!user[0] || !repo[0]) {
+        return done(null, false);
+      }
+      if (
+        !bcrypt.compareSync(password, user[0].password) ||
+        repo[0].user_id !== user[0].user_id
+      ) {
+        return done(null, false);
+      }
+      return done(null, user[0]);
+    });
+  }
+));

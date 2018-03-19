@@ -54,17 +54,6 @@ export const userType = registerType(new GraphQLObjectType({
       //   return null;
       // },
     },
-    tags: {
-      type: new GraphQLList(tagType),
-      resolve: async (rootValue, args, context) => {
-        if (rootValue.id === context.user.user_id) {
-          return mysql.getTagsByUserId({
-            user_id: context.user.user_id,
-          });
-        }
-        return null;
-      },
-    },
     averageCharactersPerMemory: {
       type: GraphQLInt,
       resolve: async (rootValue, args, context) => {

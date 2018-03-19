@@ -17,7 +17,7 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query HomePageQuery($query: String) {
+      query HomePageQuery {
         ...App_query
         ...HomePage_query
       }
