@@ -52,6 +52,29 @@ const commit = async (repo, { updateRef, author, committer, message, tree, paren
   return oid;
 };
 
+const history = async (
+  repository,
+  {
+    sort = git.Revwalk.SORT.TIME,
+    reverse = git.Revwalk.SORT.NONE,
+    count = 10,
+    sha, // Optional ´after´ argument
+  } = {}
+) => {
+  // const repo = await git.Repository.open(`./public/repo/${repository}`);
+  const revwalk = repository.createRevWalk();
+  let headCommit;
+  if (sha) {
+    headCommit = await repository.getCommit(sha);
+  } else {
+    headCommit = await repository.getMasterCommit();
+  }
+  revwalk.sorting(sort, reverse);
+  revwalk.push(headCommit.id());
+  const commits = await revwalk.getCommits(count);
+  return commits;
+};
+
 // const commit = async (repo, { updateRef, author, committer, message, tree }) => {
 //   const head = await git.Reference.nameToId(repo, 'HEAD');
 //   const parent = await repo.getCommit(head);
@@ -72,19 +95,20 @@ const commit = async (repo, { updateRef, author, committer, message, tree, paren
     type: 3,
   });
   const treeId = await updateIndex(repo, {
-    source: headTree,
+    source: null,
     filename: 'test.md',
     id: objId,
-    filemode: 0100644,
+    filemode: 100644,
   });
+  console.log(parseInt('0100644', 10));
   console.log(objId);
   console.log(treeId);
   const actor = await createGitActor('test', 'test@example.com');
   const commitId = await commit(repo, {
-    updateRef: 'HEAD',
+    updateRef: 'refs/heads/master',
     author: actor,
     committer: actor,
-    message: 'Update test.md',
+    message: 'Commit to master',
     tree: treeId,
     parents: [headCommit],
   });

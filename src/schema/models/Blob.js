@@ -17,25 +17,25 @@ export class Blob {
     this.git = data.git;
   }
 
-  static async gen(context, { repository, id }) {
-    const repositoryId = path.parse(path.join(repository.path(), '..')).name;
-    const repo = await Repository.gen(context, repositoryId);
+  static async gen(context, { repo, id }) {
+    const repositoryId = path.parse(repo.path()).name;
+    const wrappedRepo = await Repository.gen(context, repositoryId);
     let data;
     try {
       if (id) {
-        data = await context.loaders.Blob.load({ repository, id });
+        data = await context.loaders.Blob.load({ repo, id });
       }
     } catch (err) {
       console.log(err);
     }
-    if (viewerCanSee(context, repo)) {
+    if (viewerCanSee(context, wrappedRepo)) {
       return new Blob({
         id,
         partialOid: data.id().toString().substr(0, 6),
         byteSize: data.rawsize(),
         isBinary: data.isBinary(),
         oid: data.id().toString(),
-        text: data.content(),
+        text: data.content().toString(),
         git: data,
       });
     }

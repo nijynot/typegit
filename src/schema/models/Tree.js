@@ -17,18 +17,18 @@ export class Tree {
     this.git = data.git;
   }
 
-  static async gen(context, { repository, id }) {
-    const repositoryId = _(path.join(repository.path(), '..').split(path.sep)).last();
-    const repo = await Repository.gen(context, repositoryId);
+  static async gen(context, { repo, id }) {
+    const repositoryId = path.parse(repo.path()).name;
+    const wrappedRepo = await Repository.gen(context, repositoryId);
     let data;
     try {
       if (id) {
-        data = await context.loaders.Tree.load({ repository, id });
+        data = await context.loaders.Tree.load({ repo, id });
       }
     } catch (err) {
       console.log(err);
     }
-    if (viewerCanSee(context, repo)) {
+    if (viewerCanSee(context, wrappedRepo)) {
       return new Tree({
         id,
         partialOid: data.id().toString().substr(0, 6),

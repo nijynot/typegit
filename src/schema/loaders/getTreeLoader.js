@@ -4,8 +4,8 @@ import * as git from '../git.js';
 
 module.exports = () => {
   return new DataLoader(async (keys) => {
-    const promises = keys.map(({ repository, id }) => {
-      return repository.getTree(id);
+    const promises = keys.map(({ repo, id }) => {
+      return repo.getTree(id);
     });
     return Promise.all(promises);
   }, {

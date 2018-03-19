@@ -46,7 +46,7 @@ export class TreeEntry {
   }
 
   static async gen(context, { tree, id }) {
-    const repositoryId = path.parse(tree.owner().workdir()).name;
+    const repositoryId = path.parse(tree.owner().path()).name;
     const repo = await Repository.gen(context, repositoryId);
     let data;
     try {
@@ -71,7 +71,7 @@ export class TreeEntry {
   }
 
   static async entryByName(context, { tree, name }) {
-    const entry = await tree.entryByName(name);
+    const entry = tree.entryByName(name);
     return this.gen(context, { tree, id: entry.sha() });
   }
 

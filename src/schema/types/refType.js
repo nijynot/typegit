@@ -40,7 +40,7 @@ export const refType = registerType(new GraphQLObjectType({
     repository: {
       type: repositoryType,
       resolve: async (rootValue, args, context) => {
-        const repositoryId = _(path.join(rootValue.git.owner().path(), '..').split(path.sep)).last();
+        const repositoryId = path.parse(rootValue.git.owner().path()).name;
         return Repository.gen(context, repositoryId);
       },
     },
@@ -48,7 +48,7 @@ export const refType = registerType(new GraphQLObjectType({
       type: gitObjectType,
       resolve: async (rootValue, args, context) => {
         return GitObject.gen(context, {
-          repository: rootValue.git.owner(),
+          repo: rootValue.git.owner(),
           id: rootValue.git.target(),
         });
       },

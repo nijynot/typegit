@@ -101,7 +101,7 @@ export const commitType = registerType(new GraphQLObjectType({
           sha: oid || rootValue.oid,
         });
         const array = await Promise.all(commits.map((commit) => {
-          return Commit.wrap(context, { repository: rootValue.git.owner(), commit });
+          return Commit.wrap(context, { repo: rootValue.git.owner(), commit });
         }));
         return connectionFromCommits(array, { first, after }, {
           backward: isBackward(args),
@@ -120,7 +120,7 @@ export const commitType = registerType(new GraphQLObjectType({
     repository: {
       type: repositoryType,
       resolve: async (rootValue, args, context) => {
-        const repositoryId = path.parse(rootValue.git.owner().workdir()).name;
+        const repositoryId = path.parse(rootValue.git.owner().path()).name;
         return Repository.gen(context, repositoryId);
       },
     },
@@ -129,7 +129,7 @@ export const commitType = registerType(new GraphQLObjectType({
       resolve: async (rootValue, args, context) => {
         const tree = await rootValue.git.getTree();
         return Tree.gen(context, {
-          repository: rootValue.git.owner(),
+          repo: rootValue.git.owner(),
           id: tree.id().toString(),
         });
       },

@@ -76,28 +76,51 @@ export const newRepositoryMutation = {
       const randid = randexp(/[a-zA-Z0-9]{12}/);
       const paddedDir = git.padDir(randid);
       // Create Repository
-      const repo = await git.init(randid);
+      // const repo = await git.init(randid);
+      /* bareInit */
+      const repo = await git.bareInit(randid);
 
       // Create file and add to index
-      console.log(path.join('./public/repo', paddedDir, 'index.md'));
-      await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'))
-      .catch(err => console.error(err));
-      fs.writeFileSync(path.join('./public/repo', paddedDir, 'index.md'), input.text);
-      await git.add(repo, {
-        fileNames: ['index.md'],
+      // await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'))
+      // .catch(err => console.error(err));
+      // fs.writeFileSync(path.join('./public/repo', paddedDir, 'index.md'), input.text);
+      // await git.add(repo, {
+      //   fileNames: ['index.md'],
+      // });
+      // hash-object
+      // const headCommit = await repo.getHeadCommit();
+      // const headTree = await headCommit.getTree();
+      const objId = await git.hashObject(repo, {
+        data: input.text,
+        len: input.text.length,
+        type: 3,
+      });
+      const treeId = await git.updateIndex(repo, {
+        source: null,
+        filename: 'index.md',
+        id: objId,
+        filemode: 33188,
       });
 
       // Create author and committer
       const user = await User.gen(context, context.user.user_id);
-      const gitActor = git.createGitActor(user.username, user.email);
+      const actor = git.createGitActor(user.username, user.email);
 
       // Commit initial commit
+      // await git.initialCommit(repo, {
+      //   author: gitActor,
+      //   committer: gitActor,
+      //   message,
+      // });
       const headline = input.commitHeadline || 'Initial commit';
       const message = (input.commitBody && `${headline}\n\n${input.commitBody}`) || headline;
-      await git.initialCommit(repo, {
-        author: gitActor,
-        committer: gitActor,
+      await git.commitTree(repo, {
+        updateRef: 'refs/heads/master',
+        author: actor,
+        committer: actor,
         message,
+        tree: treeId,
+        parents: [],
       });
 
       // Insert into MySQL DB
@@ -107,36 +130,10 @@ export const newRepositoryMutation = {
         description: input.description,
         created: input.created,
         user_id: context.user.user_id,
-        auto_title: input.auto_title,
-        auto_created: input.auto_created,
+        auto_title: input.auto_title || 1,
+        auto_created: input.auto_created || 1,
       });
       return Repository.gen(context, randid);
-      // await repo.createCommit('HEAD', author, committer, 'Initial commit', oid, []);
-      // const head = await git.Reference.nameToId(repo, 'HEAD');
-      // const parent = await repo.getCommit(head);
-
-      // (async () => {
-      //   // Commit
-      //   const head = await git.Reference.nameToId(repo, 'HEAD');
-      //   const parent = await repo.getCommit(head);
-      //   const author = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
-      //   const committer = git.Signature.create('Tony Jin', 'nijynot@gmail', moment().unix(), 0);
-      //   await repo.createCommit('HEAD', author, committer, 'Second commit', oid, [parent]);
-      // })();
-
-      // const hashtags = _.uniq(twitter.extractHashtags(twitter.htmlEscape(input.body)));
-      // await Promise.all([
-      //   hashtags.map(hashtag => mysql.insertTag({
-      //     tag: hashtag,
-      //     memory_id: randid,
-      //   })),
-      // ]);
-      // const memory = await mysql.getMemoryByIdAndUserId({
-      //   id: randid,
-      //   user_id: context.user.user_id,
-      // })
-      // .then(value => value[0]);
-      // return memory;
     }
     return null;
   },

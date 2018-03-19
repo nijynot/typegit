@@ -4,8 +4,8 @@ import nodegit from 'nodegit';
 
 module.exports = () => {
   return new DataLoader(async (keys) => {
-    const promises = keys.map(({ repository, id }) => {
-      return repository.getCommit(id);
+    const promises = keys.map(({ repo, id }) => {
+      return repo.getCommit(id);
     });
     return Promise.all(promises);
   }, {

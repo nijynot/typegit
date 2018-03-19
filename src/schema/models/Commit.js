@@ -25,18 +25,19 @@ export class Commit {
     this.git = data.git;
   }
 
-  static async gen(context, { repository, id }) {
-    const repositoryId = path.parse(path.join(repository.path(), '..')).name;
-    const repo = await Repository.gen(context, repositoryId);
+  static async gen(context, { repo, id }) {
+    const repositoryId = path.parse(repo.path()).name;
+    const wrappedRepo = await Repository.gen(context, repositoryId);
     let data;
     try {
       if (id) {
-        data = await context.loaders.Commit.load({ repository, id });
+        data = await context.loaders.Commit.load({ repo, id });
       }
     } catch (err) {
       console.log(err);
     }
-    if (viewerCanSee(context, repo)) {
+    if (viewerCanSee(context, wrappedRepo)) {
+      console.log(data.message());
       return new Commit({
         id,
         partialOid: data.id().toString().substr(0, 6),
@@ -49,10 +50,10 @@ export class Commit {
     return this.null();
   }
 
-  static async wrap(context, { repository, commit }) {
-    const repositoryId = path.parse(path.join(repository.path(), '..')).name;
-    const repo = await Repository.gen(context, repositoryId);
-    if (viewerCanSee(context, repo)) {
+  static async wrap(context, { repo, commit }) {
+    const repositoryId = path.parse(repo.path()).name;
+    const wrappedRepo = await Repository.gen(context, repositoryId);
+    if (viewerCanSee(context, wrappedRepo)) {
       return new Commit({
         id: commit.sha(),
         partialOid: commit.sha().substr(0, 6),

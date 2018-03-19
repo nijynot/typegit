@@ -35,10 +35,10 @@ export const treeEntryType = registerType(new GraphQLObjectType({
     object: {
       type: gitObjectType,
       resolve: async (rootValue, args, context) => {
-        const repositoryId = path.parse(rootValue.tree.owner().workdir()).name;
+        const repositoryId = path.parse(rootValue.tree.owner().path()).name;
         const repo = await Repository.gen(context, repositoryId);
         return GitObject.gen(context, {
-          repository: repo.git,
+          repo: repo.git,
           id: rootValue.oid,
         });
       },

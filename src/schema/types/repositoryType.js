@@ -51,7 +51,7 @@ export const repositoryType = registerType(new GraphQLObjectType({
       description: 'The default reference for a repository.',
       resolve: async (rootValue, args, context) => {
         return Ref.defaultBranchRef(context, {
-          repository: rootValue.git,
+          repo: rootValue.git,
         });
         // return Ref.defaultBranchRef(context, {
         //   repository: rootValue.git,
@@ -83,12 +83,12 @@ export const repositoryType = registerType(new GraphQLObjectType({
       resolve: async (rootValue, args, context) => {
         if (args.oid) {
           return GitObject.gen(context, {
-            repository: rootValue.git,
+            repo: rootValue.git,
             id: args.oid,
           });
         }
         return GitObject.expression(context, {
-          repository: rootValue.git,
+          repo: rootValue.git,
           expression: args.expression,
         });
       },

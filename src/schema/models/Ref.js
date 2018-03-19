@@ -32,9 +32,9 @@ export class Ref {
   //   return viewerCanSee(context, data) ? new Blob(data) : this.null();
   // }
 
-  static async defaultBranchRef(context, { repository }) {
-    const repositoryId = _(path.join(repository.path(), '..').split(path.sep)).last();
-    const repo = await Repository.gen(context, repositoryId);
+  static async defaultBranchRef(context, { repo }) {
+    const repositoryId = path.parse(repo.path()).name;
+    const wrappedRepo = await Repository.gen(context, repositoryId);
     // // const repo = await Repository.gen(context, repositoryId);
     // // let gitObject;
     // // if (repo.user_id === context.user.user_id) {
@@ -57,13 +57,13 @@ export class Ref {
     let data;
     try {
       data = await context.loaders.Ref.load({
-        repository,
+        repo,
         name: 'refs/heads/master',
       });
     } catch (e) {
       console.log(e);
     }
-    if (repo.user_id === context.user.user_id) {
+    if (wrappedRepo.user_id === context.user.user_id) {
       return new Ref({
         id: `${repositoryId}:${data.name()}`,
         name: data.name(),

@@ -97,3 +97,38 @@ export const parseExp = async (repository, expression) => {
   }
   return null;
 };
+
+export const bareInit = async (name) => {
+  const repoDir = path.join('./public/repo', padDir(name));
+  await fs.ensureDir(repoDir);
+  const repository = await git.Repository.init(repoDir, 1);
+  return repository;
+};
+
+export const bareOpen = async (name) => {
+  const repoDir = path.join('./public/repo', padDir(name));
+  const repository = await git.Repository.openBare(repoDir);
+  return repository;
+};
+
+export const hashObject = async (repo, { data, len, type }) => {
+  const odb = await repo.odb();
+  const oid = await odb.write(data, len, type)
+  .catch(err => console.log(err));
+  return oid;
+};
+
+export const updateIndex = async (repo, { source, filename, id, filemode }) => {
+  const builder = await git.Treebuilder.create(repo, source)
+  .catch(err => console.log(err));
+  await builder.insert(filename, id, filemode);
+  return builder.write();
+};
+
+export const commitTree = async (
+  repo,
+  { updateRef, author, committer, message, tree, parents }
+) => {
+  const oid = await repo.createCommit(updateRef, author, committer, message, tree, parents);
+  return oid;
+};

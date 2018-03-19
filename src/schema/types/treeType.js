@@ -45,6 +45,8 @@ export const treeType = registerType(new GraphQLObjectType({
         },
       },
       resolve: async (rootValue, args, context) => {
+        console.log(args.name);
+        console.log(rootValue.git.id());
         if (args.oid) {
           return TreeEntry.gen(context, {
             tree: rootValue.git,
@@ -72,7 +74,7 @@ export const treeType = registerType(new GraphQLObjectType({
     repository: {
       type: repositoryType,
       resolve: async (rootValue, args, context) => {
-        const repositoryId = _(path.join(rootValue.git.owner().path(), '..').split(path.sep)).last();
+        const repositoryId = path.parse(rootValue.git.owner().path()).name;
         return Repository.gen(context, repositoryId);
       },
     },

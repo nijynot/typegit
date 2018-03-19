@@ -20,31 +20,31 @@ export class GitObject {
     this.git = data.git;
   }
 
-  static async gen(context, { repository, id }) {
+  static async gen(context, { repo, id }) {
     let gitObject;
     try {
-      if (repository && id) {
-        gitObject = await context.loaders.GitObject.load({ repository, id });
+      if (repo && id) {
+        gitObject = await context.loaders.GitObject.load({ repo, id });
       }
     } catch (err) {
       console.log(err);
     }
     if (gitObject.isCommit()) {
-      return Commit.gen(context, { repository, id });
+      return Commit.gen(context, { repo, id });
     } else if (gitObject.isBlob()) {
-      return Blob.gen(context, { repository, id });
+      return Blob.gen(context, { repo, id });
     } else if (gitObject.isTree()) {
-      return Tree.gen(context, { repository, id });
+      return Tree.gen(context, { repo, id });
     }
     return this.null();
   }
 
-  static async expression(context, { repository, expression }) {
-    const gitObject = await nodegit.Revparse.single(repository, expression);
+  static async expression(context, { repo, expression }) {
+    const gitObject = await nodegit.Revparse.single(repo, expression);
     if (gitObject.isBlob()) {
-      return Blob.gen(context, { repository, id: gitObject.id() });
+      return Blob.gen(context, { repo, id: gitObject.id() });
     } else if (gitObject.isCommit()) {
-      return Commit.gen(context, { repository, id: gitObject.id() });
+      return Commit.gen(context, { repo, id: gitObject.id() });
     }
 
     return this.null();

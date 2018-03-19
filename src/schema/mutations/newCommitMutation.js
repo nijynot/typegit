@@ -94,7 +94,7 @@ export const newCommitMutation = {
         message,
       });
 
-      return Commit.gen(context, { repository: repo, id: oid });
+      return Commit.gen(context, { repo, id: oid });
     }
     return null;
   },

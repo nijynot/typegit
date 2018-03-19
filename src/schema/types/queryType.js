@@ -192,6 +192,8 @@ export const queryType = registerType(new GraphQLObjectType({
         .then(value => value[0].count);
         const array = await mysql.getRepositoriesByUserId({
           user_id: context.user.user_id,
+          limit: first + 1,
+          offset: getOffsetWithDefault(after, -1) + 1,
         })
         .then(rows => rows.map(row => Repository.gen(context, row.id)));
         return connectionFromArray(array, { first, after }, {
