@@ -43,7 +43,7 @@ class Markdown extends React.Component {
       ...this.props.disable,
     ])
     .use(mdiRegex(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/, (match) => {
-      return `<span class="center">${moment.utc(match[1]).local().format('dddd, MMMM Do, YYYY')}</span>`;
+      return `<em class="center">${moment.utc(match[1]).local().format('dddd, MMMM Do, YYYY')}</em>`;
     }))
     // .use(mdiRegex(/:(?:Kappa):/, (match, utils) => {
     //   // https://static-cdn.jtvnw.net/emoticons/v1/25/1.0

@@ -7,7 +7,7 @@ import {
   graphql,
 } from 'react-relay';
 import isEmpty from 'lodash/isEmpty';
-import { cursorToOffset } from 'graphql-relay';
+import { cursorToOffset, getOffsetWithDefault } from 'graphql-relay';
 
 // import CompactMemoryItem from 'global-components/CompactMemoryItem.js';
 import CozyMemoryItem from 'global-components/CozyMemoryItem.js';
@@ -45,7 +45,7 @@ class HomeMemories extends React.Component {
   render() {
     return (
       <div className="homememories clearfix">
-        <div className="pagination clearfix">
+        {/* <div className="pagination clearfix">
           {(this.props.query.repositories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
@@ -64,7 +64,7 @@ class HomeMemories extends React.Component {
             >
               Next Page
             </button> : null}
-        </div>
+        </div> */}
         {this.props.query.repositories.edges.map((edge) => {
           return (
             // <CompactMemoryItem
@@ -84,7 +84,27 @@ class HomeMemories extends React.Component {
               Create a new memory.
             </a>
           </div> : null}
-        <div className="homememories-page-btn-container clearfix">
+        <div className="pagination clearfix">
+          {(this.props.query.repositories.pageInfo.hasPreviousPage) ?
+            <button
+              className="homememories-load-btn left"
+              onClick={this.previousPage}
+            >
+              Previous Page
+            </button> : null}
+          <span className="pagenumber">
+            {Math.ceil((getOffsetWithDefault(this.props.query.repositories.pageInfo.endCursor, -1) + 1) / 10)}{' / '}
+            {Math.ceil(this.props.query.repositories.totalCount / 10)}
+          </span>
+          {(this.props.query.repositories.pageInfo.hasNextPage) ?
+            <button
+              className="homememories-load-btn right"
+              onClick={this.nextPage}
+            >
+              Next Page
+            </button> : null}
+        </div>
+        {/* <div className="homememories-page-btn-container clearfix">
           {(this.props.query.repositories.pageInfo.hasPreviousPage) ?
             <button
               className="homememories-load-btn left"
@@ -99,7 +119,7 @@ class HomeMemories extends React.Component {
             >
               Next Page
             </button> : null}
-        </div>
+        </div> */}
       </div>
     );
   }

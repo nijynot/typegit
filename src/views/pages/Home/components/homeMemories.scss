@@ -4,12 +4,13 @@
 @import "src/scss/spacing";
 
 .homememories {
+  margin-top: $tiny;
   margin-bottom: $base;
 }
 .homememories .pagination {
   min-height: 34px;
   position: relative;
-  margin: $tiny 0;
+  margin: $tiny 0 $small 0;
 }
 .homememories .pagenumber {
   font-size: 13px;

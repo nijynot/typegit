@@ -14,6 +14,7 @@ import _ from 'lodash';
 import fs from 'fs-extra';
 import moment from 'moment';
 import path from 'path';
+import isValid from 'date-fns/is_valid';
 
 import twitter from '../../../vendor/twitter-text.js';
 import mysql from '../../config/mysql.js';
@@ -69,31 +70,49 @@ export const newCommitMutation = {
       isLoggedIn(context) &&
       !_.isEmpty(_.get(subscription, 'data'))
     ) {
-      const paddedDir = git.padDir(id);
-
       // Open repository
-      const repo = await git.open(id);
+      const repo = await git.bareOpen(id);
 
       // Create file and add to index
-      await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'));
-      fs.writeFileSync(path.join('./public/repo', paddedDir, 'index.md'), input.text);
-      await git.add(repo, {
-        fileNames: ['index.md'],
+      // await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'));
+      // fs.writeFileSync(path.join('./public/repo', paddedDir, 'index.md'), input.text);
+      // await git.add(repo, {
+      //   fileNames: ['index.md'],
+      // });
+      const headCommit = await repo.getHeadCommit();
+      const headTree = await headCommit.getTree();
+      const objId = await git.hashObject(repo, {
+        data: input.text,
+        len: input.text.length,
+        type: 3,
+      });
+      const treeId = await git.updateIndex(repo, {
+        source: headTree,
+        filename: 'index.md',
+        id: objId,
+        filemode: 33188,
       });
 
       // Create author and committer
       const user = await User.gen(context, context.user.user_id);
-      const gitActor = git.createGitActor(user.username, user.email);
+      const actor = git.createGitActor(user.username, user.email);
 
       // Commit initial commit
       const headline = input.commitHeadline || 'Update index.md';
       const message = (input.commitBody && `${headline}\n\n${input.commitBody}`) || headline;
-      const oid = await git.commit(repo, {
-        author: gitActor,
-        committer: gitActor,
+      // const oid = await git.commit(repo, {
+      //   author: gitActor,
+      //   committer: gitActor,
+      //   message,
+      // });
+      const oid = await git.commitTree(repo, {
+        updateRef: 'refs/heads/master',
+        author: actor,
+        committer: actor,
         message,
+        tree: treeId,
+        parents: [headCommit],
       });
-
       return Commit.gen(context, { repo, id: oid });
     }
     return null;
