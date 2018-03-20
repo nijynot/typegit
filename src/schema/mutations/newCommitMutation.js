@@ -56,6 +56,7 @@ export const newCommitMutation = {
     },
   },
   resolve: async (request, { input }, context) => {
+    console.log(input.text);
     const { id } = fromGlobalId(input.repositoryId);
     const customer_id = await mysql.getCustomerIdByUserId({
       user_id: _.get(context, 'user.user_id'),
@@ -83,7 +84,7 @@ export const newCommitMutation = {
       const headTree = await headCommit.getTree();
       const objId = await git.hashObject(repo, {
         data: input.text,
-        len: input.text.length,
+        len: Buffer.from(input.text).length,
         type: 3,
       });
       const treeId = await git.updateIndex(repo, {

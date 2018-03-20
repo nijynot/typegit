@@ -45,8 +45,6 @@ export const treeType = registerType(new GraphQLObjectType({
         },
       },
       resolve: async (rootValue, args, context) => {
-        console.log(args.name);
-        console.log(rootValue.git.id());
         if (args.oid) {
           return TreeEntry.gen(context, {
             tree: rootValue.git,

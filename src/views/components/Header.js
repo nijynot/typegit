@@ -71,13 +71,13 @@ class Header extends React.Component {
                 Profile
               </button>
             </li> */}
-            <li className="ddrow">
+            {/* <li className="ddrow">
               <a href="/insights">
                 <button className="ddrow-btn">
                   Insights
                 </button>
               </a>
-            </li>
+            </li> */}
             <li className="ddrow">
               <a href="/settings/account">
                 <button className="ddrow-btn">

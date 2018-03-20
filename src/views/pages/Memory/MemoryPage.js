@@ -33,9 +33,8 @@ class MemoryPage extends React.Component {
         </p> */}
         <MetaPortal>
           <span className="meta-count left">
-            <b>
-              {stringLength(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text || '')}
-            </b>{' '}characters
+            {stringLength(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text || '')}
+            {' '}characters
           </span>
           <a
             href={`/${this.props.query.repository.name}/edit`}

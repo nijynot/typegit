@@ -73,21 +73,18 @@ export const newRepositoryMutation = {
       isLoggedIn(context) &&
       !_.isEmpty(_.get(subscription, 'data'))
     ) {
+      /* Init bare repo */
       const randid = randexp(/[a-zA-Z0-9]{12}/);
-      const paddedDir = git.padDir(randid);
-      // Create Repository
-      // const repo = await git.init(randid);
-      /* bareInit */
       const repo = await git.bareInit(randid);
 
-      // Create file and add to index
-      // await fs.ensureFile(path.join('./public/repo', paddedDir, 'index.md'))
-      // .catch(err => console.error(err));
-      // fs.writeFileSync(path.join('./public/repo', paddedDir, 'index.md'), input.text);
-      // await git.add(repo, {
-      //   fileNames: ['index.md'],
-      // });
-      // hash-object
+      /* Set-up config */
+      const config = await repo.config();
+      await config.setString('receive.maxInputSize', '10485960');
+
+      /**
+       * Create file and add to index
+       * hash-object
+       */
       // const headCommit = await repo.getHeadCommit();
       // const headTree = await headCommit.getTree();
       const objId = await git.hashObject(repo, {
@@ -102,16 +99,11 @@ export const newRepositoryMutation = {
         filemode: 33188,
       });
 
-      // Create author and committer
+      /* Create author and committer */
       const user = await User.gen(context, context.user.user_id);
       const actor = git.createGitActor(user.username, user.email);
 
-      // Commit initial commit
-      // await git.initialCommit(repo, {
-      //   author: gitActor,
-      //   committer: gitActor,
-      //   message,
-      // });
+      /* Commit initial commit */
       const headline = input.commitHeadline || 'Initial commit';
       const message = (input.commitBody && `${headline}\n\n${input.commitBody}`) || headline;
       await git.commitTree(repo, {
@@ -123,7 +115,7 @@ export const newRepositoryMutation = {
         parents: [],
       });
 
-      // Insert into MySQL DB
+      /* Insert repo and metadata into MySQL */
       await mysql.insertRepository({
         repository_id: randid,
         title: input.title,

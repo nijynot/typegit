@@ -207,13 +207,13 @@ app.get('/new', async (req, res, next) => {
     next('Not logged in.');
   }
 });
-app.get('/insights', (req, res, next) => {
-  if (req.user) {
-    res.send(template({ title: 'Insights', script: 'InsightsPage.js' }));
-  } else {
-    next('Not logged in.');
-  }
-});
+// app.get('/insights', (req, res, next) => {
+//   if (req.user) {
+//     res.send(template({ title: 'Insights', script: 'InsightsPage.js' }));
+//   } else {
+//     next('Not logged in.');
+//   }
+// });
 app.get('/images', (req, res, next) => {
   if (req.user) {
     // res.send(template({ title: 'Insights', script: 'InsightsPage.js' }));

@@ -23,8 +23,6 @@ import MenuContextImage from 'global-components/MenuContextImage.js';
 
 import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
-// import { DeleteMemoryMutation } from './mutations/DeleteMemoryMutation.js';
-// import { UpdateMemoryMutation } from './mutations/UpdateMemoryMutation.js';
 import { UpdateRepositoryMutation } from './mutations/UpdateRepositoryMutation.js';
 import { NewCommitMutation } from './mutations/NewCommitMutation.js';
 
@@ -36,18 +34,18 @@ class MemoryEditPage extends React.Component {
       title: this.props.query.repository.title,
       body: this.props.query.repository.defaultBranchRef.target.tree.entry.object.text,
       created: this.props.query.repository.created,
-      // save: false,
+      save: false,
       error: false,
       automatic: this.props.query.repository.auto_title,
       commitHeadline: '',
     };
     this.onChange = this.onChange.bind(this);
     this.onClickImage = this.onClickImage.bind(this);
-    this.deleteMemoryMutation = this.deleteMemoryMutation.bind(this);
     this.mutationNewImage = this.mutationNewImage.bind(this);
     this.mutationUpdateRepository = this.mutationUpdateRepository.bind(this);
     this.mutationNewCommit = this.mutationNewCommit.bind(this);
     this.autodetect = this.autodetect.bind(this);
+    this.showSuccess = this.showSuccess.bind(this);
   }
   componentDidMount() {
     window.onbeforeunload = () => {
@@ -99,37 +97,20 @@ class MemoryEditPage extends React.Component {
       autosize.update(document.querySelector('.editor-ctrl'));
     });
   }
-  deleteMemoryMutation() {
-    if (window.confirm('Are you sure you want to delete this Memory?') === true) {
-      DeleteMemoryMutation({
-        environment: this.props.relay.environment,
-        id: this.props.query.memory.id,
-      })
-      .then((res) => {
-        if (res.deleteMemory) {
-          document.location.href = '/';
-        } else {
-          this.setState({ error: true });
-        }
-      });
-    }
-  }
-  // updateMemoryMutation() {
-  //   UpdateMemoryMutation({
-  //     environment: this.props.relay.environment,
-  //     id: this.props.query.memory.id,
-  //     title: this.state.title,
-  //     body: this.state.body,
-  //     created: this.state.created,
-  //   })
-  //   .then((res) => {
-  //     if (res.updateMemory) {
-  //       window.onbeforeunload = null;
-  //       document.location.href = `/${fromGlobalId(this.props.query.memory.id).id}`;
-  //     } else {
-  //       this.setState({ error: true });
-  //     }
-  //   });
+  // deleteMemoryMutation() {
+  //   if (window.confirm('Are you sure you want to delete this Memory?') === true) {
+  //     DeleteMemoryMutation({
+  //       environment: this.props.relay.environment,
+  //       id: this.props.query.memory.id,
+  //     })
+  //     .then((res) => {
+  //       if (res.deleteMemory) {
+  //         document.location.href = '/';
+  //       } else {
+  //         this.setState({ error: true });
+  //       }
+  //     });
+  //   }
   // }
   mutationNewImage() {
     NewImageMutation({
@@ -156,16 +137,16 @@ class MemoryEditPage extends React.Component {
     .then((res) => {
       if (res.updateRepository) {
         console.log(res);
+        this.showSuccess();
         this.editor.click();
+
         // window.onbeforeunload = null;
         // document.location.href = `/${this.props.query.repository.name}`;
-      } else {
-        this.setState({ error: true });
       }
-    });
+    })
+    .catch(() => this.setState({ error: true }));
   }
   mutationNewCommit() {
-    console.log(this.props.query.repository.auto_title);
     NewCommitMutation({
       environment: this.props.relay.environment,
       repositoryId: this.props.query.repository.id,
@@ -174,35 +155,47 @@ class MemoryEditPage extends React.Component {
       text: this.state.body,
     })
     .then((res) => {
-      if (res.newCommit) {
+      if (res.newCommit && this.props.query.repository.auto_title) {
         console.log('Commited!');
-        // console.log(res);
-        // this.editor.click();
-        if (this.props.query.repository.auto_title) {
-          const { title, created } = this.autodetect();
-          UpdateRepositoryMutation({
-            environment: this.props.relay.environment,
-            id: this.props.query.repository.id,
-            title,
-            auto_title: this.props.query.repository.auto_title,
-            description: '',
-            created,
-            auto_created: this.props.query.repository.auto_created,
-          })
-          .then((_res) => {
-            if (_res.updateRepository) {
-              console.log('Updated title and created!');
-              // window.onbeforeunload = null;
-              // document.location.href = `/${this.props.query.repository.name}`;
-            } else {
-              this.setState({ error: true });
-            }
-          });
-        }
-      } else {
-        this.setState({ error: true });
+        const { title, created } = this.autodetect();
+        return UpdateRepositoryMutation({
+          environment: this.props.relay.environment,
+          id: this.props.query.repository.id,
+          title,
+          auto_title: this.props.query.repository.auto_title,
+          description: '',
+          created,
+          auto_created: this.props.query.repository.auto_created,
+        })
+        .catch((err) => {
+          console.log(err);
+          this.setState({ error: true });
+          console.log('err update repo');
+        });
+      } else if (res.newCommit) {
+        window.onbeforeunload = null;
+        document.location.href = `/${this.props.query.repository.name}`;
       }
+      return null;
+    })
+    .then(() => {
+      console.log('Updated title and created!');
+      window.onbeforeunload = null;
+      document.location.href = `/${this.props.query.repository.name}`;
+    })
+    .catch((err) => {
+      console.log(err);
+      this.setState({ error: true });
+      console.log('err new commit');
     });
+  }
+  showSuccess() {
+    clearInterval(this.intervalSaveFalse);
+    this.setState({ save: true });
+    this.intervalSaveFalse = setInterval(
+      () => { this.setState({ save: false }); },
+      4500
+    );
   }
   autodetect() {
     const title = trimStart(get(this.editor.value.match(/(#{1,6})(.*)/), '[2]', 'Untitled post'));
@@ -222,6 +215,12 @@ class MemoryEditPage extends React.Component {
               >
                 subscribed?
               </a>
+            </span>
+          </div> : null}
+        {(this.state.save) ?
+          <div className="home-msg-container">
+            <span className="msg-200">
+              Title and date has been saved.
             </span>
           </div> : null}
         <div className="drafting-hint pre-wrap">
@@ -247,9 +246,9 @@ class MemoryEditPage extends React.Component {
         </div>
         <MetaPortal>
           <span className="meta-count left">
-            <b>
-              {stringLength(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text || '')}
-            </b>{' '}characters
+            {/* {stringLength(this.props.query.repository.defaultBranchRef.target.tree.entry.object.text || '')} */}
+            {stringLength(this.state.body || '')}
+            {' '}characters
           </span>
           <DropdownProp
             containerClassName="drafting-action right clearfix"
@@ -364,7 +363,7 @@ class MemoryEditPage extends React.Component {
           >
             <li className="ddrow">
               <label htmlFor="image-upload">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-upload">
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-upload">
                   <path shapeRendering="optimizeQuality" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline shapeRendering="optimizeQuality" points="17 8 12 3 7 8" />
                   <line shapeRendering="optimizeQuality" x1="12" y1="3" x2="12" y2="15" />

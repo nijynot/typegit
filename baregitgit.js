@@ -75,6 +75,20 @@ const history = async (
   return commits;
 };
 
+const show = async (repo) => {
+  // const repo = await git.Repository.open(`./public/repo/${repository}`);
+  const masterCommit = await repo.getMasterCommit();
+  const diff = await masterCommit.getDiff().then(arr => arr[0]);
+  const patches = await diff.patches().then(arr => arr[0]);
+  const hunks = await patches.hunks();
+  return hunks[0].lines();
+};
+
+const stat = async (repo) => {
+  const masterCommit = await repo.getMasterCommit();
+  const diff = await masterCommit.getDiff().then(arr => arr[0]);
+};
+
 // const commit = async (repo, { updateRef, author, committer, message, tree }) => {
 //   const head = await git.Reference.nameToId(repo, 'HEAD');
 //   const parent = await repo.getCommit(head);
@@ -84,33 +98,41 @@ const history = async (
 
 (async () => {
   // const repo = await bareInit('oL7epwEJ8zbx');
-  const content = 'test content, some additions.';
-  const repo = await bareOpen('oL7epwEJ8zbx');
-  const headCommit = await repo.getHeadCommit();
-  const headTree = await headCommit.getTree();
-
-  const objId = await hashObject(repo, {
-    data: content,
-    len: content.length,
-    type: 3,
-  });
-  const treeId = await updateIndex(repo, {
-    source: null,
-    filename: 'test.md',
-    id: objId,
-    filemode: 100644,
-  });
-  console.log(parseInt('0100644', 10));
-  console.log(objId);
-  console.log(treeId);
-  const actor = await createGitActor('test', 'test@example.com');
-  const commitId = await commit(repo, {
-    updateRef: 'refs/heads/master',
-    author: actor,
-    committer: actor,
-    message: 'Commit to master',
-    tree: treeId,
-    parents: [headCommit],
-  });
-  console.log(commitId);
+  // const content = 'test content, some additions.';
+  const repo = await bareOpen('qt/VP/qtVPybb6w9PH');
+  // const headCommit = await repo.getHeadCommit();
+  // const headTree = await headCommit.getTree();
+  //
+  // const objId = await hashObject(repo, {
+  //   data: content,
+  //   len: content.length,
+  //   type: 3,
+  // });
+  // const treeId = await updateIndex(repo, {
+  //   source: null,
+  //   filename: 'test.md',
+  //   id: objId,
+  //   filemode: 100644,
+  // });
+  // console.log(parseInt('0100644', 10));
+  // console.log(objId);
+  // console.log(treeId);
+  // const actor = await createGitActor('test', 'test@example.com');
+  // const commitId = await commit(repo, {
+  //   updateRef: 'refs/heads/master',
+  //   author: actor,
+  //   committer: actor,
+  //   message: 'Commit to master',
+  //   tree: treeId,
+  //   parents: [headCommit],
+  // });
+  // console.log(commitId);
+  // const lines = await show(repo);
+  // lines.forEach((line) => {
+  //   // console.log(String.fromCharCode(line.origin()) + line.content().trim());
+  //   // console.log(line.contentOffset());
+  //   console.log(String.fromCharCode(line.origin()) + line.content());
+  // });
+  const config = await repo.config();
+  await config.setString('receive.maxInputSize', '10485960');
 })();
