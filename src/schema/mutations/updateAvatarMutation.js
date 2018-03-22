@@ -1,3 +1,4 @@
+import sharp from 'sharp';
 import {
   GraphQLBoolean,
   GraphQLFloat,
@@ -14,7 +15,6 @@ import fs from 'fs-extra';
 import path from 'path';
 import readChunk from 'read-chunk';
 import fileType from 'file-type';
-import sharp from 'sharp';
 
 import mysql from '../../config/mysql.js';
 import { userType } from '../types/userType.js';
