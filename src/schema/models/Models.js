@@ -2,7 +2,6 @@ import { Blob } from './Blob.js';
 import { Commit } from './Commit.js';
 import { GitObject } from './GitObject.js';
 import { Image } from './Image.js';
-import { Memory } from './Memory.js';
 import { Ref } from './Ref.js';
 import { Repository } from './Repository.js';
 import { Tag } from './Tag.js';
@@ -16,7 +15,6 @@ module.exports = () => {
     Commit,
     GitObject,
     Image,
-    Memory,
     Ref,
     Repository,
     Tag,
