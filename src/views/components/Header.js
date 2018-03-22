@@ -122,7 +122,6 @@ class Header extends React.Component {
     );
   }
   render() {
-    console.log(this.state);
     return (
       <div
         className={cx('header', {
@@ -140,7 +139,7 @@ class Header extends React.Component {
               href="/"
               className="header-logo"
             >
-              {get(this.props.user, 'heading') || 'PILECROW'}
+              {get(this.props.user, 'heading') || 'Typegit'}
             </a>
           </span>
         </div>

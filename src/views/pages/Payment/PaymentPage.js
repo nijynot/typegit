@@ -75,9 +75,10 @@ class PaymentPage extends React.PureComponent {
             <div className="payment-faq">
               <h3>Pricing</h3>
               <span className="payment-answer">
-                The pricing is $3 per month.
-                You&#39;ll be charged $3 once upgraded,
-                and then you&#39;ll be billed at $3 per month.
+                The pricing is $5 per month.
+                <br />
+                You&#39;ll be charged $5 once subscribed,
+                and then be billed at $5 per month.
               </span>
               {/* <h3>What happens if I cancel my subscription?</h3>
               <span className="payment-answer">
@@ -89,7 +90,7 @@ class PaymentPage extends React.PureComponent {
               href="/"
               className="payment-skip-link"
             >
-              Skip to Home
+              Skip and don't pay for now
             </a>
           </div>
         </div>

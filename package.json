@@ -71,6 +71,7 @@
     "read-chunk": "^2.1.0",
     "redis": "^2.8.0",
     "relay-runtime": "^1.4.1",
+    "rimraf": "^2.6.2",
     "screenfull": "^3.3.2",
     "sharp": "^0.18.4",
     "string-length": "^2.0.0",

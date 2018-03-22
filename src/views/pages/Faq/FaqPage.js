@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import Markdown from 'global-components/Markdown.js';
 
-const str = `A simple diary which you can come back to whenever you want.`;
-
 class FaqPage extends React.Component {
   render() {
     return (
@@ -16,38 +14,71 @@ class FaqPage extends React.Component {
           A simple diary which you can come back to whenever you want.
         </span> */}
         <ul className="faq-list">
+          {/* <li>
+            <div className="faq-el">
+              <h3>Rough Future Roadmap</h3>
+              <span className="markdown-body inline">
+                <ul>
+                  <li>Public, private key entryption on posts.</li>
+                </ul>
+                <ul>
+                  <li>Alternative to make posts public.</li>
+                </ul>
+              </span>
+            </div>
+          </li> */}
           <li>
             <div className="faq-el">
-              <h3>How much does it cost?</h3>
-              <p>
-                $3 monthly. Cancel whenever you want.
-              </p>
+              <h3>Pricing?</h3>
+              <span className="markdown-body inline">
+                $5 monthly. Cancel <em>whenever</em> you want.
+              </span>
             </div>
           </li>
           <li>
             <div className="faq-el">
               <h3>What happens if I cancel my subscription?</h3>
-              <p>
-                You&#39;ll only lose your <i>write</i> permissions, but you can still read what you have written in the past.
+              <span className="markdown-body inline">
+                You&#39;ll only lose your <b>write</b> permissions, but you can still <b>read</b> what you have written in the past.
                 Nothing gets deleted when you cancel your subscription.
-              </p>
+              </span>
             </div>
           </li>
           <li>
             <div className="faq-el">
               <h3>Can I try before subscribing?</h3>
-              <p>
-                Yes! Sign up and skip the payment page to try the service.
-                Be aware that you won&#39;t be able to save anything without being subscribed.
-              </p>
+              <span className="markdown-body inline">
+                Yes, check out this <a href="/example">try it page</a>.
+                {/* Yes, sign-up and skip the payment page to try the service.
+                Be aware that you won&#39;t be able to save anything when you're not subscribed. */}
+              </span>
+            </div>
+          </li>
+          {/* <li>
+            <div className="faq-el">
+              <h3>Do you support Markdown?</h3>
+              <span className="markdown-body inline">
+                Markdown is supported.
+              </span>
+            </div>
+          </li> */}
+          <li>
+            <div className="faq-el">
+              <h3>Git support?</h3>
+              <span className="markdown-body inline">
+                We follow git's http smart protocol, and thus supports the <code>git-receive-pack</code> and <code>git-upload-pack</code> services.
+              </span>
             </div>
           </li>
           <li>
             <div className="faq-el">
-              <h3>Do you support Markdown?</h3>
-              <p>
-                Markdown is supported.
-              </p>
+              <h3>Help, other questions, or comments?</h3>
+              <span className="markdown-body inline">
+                Then contact us at{' '}
+                <a href="https://twitter.com/typegit">@typegit</a>{' '}
+                on twitter or{' '}
+                <a href="mailto:typegit@gmail.com">typegit@gmail.com</a> for mail.
+              </span>
             </div>
           </li>
         </ul>

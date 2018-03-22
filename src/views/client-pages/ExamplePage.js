@@ -9,7 +9,7 @@ import {
 import { modernEnvironment } from '../helpers.js';
 
 import App from '../App.js';
-import LandingPage from '../pages/Landing/LandingPage.js';
+import ExamplePage from '../pages/Example/ExamplePage.js';
 
 const mountNode = document.getElementById('root');
 
@@ -17,8 +17,9 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query LandingPageQuery {
+      query ExamplePageQuery {
         ...App_query
+        ...ExamplePage_query
       }
     `}
     variables={{}}
@@ -28,7 +29,9 @@ ReactDOM.render(
           <App
             query={props}
           >
-            <LandingPage />
+            <ExamplePage
+              query={props}
+            />
           </App>
         );
       } else if (err) {

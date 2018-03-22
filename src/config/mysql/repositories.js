@@ -142,6 +142,19 @@ exports.updateRepository = ({
   });
 };
 
+exports.deleteRepository = ({ id }) => {
+  return new Promise((resolve, reject) => {
+    let sql = `delete from repositories
+    where repository_id = ?;`;
+    sql = mysql.format(sql, [id]);
+
+    connection.query(sql, (err, results) => {
+      if (err) reject(err);
+      resolve(results);
+    });
+  });
+};
+
 exports.getRepositoryCount = ({ user_id }) => {
   return new Promise((resolve, reject) => {
     let sql = `select

@@ -23,13 +23,21 @@ import DropdownProp from 'global-components/DropdownProp.js';
 import Markdown from 'global-components/Markdown.js';
 import MenuContextImage from 'global-components/MenuContextImage.js';
 
-import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
-
-import { NewRepositoryMutation } from './mutations/NewRepositoryMutation.js';
+// import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
+//
+// import { NewRepositoryMutation } from './mutations/NewRepositoryMutation.js';
 
 mixpanel.init('ad1901a86703fb84525c156756e15e07');
 
-class DraftingPage extends React.Component {
+const images = {
+  edges: [
+    {
+      node: { id: 1, url: 'https://upload.wikimedia.org/wikipedia/en/2/24/Lenna.png' },
+    },
+  ],
+};
+
+class ExamplePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,13 +48,14 @@ class DraftingPage extends React.Component {
       error: false,
       automatic: true,
       commitHeadline: '',
-      help: false,
+      help: true,
     };
     this.onChange = this.onChange.bind(this);
     this.onClickImage = this.onClickImage.bind(this);
-    this.mutationNewRepository = this.mutationNewRepository.bind(this);
-    this.newImageMutation = this.newImageMutation.bind(this);
+    // this.mutationNewRepository = this.mutationNewRepository.bind(this);
+    // this.newImageMutation = this.newImageMutation.bind(this);
     this.autodetect = this.autodetect.bind(this);
+    this.showError = this.showError.bind(this);
     // this.tick = this.tick.bind(this);
   }
   componentDidMount() {
@@ -55,8 +64,8 @@ class DraftingPage extends React.Component {
     //   1000
     // );
     mixpanel.register({
-      id: fromGlobalId(this.props.query.me.id).id,
-      email: this.props.query.me.email,
+      id: 0,
+      email: 'example@example.com',
     });
     window.onbeforeunload = () => {
       if (this.state.body || this.state.title) {
@@ -99,51 +108,54 @@ class DraftingPage extends React.Component {
       this.setState({ [key]: e.target.value });
     }
   }
-  onClickImage(uuid) {
+  onClickImage(url) {
     this.setState({
-      body: `${this.state.body}![](/assets/img/${uuid})\n`,
+      body: `${this.state.body}![](${url})\n`,
     }, () => {
       autosize.update(document.querySelector('.editor-ctrl'));
     });
   }
-  mutationNewRepository() {
-    NewRepositoryMutation({
-      environment: this.props.relay.environment,
-      commitHeadline: this.state.commitHeadline,
-      commitBody: '',
-      title: this.state.title,
-      text: this.state.body,
-      created: this.state.created,
-      auto_title: this.state.automatic,
-      auto_created: this.state.automatic,
-    })
-    .then((res) => {
-      console.log(res);
-      if (res.newRepository) {
-        mixpanel.track('Create memory');
-        window.onbeforeunload = null;
-        window.location.href = `/${res.newRepository.name}`;
-      } else {
-        this.setState({ error: true });
-      }
-    });
-  }
-  newImageMutation() {
-    NewImageMutation({
-      environment: this.props.relay.environment,
-      uploadables: {
-        file: this.upload.files.item(0),
-      },
-      me: this.props.query.me,
-    })
-    .then((res) => {
-      console.log(res);
-    });
-  }
+  // mutationNewRepository() {
+  //   NewRepositoryMutation({
+  //     environment: this.props.relay.environment,
+  //     commitHeadline: this.state.commitHeadline,
+  //     commitBody: '',
+  //     title: this.state.title,
+  //     text: this.state.body,
+  //     created: this.state.created,
+  //     auto_title: this.state.automatic,
+  //     auto_created: this.state.automatic,
+  //   })
+  //   .then((res) => {
+  //     console.log(res);
+  //     if (res.newRepository) {
+  //       mixpanel.track('Create memory');
+  //       window.onbeforeunload = null;
+  //       window.location.href = `/${res.newRepository.name}`;
+  //     } else {
+  //       this.setState({ error: true });
+  //     }
+  //   });
+  // }
+  // newImageMutation() {
+  //   NewImageMutation({
+  //     environment: this.props.relay.environment,
+  //     uploadables: {
+  //       file: this.upload.files.item(0),
+  //     },
+  //     me: this.props.query.me,
+  //   })
+  //   .then((res) => {
+  //     console.log(res);
+  //   });
+  // }
   autodetect() {
     const title = trimStart(get(this.editor.value.match(/(#{1,6})(.*)/), '[2]', 'Untitled post'));
     const created = get(this.editor.value.match(/%\[((\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}))\]/), '[1]');
     return { title, created };
+  }
+  showError() {
+    this.setState({ error: true });
   }
   // tick() {
   //   this.setState({ created: new Date() });
@@ -151,16 +163,17 @@ class DraftingPage extends React.Component {
   render() {
     return (
       <div className="draftingpage">
-        {(this.state.error) ?
+        {(!this.state.preview) ?
           <div className="home-msg-container">
             <span className="home-read-only-msg">
-              Something went wrong. Are you{' '}
+              You&apos;re currently in test-mode.{' '}
               <a
                 className="home-sub-link"
-                href="/settings/subscription"
+                href="/register"
+                target="_blank"
               >
-                subscribed?
-              </a>
+                Register and subscribe
+              </a> to save your progress!
             </span>
           </div> : null}
         {/* <div className="drafting-hint pre-wrap">
@@ -268,7 +281,7 @@ class DraftingPage extends React.Component {
                 <div className="ddcontainer clearfix">
                   <button
                     className="left ddrow-save-btn"
-                    onClick={this.mutationNewRepository}
+                    onClick={this.showError}
                   >
                     Create initial commit
                   </button>
@@ -319,10 +332,10 @@ class DraftingPage extends React.Component {
               </li>
               <div className="dddivider" />
               <li className="ddrow">
-                {this.props.query.me.images.edges.map(edge => (
+                {images.edges.map(edge => (
                   <MenuContextImage
                     image={edge.node}
-                    onClick={() => { this.onClickImage(fromGlobalId(edge.node.id).id); }}
+                    onClick={() => { this.onClickImage(edge.node.url); }}
                   />
                 ))}
               </li>
@@ -373,28 +386,14 @@ class DraftingPage extends React.Component {
   }
 }
 
-DraftingPage.propTypes = {
+ExamplePage.propTypes = {
   query: PropTypes.object.isRequired,
 };
 
-export default createFragmentContainer(DraftingPage, {
+export default createFragmentContainer(ExamplePage, {
   query: graphql`
-    fragment DraftingPage_query on Query {
+    fragment ExamplePage_query on Query {
       id
-      me {
-        id
-        email
-        images(first: 10) @connection(
-          key: "DraftingPage_images"
-        ) {
-          edges {
-            node {
-              id
-              ...MenuContextImage_image
-            }
-          }
-        }
-      }
     }
   `,
 });

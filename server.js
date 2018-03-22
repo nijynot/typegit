@@ -112,6 +112,11 @@ if (process.env.NODE_ENV !== 'production') {
 app.use('/assets', express.static('./public/js', staticOptions));
 app.use('/assets/css', express.static('./public/css'));
 app.use('/assets/fonts', express.static('./public/fonts'));
+app.use('/assets/etc', express.static('./public/img/etc', {
+  setHeaders: (res) => {
+    return res.setHeader('Content-Type', 'image/jpeg');
+  },
+}));
 app.use('/assets/u', express.static('./public/img/u', {
   setHeaders: (res) => {
     return res.setHeader('Content-Type', 'image/jpeg');
@@ -177,9 +182,9 @@ app.get('/', async (req, res) => {
       id: req.user.user_id,
     })
     .then(value => value[0].heading);
-    res.send(template({ title: name, script: 'HomePage.js' }));
+    res.send(template({ title: name || 'Typegit', script: 'HomePage.js' }));
   } else {
-    res.send(template({ title: 'PILECROW', script: 'LandingPage.js' }));
+    res.send(template({ title: 'Typegit', script: 'LandingPage.js' }));
   }
 });
 
@@ -195,6 +200,9 @@ app.get('/payment', (req, res) => {
 app.get('/faq', (req, res) => {
   res.send(template({ title: 'FAQ', script: 'FaqPage.js' }));
 });
+app.get('/example', (req, res) => {
+  res.send(template({ title: 'Example', script: 'ExamplePage.js' }));
+});
 app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
@@ -202,7 +210,7 @@ app.get('/logout', (req, res) => {
 
 app.get('/new', async (req, res, next) => {
   if (req.user) {
-    res.send(template({ title: 'New memory', script: 'DraftingPage.js' }));
+    res.send(template({ title: 'New post', script: 'DraftingPage.js' }));
   } else {
     next('Not logged in.');
   }
@@ -249,11 +257,11 @@ app.post('/login', passport.authenticate(
   }
 ));
 
-app.use('*', (req, res) => {
-  console.log('GET WILDCARD', req.originalUrl);
-  console.log('X', req.method);
-  res.send('asdf');
-});
+// app.use('*', (req, res) => {
+//   console.log('GET WILDCARD', req.originalUrl);
+//   console.log('X', req.method);
+//   res.send('asdf');
+// });
 
 app.use((err, req, res) => {
   console.log('ERROR');

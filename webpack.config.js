@@ -24,6 +24,7 @@ const config = {
     FaqPage: './src/views/client-pages/FaqPage.js',
     HistoryPage: './src/views/client-pages/HistoryPage.js',
     CommitPage: './src/views/client-pages/CommitPage.js',
+    ExamplePage: './src/views/client-pages/ExamplePage.js',
   },
   output: {
     path: path.resolve(__dirname, './public/js'),

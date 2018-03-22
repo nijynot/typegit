@@ -4,31 +4,35 @@
 @import "src/scss/spacing";
 
 .settingssubscription-sub-heading {
-  font-size: 24px;
+  font-size: 1.35em;
   margin-bottom: $tiny;
 }
 .settingssubscription-cancel-btn {
   @include btn;
-  @include border-radius(20px);
+  @include border-radius(4px);
   background-color: $deep-grey;
   border: 0;
   color: white;
   font-family: "Open Sans";
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   padding: $tiny $small;
+  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 1);
   &:hover {
+    box-shadow: inset 0 1px 0 0 rgba(200, 0, 0, 1);
     background-color: $stripe-red;
     color: $stripe-blue;
   }
 }
 .settingssubscription-activate-btn {
   @include btn;
-  @include border-radius(20px);
+  @include border-radius(4px);
   background-color: $stripe-blue;
   border: 0;
   color: white;
   font-family: "Open Sans";
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   padding: $tiny $small;
   &:hover {
     background-color: $royalblue;
@@ -37,31 +41,33 @@
 }
 .settingssubscription-card-peek {
   @include border-radius(3px);
-  display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: #6772e5;
+  background-color: $lightnude;
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-  color: #c4f0ff;
-  font-family: "Roboto", "Open Sans", "Segoe UI", sans-serif;
+  color: black;
+  display: flex;
+  font-family: "Open Sans", "Segoe UI", sans-serif;
+  justify-content: center;
   padding: 12px $small;
 }
 .settingssubscription-card-type {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   margin-right: $tiny;
 }
 .settingssubscription-last4 {
+  font-size: 12px;
+  font-weight: 600;
   margin-left: 32px;
   margin-right: $small;
 }
 .settingssubscription-hl {
   // margin: 0 15px 20px;
-  padding: 0;
   border-style: none;
-  background-color: #7795f8;
-  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #829fff;
+  background-color: white;
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #dedede;
   border-radius: 4px;
+  font-size: 12px;
   padding: 4px $tiny;
 }
 .settingssubscription-hl svg {
@@ -72,19 +78,20 @@
 .settingssubscription-edit-card-btn {
   @include btn;
   @include border-radius(3px);
-  background-color: $nude;
   border: 0;
-  color: black;
+  background-color: $deep-grey;
+  color: white;
   display: block;
   font-family: "Open Sans";
-  font-weight: 700;
-  // font-size: 14px;
+  font-weight: 600;
+  font-size: 12px;
   margin-top: $tiny;
   padding: $tiny $small;
   // box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 1);
   width: 100%;
   &:hover {
-    background-color: $deep-grey;
+    background-color: black;
     color: white;
   }
 }
@@ -92,18 +99,19 @@
   @include btn;
   @include border-radius(3px);
   border: 0;
-  color: black;
-  background-color: $nude;
+  background-color: $deep-grey;
+  color: white;
   font-family: "Open Sans";
-  font-weight: 700;
-  // font-size: 14px;
+  font-weight: 600;
+  font-size: 12px;
   margin-top: $tiny;
   padding: $tiny $small;
+  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 1);
   // box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
   display: inline-block;
   width: 100%;
   &:hover {
-    background-color: $deep-grey;
+    background-color: black;
     color: white;
   }
 }

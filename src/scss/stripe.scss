@@ -1,9 +1,10 @@
 @import "src/scss/border-radius";
+@import "src/scss/colors";
 @import "src/scss/spacing";
 
 .example.example1 {
   @include border-radius(3px);
-  background-color: #6772e5;
+  background-color: $lightnude;
   padding: $large $base;
 }
 
@@ -17,9 +18,9 @@
   margin: 0 15px 20px;
   padding: 0;
   border-style: none;
-  background-color: #7795f8;
+  background-color: #f7f7f7;
   box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #829fff;
+    inset 0 1px 0 #dedede;
   border-radius: 4px;
 }
 
@@ -32,17 +33,19 @@
 }
 
 .example.example1 .row + .row {
-  border-top: 1px solid #819efc;
+  border-top: 1px solid #dedede;
 }
 
 .example.example1 label {
-  width: 15%;
-  min-width: 70px;
+  color: #000;
+  font-family: "Open Sans";
+  font-size: 12px;
   padding: 11px 0;
-  color: #c4f0ff;
+  min-width: 70px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 15%;
 }
 
 .example.example1 input, .example.example1 button {
@@ -69,33 +72,37 @@
 }
 
 .example.example1 input {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
   width: 100%;
   padding: 11px 15px 11px 0;
-  color: #fff;
+  color: #000;
   background-color: transparent;
   -webkit-animation: 1ms void-animation-out;
 }
 
 .example.example1 input::-webkit-input-placeholder {
-  color: #87bbfd;
+  color: #999;
 }
 
 .example.example1 input::-moz-placeholder {
-  color: #87bbfd;
+  color: #999;
 }
 
 .example.example1 input:-ms-input-placeholder {
-  color: #87bbfd;
+  color: #999;
 }
 
 .example.example1 button {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
   display: block;
   width: calc(100% - 30px);
   height: 40px;
   margin: 40px 15px 0;
-  background-color: #f6a4eb;
+  background-color: #222;
   box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #ffb9f6;
+    inset 0 1px 0 #000;
   border-radius: 4px;
   color: #fff;
   font-weight: 600;
@@ -103,9 +110,9 @@
 }
 
 .example.example1 button:active {
-  background-color: #d782d9;
+  background-color: #000;
   box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #e298d8;
+    inset 0 1px 0 #000;
 }
 
 .example.example1 .error svg .base {
@@ -121,30 +128,30 @@
 }
 
 .example.example1 .success .icon .border {
-  stroke: #87bbfd;
+  stroke: #000;
 }
 
 .example.example1 .success .icon .checkmark {
-  stroke: #fff;
+  stroke: #000;
 }
 
 .example.example1 .success .icon .feather-x {
-  stroke: #fff;
+  stroke: #000;
 }
 
 .example.example1 .success .title {
-  color: #fff;
+  color: #000;
 }
 
 .example.example1 .success .message {
-  color: #9cdbff;
+  color: #333;
 }
 
 .example.example1 .success .reset path {
-  fill: #fff;
+  fill: #222;
 }
 .example.example1 .success .message .link {
-  color: #9cdbff;
+  color: blue;
   text-decoration: underline;
 }
 .example.example1 .stripe-svg {

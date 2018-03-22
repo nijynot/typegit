@@ -29,6 +29,7 @@ import { newImageMutation } from './mutations/newImageMutation.js';
 import { newRepositoryMutation } from './mutations/newRepositoryMutation.js';
 import { newCommitMutation } from './mutations/newCommitMutation.js';
 import { updateRepositoryMutation } from './mutations/updateRepositoryMutation.js';
+import { deleteRepositoryMutation } from './mutations/deleteRepositoryMutation.js';
 
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
@@ -42,6 +43,7 @@ const mutationType = new GraphQLObjectType({
     updateSubscription: updateSubscriptionMutation,
     updateAvatar: updateAvatarMutation,
     updateRepository: updateRepositoryMutation,
+    deleteRepository: deleteRepositoryMutation,
     register: registerMutation,
   }),
 });

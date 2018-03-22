@@ -14,17 +14,21 @@ class LoginPage extends React.PureComponent {
           Login
         </h1>
         <form method="post" action="/login">
+          <span className="settingsroot-label">
+            Username
+          </span>
           <input
             className="login-control"
             name="username"
             type="text"
-            placeholder="Username"
           />
+          <span className="settingsroot-label">
+            Password
+          </span>
           <input
             className="login-control"
             name="password"
             type="password"
-            placeholder="Password"
           />
           <button className="login-btn">
             Login

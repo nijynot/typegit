@@ -181,7 +181,7 @@ class SettingsSubscriptionPage extends React.Component {
                 className="settingssubscription-cancel-update-btn"
                 onClick={() => { this.setState({ update: false }); }}
               >
-                Cancel
+                Close
               </button>
             </React.Fragment> :
             this.renderCardPeek()}

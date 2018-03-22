@@ -79,9 +79,9 @@ class HomeMemories extends React.Component {
         })}
         {(isEmpty(this.props.query.repositories.edges)) ?
           <div className="homememories-empty-msg">
-            No memories yet.&nbsp;
+            No posts yet.&nbsp;
             <a href="/new">
-              Create a new memory.
+              Create a new post.
             </a>
           </div> : null}
         {/* <div className="pagination clearfix">

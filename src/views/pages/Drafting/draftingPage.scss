@@ -114,6 +114,36 @@
     fill: black;
   }
 }
+.drafting-help {
+  position: fixed;
+  bottom: 0;
+  background-color: $lightnude;
+  left: 0;
+  right: 0;
+  height: 500px;
+}
+.drafting-help-close-btn {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  position: absolute;
+  right: $base;
+  top: $base;
+  cursor: pointer;
+}
+.drafting-help-content {
+  max-width: 650px;
+  margin: $base auto $tiny auto;
+}
+.drafting-help-label {
+  font-family: monospace;
+  // padding: 4px 16px;
+  display: block;
+  font-size: 11px;
+  color: #586069;
+  // text-align: left;
+}
 // .drafting-svg-icon {
 //   position: relative;
 //   top: -2px;

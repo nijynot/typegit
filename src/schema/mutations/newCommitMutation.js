@@ -56,7 +56,6 @@ export const newCommitMutation = {
     },
   },
   resolve: async (request, { input }, context) => {
-    console.log(input.text);
     const { id } = fromGlobalId(input.repositoryId);
     const customer_id = await mysql.getCustomerIdByUserId({
       user_id: _.get(context, 'user.user_id'),

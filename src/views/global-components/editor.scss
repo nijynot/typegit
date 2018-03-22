@@ -22,11 +22,13 @@
   resize: none;
   width: 100%;
   position: relative;
+  top: -100px;
   left: -100px;
   // outline: 2px dotted #fff;
-  padding-left: 100px;
+  padding-top: 100px;
   padding-right: 100px;
   padding-bottom: 100px;
+  padding-left: 100px;
   // padding-bottom: 100px;
   outline: 0;
   transition: all .2s cubic-bezier(.20, 1, .23, 1);

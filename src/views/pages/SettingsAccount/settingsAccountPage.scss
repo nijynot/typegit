@@ -7,21 +7,28 @@
 }
 .settingsaccountpage h1 {
   color: $deep-grey;
-  font-family: "EB Garamond";
+  font-family: "Garamond";
   font-size: 46px;
-  font-weight: 700;
+  font-style: italic;
 }
 .settingsaccount-avatar-container {
+  @include border-radius(4px);
+  padding: $small 0;
   text-align: center;
+  border: 1px solid #dedede;
 }
 .settingsaccount-avatar {
   @include border-radius(50%);
   display: block;
   margin: $small auto;
-  border: 3px solid $light-nude;
+  border: 3px solid #999;
   padding: 2px;
   height: 150px;
   width: 150px;
+  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  &:hover {
+    border: 3px solid black;
+  }
 }
 .settingsaccount-upload-success {
   @include border-radius(3px);
@@ -45,18 +52,34 @@
 }
 .settingsaccount-upload-btn {
   @include btn;
-  @include border-radius(20px);
-  background-color: $nude;
+  @include border-radius(4px);
+  background-color: $lightnude;
   border: 0;
-  color: black;
-  font-family: "Open Sans";
-  font-weight: 700;
+  color: $deep-grey;
   padding: $tiny $small;
-  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
-  &:hover {
+  font-family: "Open Sans";
+  font-weight: 600;
+  &:hover:enabled {
+    color: $lightnude;
     background-color: $deep-grey;
-    color: white;
   }
+  &:disabled {
+    color: #aaa;
+    background-color: #f9f7f6;
+  }
+  // @include btn;
+  // @include border-radius(20px);
+  // background-color: $nude;
+  // border: 0;
+  // color: black;
+  // font-family: "Open Sans";
+  // font-weight: 700;
+  // padding: $tiny $small;
+  // transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  // &:hover {
+  //   background-color: $deep-grey;
+  //   color: white;
+  // }
 }
 .settingsaccount-upload-label {
   font-family: "Open Sans";
@@ -72,22 +95,38 @@
   transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
   width: 250px;
   &:focus {
-    box-shadow: 0 0 0 2px $nude;
-    border-color: $nude;
+    box-shadow: 0 0 0 2px #333;
+    border-color: #333;
   }
 }
 .settingsaccount-save-btn {
   @include btn;
-  @include border-radius(20px);
-  background-color: $nude;
+  @include border-radius(4px);
+  background-color: $lightnude;
   border: 0;
-  color: black;
-  font-family: "Open Sans";
-  font-weight: 700;
+  color: $deep-grey;
   padding: $tiny $small;
-  transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
-  &:hover {
+  font-family: "Open Sans";
+  font-weight: 600;
+  &:hover:enabled {
+    color: $lightnude;
     background-color: $deep-grey;
-    color: white;
   }
+  &:disabled {
+    color: #aaa;
+    background-color: #f9f7f6;
+  }
+  // @include btn;
+  // @include border-radius(20px);
+  // background-color: $nude;
+  // border: 0;
+  // color: black;
+  // font-family: "Open Sans";
+  // font-weight: 700;
+  // padding: $tiny $small;
+  // transition: all .2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  // &:hover {
+  //   background-color: $deep-grey;
+  //   color: white;
+  // }
 }

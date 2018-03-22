@@ -13,18 +13,20 @@
 }
 .paymentpage h1 {
   // display: block;
-  color: $deep-grey;
-  font-family: "EB Garamond";
+  // color: $deep-grey;
+  color: black;
+  font-family: "Garamond";
   font-size: 46px;
-  font-weight: 700;
+  font-style: italic;
   margin: 0 auto $tiny auto;
 }
 .paymentpage h3 {
   // display: block;
-  color: $deep-grey;
-  font-family: "EB Garamond";
+  // color: $deep-grey;
+  color: black;
+  font-family: "Garamond";
   font-size: 26px;
-  font-weight: 700;
+  font-style: italic;
   margin-bottom: $tiny;
 }
 .payment-btn-container {
@@ -39,5 +41,5 @@
 }
 .payment-skip-link {
   color: $lightgrey;
-  font-family: monospace;
+  font-size: 14px;
 }

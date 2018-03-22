@@ -4,15 +4,33 @@
 @import "src/scss/spacing";
 
 .landingpage {
-  width: 700px;
+  width: 980px;
   margin: 0 auto $small auto;
+  // font-family: "Space Mono";
+}
+.landing-heading {
+  font-size: 3em;
+  display: block;
+  text-align: center;
+  margin-top: $large;
+  font-family: "Garamond";
+  // font-style: italic;
+  margin-bottom: $tiny;
+  color: black;
 }
 .landingpage h2 {
   font-size: 32px;
-  font-family: "EB Garamond";
-  font-weight: 700;
+  font-family: "Garamond";
+  // font-style: italic;
   margin-bottom: $tiny;
-  color: $deep-grey;
+  color: #000;
+}
+.landing-mockup {
+  display: block;
+  margin: $base auto 0 auto;
+  // margin-top: $small;
+  max-width: 680px;
+  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
 }
 .landingpage p {
   font-size: 16px;
@@ -20,7 +38,7 @@
 .landing-pitch {
   margin-top: 45px;
   list-style-type: none;
-  margin-bottom: 60px;
+  margin-bottom: 32px;
 }
 .landing-pitch li {
   overflow: hidden;
@@ -30,20 +48,14 @@
   margin-bottom: $base;
 }
 .landing-content {
+  // max-width: 500px;
+  width: 500px;
+}
+.landing-faq-line {
   max-width: 500px;
 }
-.landing-content a {
+.landing-faq-line a {
   text-decoration: underline;
-}
-.landing-heading {
-  font-size: 44px;
-  display: block;
-  text-align: center;
-  margin-top: $large;
-  font-family: "EB Garamond";
-  font-weight: 700;
-  margin-bottom: $small;
-  color: black;
 }
 .landing-timestamp {
   display: block;
@@ -53,7 +65,7 @@
   margin-bottom: $small;
 }
 .landing-body {
-  font-size: 18px;
+  font-size: 16px;
   display: block;
   text-align: center;
 }
@@ -98,22 +110,23 @@
 .landing-pricing {
   text-align: center;
   // font-family: "Open Sans";
-  font-size: 18px;
+  font-size: 16px;
 }
 .landing-sign-btn {
   @include btn;
-  @include border-radius(30px);
+  @include border-radius(4px);
+  color: white;
   padding: 12px 32px;
-  margin-top: $base;
+  margin-top: $small;
   text-align: center;
   font-weight: 700;
-  background-color: $nude;
+  background-color: $deep-grey;
   border: 0;
   font-size: 14px;
   font-family: "Open Sans";
+  box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 1);
   &:hover {
-    color: white;
-    background-color: $deep-grey;
+    background-color: black;
     box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
   }

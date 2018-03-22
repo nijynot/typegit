@@ -11,51 +11,54 @@ class LandingPage extends React.Component {
     return (
       <div className="landingpage clearfix">
         <h1 className="landing-heading">
-          Keeping a diary should be easy.
+          A minimalist journal.
         </h1>
         <span className="landing-body">
-          A simple diary which you can come back to whenever you want.
+          Journal that reads like a book and supports git.
         </span>
+        <img
+          className="landing-mockup"
+          alt="mockup"
+          src="/assets/etc/mockup.jpg"
+        />
         <ul className="landing-pitch">
           <li>
             <div className="landing-content">
-              <h2>Minimalist</h2>
-              <p>
-                Simple and easy diary keeping. Aims to be as simple and useable as possible.
-              </p>
+              <h2>Supports Git</h2>
+              <span className="markdown-body inline">
+                Execute <kbd>git commit</kbd>- or <kbd>git log</kbd> on your post directly in the browser.<br />
+                You can also <kbd>git clone</kbd> and <kbd>git push origin master</kbd>, if you want to write in another markdown editor.
+              </span>
             </div>
           </li>
           <li>
             <div className="landing-content">
-              <h2>Made to last</h2>
-              <p>
-                {/* If you quit along the way and then decide to come back, know that your diary will be just like you left it. */}
-                Even if you quit along the way, your diary will be safe.
-                And when you do return, your diary will be just like you left it.
-              </p>
+              <h2>Write for yourself</h2>
+              <span className="markdown-body inline">
+                Think of all the blogposts that were <b>scrapped</b> when you're writing for everyone.
+                Try writing for youself instead. Every post on Typegit is private.
+              </span>
             </div>
           </li>
           <li>
             <div className="landing-content">
-              <h2>No &#8220;productivity hacks&#8221;</h2>
-              <p>
-                {/* If you quit along the way and then decide to come back, know that your diary will be just like you left it. */}
-                No gamification or productivity hacks to make you keep a diary. Just you and your diary and nothing inbetween.
-                {/* Just write when you feel like it, no need to force it. */}
-              </p>
+              <h2>Minimalist design</h2>
+              <span className="markdown-body inline">
+                A simple book-like design. Hashtags work just like in twitter.
+              </span>
             </div>
           </li>
           <li>
-            <div className="landing-content">
+            <div className="landing-faq-line">
               <p>
-                Check out the <a href="/faq">FAQ</a> for more information.
+                Check out the <a href="/faq">FAQ</a> for more information, or <a href="/example">try Typegit</a>.
               </p>
             </div>
           </li>
         </ul>
         <div className="landing-pricing">
           <div>
-            Pricing is&nbsp;<b>$3</b>&nbsp;monthly.
+            Pricing is&nbsp;<b>$5</b>&nbsp;monthly.
             Cancel&nbsp;
             <i>
               anytime.

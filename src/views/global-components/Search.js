@@ -81,7 +81,7 @@ class Search extends React.Component {
                       Search —&nbsp;
                     </span>
                     <a href="/">
-                      {this.props.query.me.heading || 'PILECROW'}
+                      {this.props.query.me.heading || 'Typegit'}
                     </a>
                     <button
                       onClick={this.closeModal}

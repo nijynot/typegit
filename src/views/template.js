@@ -12,6 +12,7 @@ module.exports = ({ script, title }) => {
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,700" rel="stylesheet">
         <title>${title}</title>
       </head>
       <body>
@@ -48,6 +49,7 @@ module.exports = ({ script, title }) => {
       <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,700" rel="stylesheet">
       <title>${title}</title>
     </head>
     <body>

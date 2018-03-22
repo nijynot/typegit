@@ -23,6 +23,7 @@ import MenuContextImage from 'global-components/MenuContextImage.js';
 
 import { NewImageMutation } from 'global-mutations/NewImageMutation.js';
 
+import { DeleteRepositoryMutation } from './mutations/DeleteRepositoryMutation.js';
 import { UpdateRepositoryMutation } from './mutations/UpdateRepositoryMutation.js';
 import { NewCommitMutation } from './mutations/NewCommitMutation.js';
 
@@ -38,12 +39,14 @@ class MemoryEditPage extends React.Component {
       error: false,
       automatic: this.props.query.repository.auto_title,
       commitHeadline: '',
+      help: false,
     };
     this.onChange = this.onChange.bind(this);
     this.onClickImage = this.onClickImage.bind(this);
     this.mutationNewImage = this.mutationNewImage.bind(this);
     this.mutationUpdateRepository = this.mutationUpdateRepository.bind(this);
     this.mutationNewCommit = this.mutationNewCommit.bind(this);
+    this.mutationDeleteRepository = this.mutationDeleteRepository.bind(this);
     this.autodetect = this.autodetect.bind(this);
     this.showSuccess = this.showSuccess.bind(this);
   }
@@ -67,6 +70,8 @@ class MemoryEditPage extends React.Component {
   onChange(e, key) {
     if (key === 'preview') {
       this.setState({ preview: !this.state.preview });
+    } else if (key === 'help') {
+      this.setState({ help: !this.state.help });
     } else if (key === 'body' && this.state.automatic) {
       const { title, created } = this.autodetect();
       // const title = trimStart(get(e.target.value.match(/(#{1,6})(.*)/), '[2]', 'Untitled post'));
@@ -97,21 +102,6 @@ class MemoryEditPage extends React.Component {
       autosize.update(document.querySelector('.editor-ctrl'));
     });
   }
-  // deleteMemoryMutation() {
-  //   if (window.confirm('Are you sure you want to delete this Memory?') === true) {
-  //     DeleteMemoryMutation({
-  //       environment: this.props.relay.environment,
-  //       id: this.props.query.memory.id,
-  //     })
-  //     .then((res) => {
-  //       if (res.deleteMemory) {
-  //         document.location.href = '/';
-  //       } else {
-  //         this.setState({ error: true });
-  //       }
-  //     });
-  //   }
-  // }
   mutationNewImage() {
     NewImageMutation({
       environment: this.props.relay.environment,
@@ -188,6 +178,25 @@ class MemoryEditPage extends React.Component {
       this.setState({ error: true });
       console.log('err new commit');
     });
+  }
+  mutationDeleteRepository() {
+    if (window.confirm('Are you sure you want to delete this post?') === true) {
+      DeleteRepositoryMutation({
+        environment: this.props.relay.environment,
+        id: this.props.query.repository.id,
+      })
+      .then((res) => {
+        if (res.deleteRepository) {
+          document.location.href = '/';
+        } else {
+          throw new Error('deleteRepository did not return 1.');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ error: true });
+      });
+    }
   }
   showSuccess() {
     clearInterval(this.intervalSaveFalse);
@@ -275,8 +284,30 @@ class MemoryEditPage extends React.Component {
               </button>
             </li>
             <li className="ddrow">
-              <button className="ddrow-btn">
-                Keyboard shortcuts
+              <button
+                className="ddrow-btn"
+                onClick={partial(this.onChange, partial.placeholder, 'help')}
+              >
+                Keyboard shortcuts and Hints
+              </button>
+            </li>
+            <div className="dddivider" />
+            <li className="ddrow">
+              <a href={`/${this.props.query.repository.name}`}>
+                <button
+                  className="ddrow-btn"
+                  // onClick={this.mutationDeleteRepository}
+                >
+                  Cancel post
+                </button>
+              </a>
+            </li>
+            <li className="ddrow">
+              <button
+                className="ddrow-btn"
+                onClick={this.mutationDeleteRepository}
+              >
+                Delete post
               </button>
             </li>
             <div className="dddivider" />
@@ -316,15 +347,6 @@ class MemoryEditPage extends React.Component {
                   </span>
                 </label>
               </div>
-            </li>
-            <div className="dddivider" />
-            <li className="ddrow">
-              <button
-                className="ddrow-btn"
-                onClick={this.deleteMemoryMutation}
-              >
-                Delete post
-              </button>
             </li>
             <div className="dddivider" />
             <li className="ddrow">
@@ -387,15 +409,47 @@ class MemoryEditPage extends React.Component {
                 />
               ))}
             </li>
-            <li className="ddrow">
+            {/* <li className="ddrow">
               <a href="/images">
                 <button className="ddrow-btn">
                   To all images
                 </button>
               </a>
-            </li>
+            </li> */}
           </DropdownProp>
         </MetaPortal>
+        {(this.state.help) ?
+          <div className="drafting-help">
+            <button
+              className="drafting-help-close-btn right"
+              onClick={partial(this.onChange, partial.placeholder, 'help')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-x">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <div className="drafting-help-content markdown-body inline">
+              <span className="drafting-help-label">Keyboard shortcuts</span>
+              <kbd>Ctrl</kbd> + <kbd>P</kbd> to <em>preview</em> your post.
+              <div className="dddivider" />
+              <span className="drafting-help-label">Hints</span>
+              A hashtag symbol (#) followed by a non-whitespace character will result in a hashtag.
+              E.g. &ldquo;#draft&rdquo; will successfully create a hashtag, while &ldquo;# draft&rdquo; will create a <em>markdown heading</em>.<br />
+              The automatic feature will pick the first heading as title, and the first custom date as date.
+              <div className="dddivider" />
+              <span className="drafting-help-label">Markdown</span>
+              The <code>h1</code> heading is always centered.<br />
+              &ldquo;%[YYYY-MM-DD HH:mm:ss]&rdquo; is custom markdown that will only parse in Typegit. The output is formatted as &ldquo;dddd, MMMM Do, YYYY&rdquo;.<br />
+              <a href="https://guides.github.com/features/mastering-markdown/">
+                Github&apos;s Markdown Guide
+              </a> for a more complete guide of the supported markdown syntax. Not everything from Github&apos;s guide is supported, but most is.
+              <div className="dddivider" />
+              <span className="drafting-help-label">Git</span>
+              Command for cloning: <kbd>git clone &lt;url&gt;.git</kbd><br />
+              Command for pushing: <kbd>git push origin master</kbd>
+            </div>
+          </div> : null}
       </div>
     );
   }
