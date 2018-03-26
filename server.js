@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === 'production') {
 const staticOptions = {
   setHeaders: (res) => {
     if (process.env.NODE_ENV === 'production') {
-      return res.setHeader('Content-Encoding', 'gzip');
+      return res.set('Content-Encoding', 'gzip');
     }
     return null;
   },
@@ -114,12 +114,12 @@ app.use('/assets/css', express.static('./public/css'));
 app.use('/assets/fonts', express.static('./public/fonts'));
 app.use('/assets/etc', express.static('./public/img/etc', {
   setHeaders: (res) => {
-    return res.setHeader('Content-Type', 'image/jpeg');
+    return res.set('Content-Type', 'image/jpeg');
   },
 }));
 app.use('/assets/u', express.static('./public/img/u', {
   setHeaders: (res) => {
-    return res.setHeader('Content-Type', 'image/jpeg');
+    return res.set('Content-Type', 'image/jpeg');
   },
 }));
 app.use('/assets/img/:uuid', (req, res, next) => {
