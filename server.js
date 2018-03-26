@@ -55,7 +55,10 @@ if (process.env.NODE_ENV === 'production') {
 const staticOptions = {
   setHeaders: (res) => {
     if (process.env.NODE_ENV === 'production') {
-      return res.set('Content-Encoding', 'gzip');
+      return res.set({
+        'Content-Encoding': 'gzip',
+        'Content-Type': 'application/javascript',
+      });
     }
     return null;
   },
