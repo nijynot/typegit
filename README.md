@@ -1,8 +1,10 @@
 # typegit
 > A diary based on git.
 
-Every update is a git commit in a bare repo. Updates are executed with git plumbing commands.  
-Call `git clone`, `git push` or `git pull` from your CLI to sync your changes with the bare repo online.
+Every post is a bare git repo with an `index.md` file, and so every edit will be a git commit.  
+You can call `git clone`, `git push` or `git pull` to the bare repo, or commit changes through the online editor.
+
+See all diffs of a post by pressing "History".
 
 ![text](media/text.png)
 
